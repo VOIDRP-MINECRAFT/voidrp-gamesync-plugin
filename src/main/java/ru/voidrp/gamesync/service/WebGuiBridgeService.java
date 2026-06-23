@@ -70,13 +70,42 @@ public final class WebGuiBridgeService {
     }
 
     public void openGui(Player player, String url) {
-        if (!plugin.getGameSyncConfig().isWebGuiEnabled()) return;
-        sendWebPacket(player, signUrl(player, url), MODE_GUI);
+        if (!plugin.getGameSyncConfig().isWebGuiEnabled()) {
+            plugin.getLogger().warning("[WebGUI] webgui disabled in config — skipping openGui for " + player.getName());
+            return;
+        }
+        plugin.getLogger().info("[WebGUI] openGui → " + player.getName() + " : " + url);
+        if (!tryViaForge(player, url, MODE_GUI)) {
+            sendWebPacket(player, signUrl(player, url), MODE_GUI);
+        }
     }
 
     public void openHud(Player player, String url) {
         if (!plugin.getGameSyncConfig().isWebGuiEnabled()) return;
-        sendWebPacket(player, signUrl(player, url), MODE_HUD);
+        plugin.getLogger().info("[WebGUI] openHud → " + player.getName() + " : " + url);
+        if (!tryViaForge(player, url, MODE_HUD)) {
+            sendWebPacket(player, signUrl(player, url), MODE_HUD);
+        }
+    }
+
+    /**
+     * Try to call WebviewNetworking.openGui/openHud on the NeoForge server mod via reflection.
+     * On Mohist the NeoForge mod classes are on the same classpath. Using PacketDistributor
+     * (NeoForge) instead of sendPluginMessage ensures the packet reaches the NeoForge client.
+     */
+    private boolean tryViaForge(Player player, String url, int mode) {
+        try {
+            Object serverPlayer = player.getClass().getMethod("getHandle").invoke(player);
+            Class<?> cls = Class.forName("land.webgui.WebviewNetworking");
+            Class<?> serverPlayerClass = Class.forName("net.minecraft.server.level.ServerPlayer");
+            String method = mode == MODE_GUI ? "openGui" : "openHud";
+            cls.getMethod(method, serverPlayerClass, String.class).invoke(null, serverPlayer, url);
+            plugin.getLogger().info("[WebGUI] sent via NeoForge PacketDistributor → " + player.getName());
+            return true;
+        } catch (Exception e) {
+            plugin.getLogger().warning("[WebGUI] NeoForge bridge failed, falling back to plugin message: " + e.getMessage());
+            return false;
+        }
     }
 
     public void sendMainMenuUrl(Player player, String url) {
@@ -97,8 +126,9 @@ public final class WebGuiBridgeService {
             writeVarInt(buf, mode);
             writeString(buf, url);
             player.sendPluginMessage(plugin, OPEN_WEB_CHANNEL, buf.toByteArray());
+            plugin.getLogger().info("[WebGUI] sendPluginMessage → " + player.getName() + " (" + buf.size() + " bytes, mode=" + mode + ")");
         } catch (IOException e) {
-            plugin.getLogger().warning("Failed to send WebGUI packet: " + e.getMessage());
+            plugin.getLogger().warning("[WebGUI] Failed to send WebGUI packet: " + e.getMessage());
         }
     }
 
