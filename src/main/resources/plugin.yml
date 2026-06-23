@@ -1,0 +1,97 @@
+name: VoidRpGameSync
+version: 1.4.0
+main: ru.voidrp.gamesync.VoidRpGameSyncPlugin
+api-version: "1.21"
+depend:
+  - Vault
+softdepend:
+  - LuckPerms
+  - WorldGuard
+  - dynmap
+  - Dynmap-WorldGuard
+  - SkinsRestorer
+  - EconomyShopGUI
+  - EconomyShopGUI-Premium
+  - VoidRpDailyQuests
+  - VoidRpBattlePass
+
+commands:
+  vrgs:
+    description: VoidRP GameSync admin command
+    usage: /vrgs
+    permission: voidrp.gamesync.admin
+  nationdonate:
+    description: Donate your money to your nation treasury
+    usage: /nationdonate <amount> [comment]
+    permission: voidrp.gamesync.donate
+    aliases: [ndonate]
+  nationtreasury:
+    description: Show current nation treasury summary
+    usage: /nationtreasury
+    permission: voidrp.gamesync.treasury.view
+    aliases: [ntreasury]
+  nationtreasuryhistory:
+    description: Show nation treasury history
+    usage: /nationtreasuryhistory
+    permission: voidrp.gamesync.treasury.view
+    aliases: [ntreasuryhistory]
+  nationwithdraw:
+    description: Withdraw nation treasury funds
+    usage: /nationwithdraw <amount> [comment]
+    permission: voidrp.gamesync.treasury.manage
+    aliases: [nwithdraw]
+  marketprice:
+    description: Show current VoidRP market price
+    usage: /marketprice [material]
+    permission: voidrp.market.price
+    aliases: [mprice, price]
+  nmarket:
+    description: VoidRP nation market
+    usage: /nmarket
+    permission: voidrp.nmarket.use
+    aliases: [nationmarket, nm]
+  nsetcapital:
+    description: Set your nation capital at your current location
+    usage: /nsetcapital
+    permission: voidrp.gamesync.setcapital
+  alliance:
+    description: Alliance management commands
+    usage: /alliance <apply|leave|proposals|vote|kick>
+    permission: voidrp.alliance.use
+    aliases: [ally]
+  shop:
+    description: Открыть рынок игроков (покупка/продажа через GUI)
+    usage: /shop
+    permission: voidrp.pm.use
+    aliases: [market]
+  pm:
+    description: Player-driven market — create buy/sell orders
+    usage: /pm [sell|buy|cancel|confirm]
+    permission: voidrp.pm.use
+    aliases: [pmarket, playermarket]
+
+permissions:
+  voidrp.gamesync.admin:
+    default: op
+  voidrp.gamesync.donate:
+    default: true
+  voidrp.gamesync.treasury.view:
+    default: true
+  voidrp.gamesync.treasury.manage:
+    default: op
+  voidrp.market.price:
+    default: true
+  voidrp.nmarket.use:
+    default: true
+  voidrp.nmarket.sell:
+    default: true
+  voidrp.nmarket.admin:
+    default: op
+  voidrp.gamesync.setcapital:
+    default: true
+  voidrp.alliance.use:
+    default: true
+  voidrp.pm.use:
+    default: true
+  voidrp.battlepass.premium:
+    default: false

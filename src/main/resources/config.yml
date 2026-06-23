@@ -1,0 +1,201 @@
+backend:
+  base-url: "https://api.void-rp.ru"
+  api-prefix: "/api/v1"
+  game-auth-secret: "AAEfal24AG2rwgwOTsL9HefSbp_8TpZZy6A"
+  connect-timeout-ms: 8000
+  read-timeout-ms: 12000
+
+nation-source:
+  backend-enabled: true
+  fallback-yml-enabled: true
+
+sync:
+  enabled: true
+  period-seconds: 180
+  sync-membership: true
+  sync-stats: true
+  stats-online-only: false
+  sync-on-player-join: true
+  player-join-delay-ticks: 80
+
+territory:
+  source: "worldguard"
+  worldguard:
+    count-mode: "2d"
+    fallback_to_manual: true
+
+referrals:
+  resolve-on-join: true
+  join-delay-ticks: 60
+  auto-apply-on-join: true
+  suppress-duplicate-reward-until-expiry: true
+
+luckperms:
+  enabled: true
+  apply-on-join: true
+  reconcile-after-sync: true
+  server-context: ""
+  prefix:
+    enabled: true
+    priority: 25
+    template: "&8[&b%tag%&8]&r "
+  suffix:
+    enabled: true
+    priority: 25
+    template: " &8• &7%role%"
+  role-labels:
+    leader: "Лидер"
+    officer: "Офицер"
+    member: "Участник"
+
+skins:
+  enabled: true
+  apply-on-join: true
+  join-delay-ticks: 100
+  clear-when-missing: true
+
+starting-balance:
+  enabled: false
+  amount: 1000
+  delay-ticks: 60
+
+reward-bundles:
+  referral_rank_3:
+    commands:
+      - "lp user %player% permission set referral.rank_3 true 30d"
+      - "eco give %player% 5000"
+      - "minecraft:give %player% golden_apple 4"
+  referral_rank_2:
+    commands:
+      - "lp user %player% permission set referral.rank_2 true 30d"
+      - "eco give %player% 15000"
+      - "minecraft:give %player% diamond 16"
+      - "crate key give %player% referral 2"
+  referral_rank_1:
+    commands:
+      - "lp user %player% permission set referral.rank_1 true 30d"
+      - "eco give %player% 50000"
+      - "minecraft:give %player% netherite_ingot 4"
+      - "crate key give %player% referral 5"
+      - "lp user %player% parent addtemp referralvip 30d"
+
+debug:
+  log-http: false
+  verbose-sync: true
+
+
+
+# ============================================================
+# VoidRP Dynamic Economy Stage 3/4
+# Добавь этот блок в конец текущего config.yml или сверяй значения вручную.
+# Если блок economy-market/nation-market уже есть — не дублируй, а обнови поля.
+# ============================================================
+
+economy-market:
+  enabled: true
+
+  sync:
+    # Как часто плагин забирает текущие рыночные цены из backend.
+    period-seconds: 60
+
+  economyshopgui:
+    # Stage 3: подключение к EconomyShopGUI Free/Premium через runtime bridge.
+    enabled: true
+
+  real-price:
+    # Реальная цена сделки меняется без рестарта через PreTransactionEvent.
+    enabled: true
+    apply-buy: true
+    apply-sell: true
+
+  transactions:
+    # Stage 3: PostTransactionEvent отправляет покупки/продажи в backend.
+    push: true
+
+    # Sell-all/multi-item события не меняем по цене, но пишем статистику спроса/предложения.
+    record-multi-item-events: true
+
+  player-notify:
+    actionbar: true
+    chat-on-price-diff: false
+
+  abuse-guard:
+    # Чтобы админы/тестеры не ломали статистику рынка.
+    ignore-op-players: true
+    ignore-creative-players: true
+
+  visual-sync:
+    # Stage 4: визуально обновляет buy/sell в EconomyShopGUI через /editshop + /sreload.
+    enabled: true
+
+    # Нормально ставить 300-600. Не ставь 10-30 сек, это будет лишняя нагрузка.
+    period-seconds: 15
+
+    # Если изменилось меньше предметов — reload не делаем.
+    # Для небольшого магазина/тестов ставь 1, иначе изменения будут видны только после накопления порога.
+    min-changes-before-reload: 1
+
+    # Жёсткий лимит reload в час.
+    max-reloads-per-hour: 12
+
+    # Чтобы не редактировать тысячи товаров за один цикл.
+    max-items-per-cycle: 40
+
+    # Меньшие расхождения не трогаем.
+    min-diff-percent: 1.0
+
+    # Для EconomyShopGUI Free обычно editshop и sreload.
+    # Если у тебя команды через /eshop — поставь edit-command: "eshop".
+    edit-command: "editshop"
+    reload-command: "sreload"
+    run-reload-command: true
+
+player-market:
+  enabled: true
+  max-sell-orders: 50
+  max-buy-orders: 50
+
+nation-market:
+  enabled: true
+  money-target: "nation_treasury"
+  fee-percent: 3.0
+  listing-expire-hours: 72
+
+  sell:
+    allowed-roles:
+      - leader
+      - officer
+    require-item-in-hand: true
+    allow-all-keyword: true
+    max-listings-per-nation: 50
+    max-listings-per-player: 15
+
+  item-rules:
+    allow-custom-items: false
+    allow-enchanted-items: false
+    allow-damaged-items: false
+    allow-shulker-boxes: false
+    allow-bundles: false
+
+  price-guard:
+    min-above-server-sell-multiplier: 1.25
+    warn-below-market-multiplier: 0.65
+    warn-above-market-multiplier: 2.5
+    hard-max-market-multiplier: 10.0
+    confirm-timeout-seconds: 60
+
+  gui:
+    title: "Рынок государств"
+
+webgui:
+  # Включить интеграцию с WebGUI модом (HTML-интерфейсы в браузере)
+  # Пока false — переключить на true когда фронтенд-страницы будут готовы
+  enabled: false
+  urls:
+    menu: "https://void-rp.ru/game-ui/menu"
+    market: "https://void-rp.ru/game-ui/market"
+    nation-market: "https://void-rp.ru/game-ui/nmarket"
+    treasury: "https://void-rp.ru/game-ui/treasury"
+    alliance: "https://void-rp.ru/game-ui/alliance"
+    battlepass: "https://void-rp.ru/game-ui/battlepass"
+    quests: "https://void-rp.ru/game-ui/quests"

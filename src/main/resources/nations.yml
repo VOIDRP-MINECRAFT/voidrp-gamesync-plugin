@@ -1,0 +1,26 @@
+# Fallback only.
+nations:
+  kingdom-citadel:
+    title: "CITADEL"
+    tag: "CTL"
+    leader: "TWINKHUMER2"
+    officers: []
+    members:
+      - "im1097"
+    manual:
+      territory-points: 0
+      boss-kills: 0
+      events-completed: 0
+      prestige-bonus: 0
+
+  void:
+    title: "VOID"
+    tag: "VOID"
+    leader: "mironoouv"
+    officers: []
+    members: []
+    manual:
+      territory-points: 0
+      boss-kills: 0
+      events-completed: 0
+      prestige-bonus: 0

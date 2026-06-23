@@ -1,0 +1,778 @@
+# Modded shop proxy items for EconomyShopGUI.
+# Key format: "ESGUISectionName.pageN.items.M"
+# Must match exactly the ESGUI shop file structure in shops/ModdedItems.yml.
+# buy/sell prices are per-unit. sell: 0 disables selling.
+
+items:
+  # ─── PAGE 1: Primitive tier ───────────────────────────────────────────────
+  "ModdedItems.page1.items.1":
+    id: "kubejs:primitive_binding"
+    display: "Примитивная обвязка"
+    buy: 200
+    sell: 50
+  "ModdedItems.page1.items.2":
+    id: "kubejs:sturdy_plank"
+    display: "Укреплённая доска"
+    buy: 220
+    sell: 55
+  "ModdedItems.page1.items.3":
+    id: "kubejs:iron_fitting"
+    display: "Железная фурнитура"
+    buy: 250
+    sell: 62
+  "ModdedItems.page1.items.4":
+    id: "kubejs:copper_coil"
+    display: "Медная катушка"
+    buy: 230
+    sell: 58
+  "ModdedItems.page1.items.5":
+    id: "kubejs:redstone_contact"
+    display: "Редстоун-контакт"
+    buy: 240
+    sell: 60
+  "ModdedItems.page1.items.6":
+    id: "kubejs:treated_leather"
+    display: "Обработанная кожа"
+    buy: 280
+    sell: 70
+  "ModdedItems.page1.items.7":
+    id: "kubejs:survival_gear_core"
+    display: "Ядро походного снаряжения"
+    buy: 350
+    sell: 88
+  "ModdedItems.page1.items.8":
+    id: "kubejs:workshop_core"
+    display: "Ядро мастерской"
+    buy: 380
+    sell: 95
+  "ModdedItems.page1.items.9":
+    id: "kubejs:primitive_machine_frame"
+    display: "Примитивный каркас машины"
+    buy: 420
+    sell: 105
+  "ModdedItems.page1.items.10":
+    id: "kubejs:kitchen_core"
+    display: "Кухонное ядро"
+    buy: 320
+    sell: 80
+  # ─── PAGE 1: Create tier ──────────────────────────────────────────────────
+  "ModdedItems.page1.items.11":
+    id: "kubejs:rough_mechanism"
+    display: "Черновой механизм"
+    buy: 500
+    sell: 125
+  "ModdedItems.page1.items.12":
+    id: "kubejs:andesite_machine_frame"
+    display: "Андезитовый каркас машины"
+    buy: 550
+    sell: 138
+  "ModdedItems.page1.items.13":
+    id: "kubejs:engineering_circuit"
+    display: "Инженерная схема"
+    buy: 600
+    sell: 150
+  "ModdedItems.page1.items.14":
+    id: "kubejs:precision_mechanism_core"
+    display: "Ядро точного механизма"
+    buy: 800
+    sell: 200
+
+  # ─── PAGE 2: Magic tier ───────────────────────────────────────────────────
+  "ModdedItems.page2.items.1":
+    id: "kubejs:arcane_mechanism"
+    display: "Магический механизм"
+    buy: 800
+    sell: 200
+  "ModdedItems.page2.items.2":
+    id: "kubejs:arcane_lens"
+    display: "Магическая линза"
+    buy: 700
+    sell: 175
+  "ModdedItems.page2.items.3":
+    id: "kubejs:rune_plate"
+    display: "Рунная пластина"
+    buy: 850
+    sell: 213
+  "ModdedItems.page2.items.4":
+    id: "kubejs:ritual_focus"
+    display: "Ритуальный фокус"
+    buy: 900
+    sell: 225
+  "ModdedItems.page2.items.5":
+    id: "kubejs:magical_conduit"
+    display: "Магический проводник"
+    buy: 1000
+    sell: 250
+  "ModdedItems.page2.items.6":
+    id: "kubejs:arcane_capacitor"
+    display: "Магический конденсатор"
+    buy: 950
+    sell: 238
+  # ─── PAGE 2: Exploration tier ─────────────────────────────────────────────
+  "ModdedItems.page2.items.7":
+    id: "kubejs:explorer_seal"
+    display: "Печать исследователя"
+    buy: 1000
+    sell: 250
+  "ModdedItems.page2.items.8":
+    id: "kubejs:gateway_core"
+    display: "Ядро врат"
+    buy: 1200
+    sell: 300
+  "ModdedItems.page2.items.9":
+    id: "kubejs:dimensional_thread"
+    display: "Измерительная нить"
+    buy: 1100
+    sell: 275
+  "ModdedItems.page2.items.10":
+    id: "kubejs:nether_seal"
+    display: "Адская печать"
+    buy: 1500
+    sell: 375
+  "ModdedItems.page2.items.11":
+    id: "kubejs:otherside_seal"
+    display: "Печать Иной стороны"
+    buy: 1500
+    sell: 375
+
+  # ─── PAGE 3: Immersive Engineering tier ───────────────────────────────────
+  "ModdedItems.page3.items.1":
+    id: "kubejs:industrial_steel_compound"
+    display: "Промышленная стальная смесь"
+    buy: 1500
+    sell: 375
+  "ModdedItems.page3.items.2":
+    id: "kubejs:coke_bound_brick"
+    display: "Коксованный кирпичный композит"
+    buy: 1400
+    sell: 350
+  "ModdedItems.page3.items.3":
+    id: "kubejs:reinforced_blast_brick"
+    display: "Усиленный доменный кирпич"
+    buy: 1600
+    sell: 400
+  "ModdedItems.page3.items.4":
+    id: "kubejs:treated_mechanism"
+    display: "Пропитанный механизм"
+    buy: 1800
+    sell: 450
+  "ModdedItems.page3.items.5":
+    id: "kubejs:heavy_engineering_core"
+    display: "Ядро тяжёлой инженерии"
+    buy: 2200
+    sell: 550
+  "ModdedItems.page3.items.6":
+    id: "kubejs:high_voltage_circuit"
+    display: "Высоковольтная схема"
+    buy: 2000
+    sell: 500
+  "ModdedItems.page3.items.7":
+    id: "kubejs:industrial_bolt"
+    display: "Промышленный болт"
+    buy: 1500
+    sell: 375
+  "ModdedItems.page3.items.8":
+    id: "kubejs:reinforced_casing_plate"
+    display: "Усиленная корпусная пластина"
+    buy: 1800
+    sell: 450
+  "ModdedItems.page3.items.9":
+    id: "kubejs:steel_machine_frame"
+    display: "Стальной каркас машины"
+    buy: 2500
+    sell: 625
+
+  # ─── PAGE 4: Boss Seals ───────────────────────────────────────────────────
+  "ModdedItems.page4.items.1":
+    id: "kubejs:boss_seal"
+    display: "Печать босса"
+    buy: 3000
+    sell: 750
+  "ModdedItems.page4.items.2":
+    id: "kubejs:twilight_seal"
+    display: "Сумеречная печать"
+    buy: 3500
+    sell: 875
+  "ModdedItems.page4.items.3":
+    id: "kubejs:cataclysm_seal"
+    display: "Катаклизмическая печать"
+    buy: 4000
+    sell: 1000
+  "ModdedItems.page4.items.4":
+    id: "kubejs:boss_trophy_core"
+    display: "Ядро трофеев боссов"
+    buy: 5000
+    sell: 1250
+  "ModdedItems.page4.items.5":
+    id: "kubejs:boss_essence"
+    display: "Эссенция босса"
+    buy: 2500
+    sell: 625
+  "ModdedItems.page4.items.6":
+    id: "kubejs:end_seal"
+    display: "Краевая печать"
+    buy: 3000
+    sell: 750
+  "ModdedItems.page4.items.7":
+    id: "kubejs:aetheric_seal"
+    display: "Эфирная печать"
+    buy: 4000
+    sell: 1000
+  "ModdedItems.page4.items.8":
+    id: "kubejs:mahou_seal"
+    display: "Печать Махо"
+    buy: 5000
+    sell: 1250
+  # ─── PAGE 4: Mekanism tier ────────────────────────────────────────────────
+  "ModdedItems.page4.items.9":
+    id: "kubejs:osmium_resonator"
+    display: "Осмиевый резонатор"
+    buy: 3000
+    sell: 750
+  "ModdedItems.page4.items.10":
+    id: "kubejs:factory_control_unit"
+    display: "Фабричный блок управления"
+    buy: 4000
+    sell: 1000
+  "ModdedItems.page4.items.11":
+    id: "kubejs:machine_plastic_sheet"
+    display: "Машинный пластик"
+    buy: 2500
+    sell: 625
+  "ModdedItems.page4.items.12":
+    id: "kubejs:latex_circuit"
+    display: "Латексная схема"
+    buy: 3000
+    sell: 750
+  "ModdedItems.page4.items.13":
+    id: "kubejs:bio_industrial_core"
+    display: "Биоиндустриальное ядро"
+    buy: 4500
+    sell: 1125
+  "ModdedItems.page4.items.14":
+    id: "kubejs:oil_industrial_core"
+    display: "Нефтехимическое ядро"
+    buy: 4000
+    sell: 1000
+  "ModdedItems.page4.items.15":
+    id: "kubejs:petrochemical_circuit"
+    display: "Нефтехимическая схема"
+    buy: 4500
+    sell: 1125
+  "ModdedItems.page4.items.16":
+    id: "kubejs:diesel_mechanism"
+    display: "Дизельный механизм"
+    buy: 5000
+    sell: 1250
+
+  # ─── PAGE 5: Advanced tier ────────────────────────────────────────────────
+  "ModdedItems.page5.items.1":
+    id: "kubejs:evolved_alloy_core"
+    display: "Ядро развитых сплавов"
+    buy: 6000
+    sell: 1500
+  "ModdedItems.page5.items.2":
+    id: "kubejs:dense_machine_frame"
+    display: "Плотный каркас машины"
+    buy: 7000
+    sell: 1750
+  "ModdedItems.page5.items.3":
+    id: "kubejs:overclocked_machine_frame"
+    display: "Разогнанный каркас машины"
+    buy: 8000
+    sell: 2000
+  "ModdedItems.page5.items.4":
+    id: "kubejs:resonant_circuit"
+    display: "Резонансная схема"
+    buy: 7000
+    sell: 1750
+  "ModdedItems.page5.items.5":
+    id: "kubejs:logistical_circuit"
+    display: "Логистическая схема"
+    buy: 7500
+    sell: 1875
+  "ModdedItems.page5.items.6":
+    id: "kubejs:magic_tech_interface"
+    display: "Магитех-интерфейс"
+    buy: 9000
+    sell: 2250
+  "ModdedItems.page5.items.7":
+    id: "kubejs:assembly_matrix"
+    display: "Сборочная матрица"
+    buy: 10000
+    sell: 2500
+  # ─── PAGE 5: AE2 tier ─────────────────────────────────────────────────────
+  "ModdedItems.page5.items.8":
+    id: "kubejs:ae_logic_array"
+    display: "Логическая AE-матрица"
+    buy: 10000
+    sell: 2500
+  "ModdedItems.page5.items.9":
+    id: "kubejs:ae_calculation_array"
+    display: "Вычислительная AE-матрица"
+    buy: 12000
+    sell: 3000
+  "ModdedItems.page5.items.10":
+    id: "kubejs:ae_engineering_array"
+    display: "Инженерная AE-матрица"
+    buy: 14000
+    sell: 3500
+  "ModdedItems.page5.items.11":
+    id: "kubejs:autocrafting_core"
+    display: "Ядро автокрафта"
+    buy: 15000
+    sell: 3750
+  "ModdedItems.page5.items.12":
+    id: "kubejs:wireless_matrix"
+    display: "Беспроводная матрица"
+    buy: 12000
+    sell: 3000
+  "ModdedItems.page5.items.13":
+    id: "kubejs:singularity_core"
+    display: "Сингулярное ядро"
+    buy: 20000
+    sell: 5000
+  "ModdedItems.page5.items.14":
+    id: "kubejs:spatial_core"
+    display: "Пространственное ядро"
+    buy: 15000
+    sell: 3750
+  "ModdedItems.page5.items.15":
+    id: "kubejs:ultimate_storage_core"
+    display: "Ультимативное ядро хранения"
+    buy: 25000
+    sell: 6250
+
+  # ─── PAGE 6: Quantum tier ─────────────────────────────────────────────────
+  "ModdedItems.page6.items.1":
+    id: "kubejs:quantum_circuit"
+    display: "Квантовая схема"
+    buy: 20000
+    sell: 5000
+  "ModdedItems.page6.items.2":
+    id: "kubejs:quantum_machine_frame"
+    display: "Квантовый каркас машины"
+    buy: 25000
+    sell: 6250
+  "ModdedItems.page6.items.3":
+    id: "kubejs:reactor_heart"
+    display: "Сердце реактора"
+    buy: 30000
+    sell: 7500
+  "ModdedItems.page6.items.4":
+    id: "kubejs:skybound_core"
+    display: "Небесное ядро"
+    buy: 20000
+    sell: 5000
+  "ModdedItems.page6.items.5":
+    id: "kubejs:dark_core"
+    display: "Тёмное ядро"
+    buy: 20000
+    sell: 5000
+  "ModdedItems.page6.items.6":
+    id: "kubejs:dimensional_convergence_core"
+    display: "Ядро схождения измерений"
+    buy: 35000
+    sell: 8750
+  # ─── PAGE 6: Draconic / Endgame tier ──────────────────────────────────────
+  "ModdedItems.page6.items.7":
+    id: "kubejs:draconic_circuit"
+    display: "Драконическая схема"
+    buy: 50000
+    sell: 12500
+  "ModdedItems.page6.items.8":
+    id: "kubejs:draconic_machine_frame"
+    display: "Драконический каркас машины"
+    buy: 60000
+    sell: 15000
+  "ModdedItems.page6.items.9":
+    id: "kubejs:awakened_matrix"
+    display: "Пробуждённая матрица"
+    buy: 70000
+    sell: 17500
+  "ModdedItems.page6.items.10":
+    id: "kubejs:chaotic_matrix"
+    display: "Хаотическая матрица"
+    buy: 90000
+    sell: 22500
+  "ModdedItems.page6.items.11":
+    id: "kubejs:fusion_stabilizer"
+    display: "Стабилизатор слияния"
+    buy: 80000
+    sell: 20000
+  "ModdedItems.page6.items.12":
+    id: "kubejs:infinity_catalyst_core"
+    display: "Ядро катализатора бесконечности"
+    buy: 100000
+    sell: 25000
+  "ModdedItems.page6.items.13":
+    id: "kubejs:creative_gate_seal"
+    display: "Печать творческих врат"
+    buy: 150000
+    sell: 37500
+  "ModdedItems.page6.items.14":
+    id: "kubejs:infinity_matrix"
+    display: "Матрица бесконечности"
+    buy: 120000
+    sell: 30000
+  "ModdedItems.page6.items.15":
+    id: "kubejs:infinity_ultimate_matrix"
+    display: "Ультимативная матрица бесконечности"
+    buy: 200000
+    sell: 50000
+  "ModdedItems.page6.items.16":
+    id: "kubejs:multiversal_machine_frame"
+    display: "Мультивселенский каркас машины"
+    buy: 250000
+    sell: 62500
+
+  # ─── ModItems section ─────────────────────────────────────────────────────
+  # Page 1: Create
+  "ModItems.page1.items.1":
+    id: "create:andesite_alloy"
+    display: "Андезитовый сплав"
+    buy: 320
+    sell: 80
+  "ModItems.page1.items.2":
+    id: "create:zinc_ingot"
+    display: "Цинковый слиток"
+    buy: 320
+    sell: 80
+  "ModItems.page1.items.3":
+    id: "create:brass_ingot"
+    display: "Латунный слиток"
+    buy: 600
+    sell: 152
+  "ModItems.page1.items.4":
+    id: "create:cogwheel"
+    display: "Шестерня"
+    buy: 720
+    sell: 180
+  "ModItems.page1.items.5":
+    id: "create:large_cogwheel"
+    display: "Большая шестерня"
+    buy: 1200
+    sell: 300
+  "ModItems.page1.items.6":
+    id: "create:shaft"
+    display: "Вал"
+    buy: 480
+    sell: 120
+  "ModItems.page1.items.7":
+    id: "create:iron_sheet"
+    display: "Железный лист"
+    buy: 560
+    sell: 140
+  "ModItems.page1.items.8":
+    id: "create:brass_sheet"
+    display: "Латунный лист"
+    buy: 960
+    sell: 240
+  "ModItems.page1.items.9":
+    id: "create:electron_tube"
+    display: "Электронная трубка"
+    buy: 2000
+    sell: 500
+  "ModItems.page1.items.10":
+    id: "create:precision_mechanism"
+    display: "Механизм точности"
+    buy: 6000
+    sell: 1500
+  "ModItems.page1.items.11":
+    id: "create:blaze_cake"
+    display: "Торт из пламени"
+    buy: 3200
+    sell: 800
+  "ModItems.page1.items.12":
+    id: "create:experience_nugget"
+    display: "Кристалл опыта"
+    buy: 240
+    sell: 0
+  "ModItems.page1.items.13":
+    id: "create:crushed_raw_copper"
+    display: "Дроблёная медь"
+    buy: 240
+    sell: 60
+  "ModItems.page1.items.14":
+    id: "create:crushed_raw_iron"
+    display: "Дроблёное железо"
+    buy: 240
+    sell: 60
+  "ModItems.page1.items.15":
+    id: "create:crushed_raw_gold"
+    display: "Дроблёное золото"
+    buy: 480
+    sell: 120
+
+  # Page 2: Immersive Engineering
+  "ModItems.page2.items.1":
+    id: "immersiveengineering:ingot_steel"
+    display: "Стальной слиток"
+    buy: 400
+    sell: 100
+  "ModItems.page2.items.2":
+    id: "immersiveengineering:ingot_electrum"
+    display: "Слиток электрума"
+    buy: 720
+    sell: 180
+  "ModItems.page2.items.3":
+    id: "immersiveengineering:coal_coke"
+    display: "Кокс"
+    buy: 320
+    sell: 80
+  "ModItems.page2.items.4":
+    id: "immersiveengineering:cokebrick"
+    display: "Коксовый кирпич"
+    buy: 600
+    sell: 152
+  "ModItems.page2.items.5":
+    id: "immersiveengineering:treated_wood_horizontal"
+    display: "Обработанное дерево"
+    buy: 360
+    sell: 92
+  "ModItems.page2.items.6":
+    id: "immersiveengineering:stick_treated"
+    display: "Обработанная палка"
+    buy: 200
+    sell: 52
+  "ModItems.page2.items.7":
+    id: "immersiveengineering:hemp_fiber"
+    display: "Волокно конопли"
+    buy: 160
+    sell: 40
+  "ModItems.page2.items.8":
+    id: "immersiveengineering:wire_copper"
+    display: "Медная проволока"
+    buy: 880
+    sell: 220
+  "ModItems.page2.items.9":
+    id: "immersiveengineering:wire_electrum"
+    display: "Электрумная проволока"
+    buy: 2000
+    sell: 500
+  "ModItems.page2.items.10":
+    id: "immersiveengineering:wire_steel"
+    display: "Стальная проволока"
+    buy: 1400
+    sell: 352
+  "ModItems.page2.items.11":
+    id: "immersiveengineering:component_iron"
+    display: "Железный мехкомпонент"
+    buy: 800
+    sell: 200
+  "ModItems.page2.items.12":
+    id: "immersiveengineering:component_steel"
+    display: "Стальной мехкомпонент"
+    buy: 1600
+    sell: 400
+  "ModItems.page2.items.13":
+    id: "immersiveengineering:plate_steel"
+    display: "Стальная пластина"
+    buy: 1000
+    sell: 252
+
+  # Page 3: Mekanism
+  "ModItems.page3.items.1":
+    id: "mekanism:ingot_osmium"
+    display: "Слиток осмия"
+    buy: 600
+    sell: 152
+  "ModItems.page3.items.2":
+    id: "mekanism:ingot_steel"
+    display: "Стальной слиток"
+    buy: 520
+    sell: 132
+  "ModItems.page3.items.3":
+    id: "mekanism:salt"
+    display: "Соль"
+    buy: 160
+    sell: 40
+  "ModItems.page3.items.4":
+    id: "mekanism:fluorite_gem"
+    display: "Флюорит"
+    buy: 800
+    sell: 200
+  "ModItems.page3.items.5":
+    id: "mekanism:hdpe_sheet"
+    display: "HDPE лист"
+    buy: 2400
+    sell: 600
+  "ModItems.page3.items.6":
+    id: "mekanism:energy_tablet"
+    display: "Энергетическая таблетка"
+    buy: 3600
+    sell: 900
+  "ModItems.page3.items.7":
+    id: "mekanism:alloy_infused"
+    display: "Наполненный сплав"
+    buy: 2800
+    sell: 700
+  "ModItems.page3.items.8":
+    id: "mekanism:alloy_reinforced"
+    display: "Усиленный сплав"
+    buy: 8000
+    sell: 2000
+  "ModItems.page3.items.9":
+    id: "mekanism:alloy_atomic"
+    display: "Атомный сплав"
+    buy: 24000
+    sell: 6000
+  "ModItems.page3.items.10":
+    id: "mekanism:basic_control_circuit"
+    display: "Базовая плата управления"
+    buy: 1800
+    sell: 452
+  "ModItems.page3.items.11":
+    id: "mekanism:advanced_control_circuit"
+    display: "Продвинутая плата управления"
+    buy: 6000
+    sell: 1500
+  "ModItems.page3.items.12":
+    id: "mekanism:elite_control_circuit"
+    display: "Элитная плата управления"
+    buy: 20000
+    sell: 5000
+  "ModItems.page3.items.13":
+    id: "mekanism:ultimate_control_circuit"
+    display: "Ультимативная плата управления"
+    buy: 72000
+    sell: 18000
+  "ModItems.page3.items.14":
+    id: "mekanism:steel_casing"
+    display: "Стальной корпус"
+    buy: 3600
+    sell: 900
+
+  # Page 4: AE2
+  "ModItems.page4.items.1":
+    id: "ae2:certus_quartz_crystal"
+    display: "Кристалл сертус кварца"
+    buy: 400
+    sell: 100
+  "ModItems.page4.items.2":
+    id: "ae2:charged_certus_quartz_crystal"
+    display: "Заряженный сертус кварц"
+    buy: 1000
+    sell: 252
+  "ModItems.page4.items.3":
+    id: "ae2:fluix_crystal"
+    display: "Кристалл флюикса"
+    buy: 1200
+    sell: 300
+  "ModItems.page4.items.4":
+    id: "ae2:fluix_dust"
+    display: "Пыль флюикса"
+    buy: 720
+    sell: 180
+  "ModItems.page4.items.5":
+    id: "ae2:fluix_pearl"
+    display: "Жемчуг флюикса"
+    buy: 1400
+    sell: 352
+  "ModItems.page4.items.6":
+    id: "ae2:ender_dust"
+    display: "Эндерная пыль"
+    buy: 800
+    sell: 200
+  "ModItems.page4.items.7":
+    id: "ae2:printed_silicon"
+    display: "Напечатанный кремний"
+    buy: 1400
+    sell: 352
+  "ModItems.page4.items.8":
+    id: "ae2:blank_pattern"
+    display: "Чистый шаблон"
+    buy: 600
+    sell: 0
+  "ModItems.page4.items.9":
+    id: "ae2:logic_processor"
+    display: "Логический процессор"
+    buy: 4000
+    sell: 1000
+  "ModItems.page4.items.10":
+    id: "ae2:calculation_processor"
+    display: "Вычислительный процессор"
+    buy: 6000
+    sell: 1500
+  "ModItems.page4.items.11":
+    id: "ae2:engineering_processor"
+    display: "Инженерный процессор"
+    buy: 12000
+    sell: 3000
+  "ModItems.page4.items.12":
+    id: "ae2:cell_component_1k"
+    display: "1K ME компонент"
+    buy: 4800
+    sell: 1200
+  "ModItems.page4.items.13":
+    id: "ae2:cell_component_4k"
+    display: "4K ME компонент"
+    buy: 20000
+    sell: 5000
+  "ModItems.page4.items.14":
+    id: "ae2:cell_component_16k"
+    display: "16K ME компонент"
+    buy: 80000
+    sell: 20000
+
+  # Page 5: Draconic Evolution + Industrial Foregoing
+  "ModItems.page5.items.1":
+    id: "draconicevolution:draconium_ingot"
+    display: "Слиток дракониума"
+    buy: 4800
+    sell: 1200
+  "ModItems.page5.items.2":
+    id: "draconicevolution:awakened_draconium_ingot"
+    display: "Пробуждённый дракониум"
+    buy: 40000
+    sell: 10000
+  "ModItems.page5.items.3":
+    id: "draconicevolution:draconium_core"
+    display: "Ядро дракониума"
+    buy: 100000
+    sell: 25000
+  "ModItems.page5.items.4":
+    id: "draconicevolution:wyvern_core"
+    display: "Ядро виверны"
+    buy: 80000
+    sell: 20000
+  "ModItems.page5.items.5":
+    id: "draconicevolution:awakened_core"
+    display: "Дракониевое ядро"
+    buy: 400000
+    sell: 100000
+  "ModItems.page5.items.6":
+    id: "draconicevolution:chaotic_core"
+    display: "Хаотическое ядро"
+    buy: 1600000
+    sell: 400000
+  "ModItems.page5.items.7":
+    id: "industrialforegoing:plastic"
+    display: "Пластик"
+    buy: 1400
+    sell: 352
+  "ModItems.page5.items.8":
+    id: "industrialforegoing:machine_frame_pity"
+    display: "Рамка машины (Нищая)"
+    buy: 2400
+    sell: 600
+  "ModItems.page5.items.9":
+    id: "industrialforegoing:machine_frame_simple"
+    display: "Простая рамка машины"
+    buy: 6000
+    sell: 1500
+  "ModItems.page5.items.10":
+    id: "industrialforegoing:machine_frame_advanced"
+    display: "Продвинутая рамка машины"
+    buy: 24000
+    sell: 6000
+  "ModItems.page5.items.11":
+    id: "industrialforegoing:machine_frame_supreme"
+    display: "Высшая рамка машины"
+    buy: 100000
+    sell: 25000
+  "ModItems.page5.items.12":
+    id: "industrialforegoing:pink_slime"
+    display: "Розовая слизь"
+    buy: 1000
+    sell: 252

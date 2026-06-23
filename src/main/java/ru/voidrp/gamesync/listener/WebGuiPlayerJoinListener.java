@@ -1,0 +1,31 @@
+package ru.voidrp.gamesync.listener;
+
+import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+
+import ru.voidrp.gamesync.VoidRpGameSyncPlugin;
+
+public final class WebGuiPlayerJoinListener implements Listener {
+
+    private final VoidRpGameSyncPlugin plugin;
+
+    public WebGuiPlayerJoinListener(VoidRpGameSyncPlugin plugin) {
+        this.plugin = plugin;
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        if (!plugin.getGameSyncConfig().isWebGuiEnabled()) return;
+        var player = event.getPlayer();
+        // Delay 3 seconds (60 ticks) so the client has time to fully load and
+        // NeoForge mod channel registration completes before we send the packet.
+        // If the NeoForge mod already sent mainMenuUrl via PlayerLoggedInEvent,
+        // the client simply receives the same URL twice — harmless.
+        Bukkit.getScheduler().runTaskLater(plugin, () -> {
+            if (!player.isOnline()) return;
+            plugin.getWebGuiBridgeService().sendMainMenuUrl(player, plugin.getGameSyncConfig().getWebGuiMenuUrl());
+        }, 60L);
+    }
+}
