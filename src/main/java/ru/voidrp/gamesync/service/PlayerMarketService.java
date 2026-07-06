@@ -922,6 +922,14 @@ public final class PlayerMarketService {
     }
 
     /** Find an ItemStack in player's inventory matching the given item_key. */
+    public ItemStack findInInventoryByKey(Player player, String itemKey) {
+        return findInInventory(player, itemKey);
+    }
+
+    public String enrichItemKeyPublic(ItemStack item) { return enrichItemKey(item); }
+    public String displayNamePublic(ItemStack item)   { return displayName(item); }
+
+    /** Find an ItemStack in player's inventory matching the given item_key. */
     private ItemStack findInInventory(Player player, String itemKey) {
         // Check main hand first (most likely slot for selling)
         ItemStack hand = player.getInventory().getItemInMainHand();

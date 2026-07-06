@@ -40,10 +40,22 @@ public final class AllianceCommand implements CommandExecutor, TabCompleter {
             return true;
         }
         if (args.length == 0) {
-            sendHelp(player);
+            if (plugin.getGameSyncConfig().isWebGuiEnabled()) {
+                plugin.getWebGuiBridgeService().openGui(player, plugin.getGameSyncConfig().getWebGuiAllianceUrl());
+            } else {
+                sendHelp(player);
+            }
             return true;
         }
         switch (args[0].toLowerCase()) {
+            case "gui",
+                 "open"      -> {
+                if (plugin.getGameSyncConfig().isWebGuiEnabled()) {
+                    plugin.getWebGuiBridgeService().openGui(player, plugin.getGameSyncConfig().getWebGuiAllianceUrl());
+                } else {
+                    sendHelp(player);
+                }
+            }
             case "apply"     -> handleApply(player, args);
             case "leave"     -> handleLeave(player);
             case "proposals",
@@ -251,7 +263,7 @@ public final class AllianceCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            return List.of("apply", "leave", "proposals", "vote", "kick").stream()
+            return List.of("gui", "apply", "leave", "proposals", "vote", "kick").stream()
                 .filter(s -> s.startsWith(args[0].toLowerCase()))
                 .toList();
         }

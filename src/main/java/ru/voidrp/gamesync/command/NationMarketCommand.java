@@ -44,18 +44,27 @@ public final class NationMarketCommand implements CommandExecutor, TabCompleter 
             return true;
         }
         if (args.length == 0) {
-            plugin.getNationMarketGuiService().open(player);
+            if (plugin.getGameSyncConfig().isWebGuiEnabled()) {
+                plugin.getWebGuiBridgeService().openGui(player, plugin.getGameSyncConfig().getWebGuiNationMarketUrl());
+            } else {
+                plugin.getNationMarketGuiService().open(player);
+            }
             return true;
         }
 
         String sub = args[0].toLowerCase(Locale.ROOT);
         return switch (sub) {
             case "sell" -> handleSell(player, label, args);
+            case "buy" -> handleBuy(player, args);
             case "confirm" -> handleConfirm(player);
             case "cancel" -> handleCancel(player, args);
             case "list", "listings" -> handleListings(player);
             case "open", "gui" -> {
-                plugin.getNationMarketGuiService().open(player);
+                if (plugin.getGameSyncConfig().isWebGuiEnabled()) {
+                    plugin.getWebGuiBridgeService().openGui(player, plugin.getGameSyncConfig().getWebGuiNationMarketUrl());
+                } else {
+                    plugin.getNationMarketGuiService().open(player);
+                }
                 yield true;
             }
             default -> {
@@ -342,9 +351,56 @@ public final class NationMarketCommand implements CommandExecutor, TabCompleter 
         return new PriceGuardResult(false, false, marketPrice, "OK");
     }
 
+    private boolean handleBuy(Player player, String[] args) {
+        if (args.length < 3) {
+            player.sendMessage("§eИспользование: /nmarket buy <id> <количество>");
+            return true;
+        }
+        String listingId = args[1];
+        int amount;
+        try {
+            amount = Integer.parseInt(args[2]);
+        } catch (NumberFormatException e) {
+            player.sendMessage("§cКоличество должно быть числом.");
+            return true;
+        }
+        if (amount <= 0) {
+            player.sendMessage("§cКоличество должно быть больше 0.");
+            return true;
+        }
+        player.sendMessage("§7Покупаем лот...");
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                ru.voidrp.gamesync.model.NationMarketListing listing = plugin.getBackendClient().getNationMarketListing(listingId);
+                double price = listing.current_unit_price;
+                double total = round2(price * amount);
+                net.milkbowl.vault.economy.EconomyResponse resp = plugin.getEconomy().withdrawPlayer(player, total);
+                if (!resp.transactionSuccess()) {
+                    Bukkit.getScheduler().runTask(plugin, () -> player.sendMessage("§cНедостаточно средств (нужно " + money(total) + ")."));
+                    return;
+                }
+                ru.voidrp.gamesync.model.NationMarketPurchaseResponse purchase = plugin.getBackendClient().purchaseNationMarketListing(
+                    listingId,
+                    new ru.voidrp.gamesync.model.NationMarketPurchaseRequest(player.getName(), amount, price)
+                );
+                org.bukkit.inventory.ItemStack item = plugin.getItemStackSnapshotService().deserialize(purchase.item_stack_base64, purchase.purchased_amount);
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    plugin.getNationMarketInventoryService().giveOrDrop(player, item, purchase.purchased_amount);
+                    player.sendMessage("§aКуплено: §f" + purchase.purchased_amount + " §aза §6" + money(total));
+                });
+            } catch (Exception e) {
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    player.sendMessage("§cОшибка покупки: §f" + e.getMessage());
+                });
+            }
+        });
+        return true;
+    }
+
     private void sendHelp(Player player, String label) {
         player.sendMessage("§6/" + label + " §7— открыть рынок");
         player.sendMessage("§6/" + label + " sell <кол-во|all> <цена> §7— выставить предмет из руки");
+        player.sendMessage("§6/" + label + " buy <id> <кол-во> §7— купить лот");
         player.sendMessage("§6/" + label + " confirm §7— подтвердить подозрительную цену");
         player.sendMessage("§6/" + label + " listings §7— лоты своего государства");
         player.sendMessage("§6/" + label + " cancel <id> §7— снять лот и вернуть остаток");

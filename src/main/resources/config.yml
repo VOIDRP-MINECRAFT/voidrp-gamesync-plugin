@@ -191,6 +191,9 @@ webgui:
   # Включить интеграцию с WebGUI модом (HTML-интерфейсы в браузере)
   # Пока false — переключить на true когда фронтенд-страницы будут готовы
   enabled: false
+  # Открывать HUD-оверлей при входе (через плагин — с подписанным токеном).
+  # Держи autoHudOnJoin=false в config/webgui/server.json, иначе мод откроет HUD без токена.
+  auto-hud-on-join: false
   urls:
     menu: "https://void-rp.ru/game-ui/menu"
     market: "https://void-rp.ru/game-ui/market"
@@ -199,3 +202,4 @@ webgui:
     alliance: "https://void-rp.ru/game-ui/alliance"
     battlepass: "https://void-rp.ru/game-ui/battlepass"
     quests: "https://void-rp.ru/game-ui/quests"
+    hud: "https://void-rp.ru/game-ui/hud"

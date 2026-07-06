@@ -171,6 +171,12 @@ public final class BackendClient {
         return gson.fromJson(response.body(), MarketRecalculateResponse.class);
     }
 
+    public NationMarketListing getNationMarketListing(String listingId) throws IOException, InterruptedException {
+        String url = apiUrl("/game-sync/nation-market/listings/" + encode(listingId));
+        HttpResponse<String> response = get(url);
+        return gson.fromJson(response.body(), NationMarketListing.class);
+    }
+
     public NationMarketListing createNationMarketListing(NationMarketCreateRequest payload) throws IOException, InterruptedException {
         String url = apiUrl("/game-sync/nation-market/listings");
         HttpResponse<String> response = postJsonForResponse(url, gson.toJson(payload), "Nation market listing create failed");

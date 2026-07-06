@@ -74,17 +74,22 @@ public final class WebGuiBridgeService {
             plugin.getLogger().warning("[WebGUI] webgui disabled in config — skipping openGui for " + player.getName());
             return;
         }
+        // Sign the URL with a fresh per-player token BEFORE dispatch. Both the NeoForge
+        // bridge and the plugin-message fallback must receive the signed URL, otherwise
+        // the page loads without ?webgui_token= and the backend rejects it ("session not confirmed").
+        String signed = signUrl(player, url);
         plugin.getLogger().info("[WebGUI] openGui → " + player.getName() + " : " + url);
-        if (!tryViaForge(player, url, MODE_GUI)) {
-            sendWebPacket(player, signUrl(player, url), MODE_GUI);
+        if (!tryViaForge(player, signed, MODE_GUI)) {
+            sendWebPacket(player, signed, MODE_GUI);
         }
     }
 
     public void openHud(Player player, String url) {
         if (!plugin.getGameSyncConfig().isWebGuiEnabled()) return;
+        String signed = signUrl(player, url);
         plugin.getLogger().info("[WebGUI] openHud → " + player.getName() + " : " + url);
-        if (!tryViaForge(player, url, MODE_HUD)) {
-            sendWebPacket(player, signUrl(player, url), MODE_HUD);
+        if (!tryViaForge(player, signed, MODE_HUD)) {
+            sendWebPacket(player, signed, MODE_HUD);
         }
     }
 

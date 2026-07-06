@@ -25,7 +25,18 @@ public final class WebGuiPlayerJoinListener implements Listener {
         // the client simply receives the same URL twice — harmless.
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (!player.isOnline()) return;
-            plugin.getWebGuiBridgeService().sendMainMenuUrl(player, plugin.getGameSyncConfig().getWebGuiMenuUrl());
+            // Cache-bust the menu URL: it carries no token (the menu page itself calls no API),
+            // so CEF would cache it and keep serving a stale build. A per-join version param
+            // forces a fresh load each session so menu buttons always run the latest code.
+            String menuUrl = plugin.getGameSyncConfig().getWebGuiMenuUrl();
+            menuUrl += (menuUrl.contains("?") ? "&" : "?") + "v=" + (System.currentTimeMillis() / 1000L);
+            plugin.getWebGuiBridgeService().sendMainMenuUrl(player, menuUrl);
+            // Open the HUD overlay from the plugin (not the WebGUI mod's autoHudOnJoin):
+            // only the plugin signs the URL with a token, so a plugin-driven HUD avoids
+            // the "session not confirmed" error a tokenless mod-driven HUD would cause.
+            if (plugin.getGameSyncConfig().isWebGuiAutoHudOnJoin()) {
+                plugin.getWebGuiBridgeService().openHud(player, plugin.getGameSyncConfig().getWebGuiHudUrl());
+            }
         }, 60L);
     }
 }

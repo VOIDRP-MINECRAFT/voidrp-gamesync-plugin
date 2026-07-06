@@ -35,6 +35,11 @@ public final class PlayerNationTreasuryCommand implements CommandExecutor, TabCo
             return true;
         }
 
+        if (plugin.getGameSyncConfig().isWebGuiEnabled()) {
+            plugin.getWebGuiBridgeService().openGui(player, plugin.getGameSyncConfig().getWebGuiTreasuryUrl());
+            return true;
+        }
+
         player.sendMessage("§7Запрашиваем treasury summary...");
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {

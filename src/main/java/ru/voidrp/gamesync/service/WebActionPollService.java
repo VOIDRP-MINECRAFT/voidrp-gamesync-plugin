@@ -8,13 +8,16 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitTask;
 
+import org.bukkit.inventory.ItemStack;
 import net.milkbowl.vault.economy.EconomyResponse;
 import ru.voidrp.gamesync.VoidRpGameSyncPlugin;
 import ru.voidrp.gamesync.model.PlayerMarketBuyOrderCreateRequest;
 import ru.voidrp.gamesync.model.PlayerMarketCancelBuyOrderResponse;
 import ru.voidrp.gamesync.model.PlayerMarketCancelSellOrderResponse;
 import ru.voidrp.gamesync.model.PlayerMarketCreateBuyOrderResponse;
+import ru.voidrp.gamesync.model.PlayerMarketCreateSellOrderResponse;
 import ru.voidrp.gamesync.model.PlayerMarketImmediateFill;
+import ru.voidrp.gamesync.model.PlayerMarketSellOrderCreateRequest;
 import ru.voidrp.gamesync.model.WebActionItem;
 import ru.voidrp.gamesync.model.WebActionListResponse;
 
@@ -69,6 +72,7 @@ public final class WebActionPollService {
     private void dispatch(WebActionItem action) {
         switch (action.action_type) {
             case "buy"          -> processBuy(action);
+            case "sell"         -> processSell(action);
             case "cancel_sell"  -> processCancelSell(action);
             case "cancel_buy"   -> processCancelBuy(action);
             case "pickup"       -> processPickup(action);
@@ -156,6 +160,119 @@ public final class WebActionPollService {
                             plugin.getEconomy().depositPlayer(p, reserved);
                             p.sendMessage("§c[Рынок] Ошибка покупки, средства возвращены.");
                         }
+                    });
+                    ackFailed(actionId, ex.getMessage());
+                }
+            });
+        });
+    }
+
+    // ── sell ──────────────────────────────────────────────────────────────────
+
+    private void processSell(WebActionItem action) {
+        String actionId   = action.action_id;
+        String playerName = action.player_name;
+        String itemKey    = str(action.payload, "item_key");
+        int    amount     = intVal(action.payload, "amount");
+        double unitPrice  = dbl(action.payload, "unit_price");
+
+        if (itemKey == null || amount <= 0 || unitPrice <= 0) {
+            ackFailed(actionId, "Invalid sell payload");
+            return;
+        }
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            Player player = Bukkit.getPlayerExact(playerName);
+            if (player == null || !player.isOnline()) {
+                ackFailed(actionId, "Player offline");
+                return;
+            }
+
+            PlayerMarketService svc = plugin.getPlayerMarketService();
+            // __hand__ = sell whatever is currently in main hand
+            ItemStack sample;
+            if ("__hand__".equals(itemKey)) {
+                ItemStack hand = player.getInventory().getItemInMainHand();
+                if (hand == null || hand.getType() == org.bukkit.Material.AIR) {
+                    player.sendMessage("§c[Рынок] Возьмите предмет в руку для продажи.");
+                    ackFailed(actionId, "No item in main hand");
+                    return;
+                }
+                sample = hand.clone();
+                sample.setAmount(1);
+            } else {
+                sample = svc.findInInventoryByKey(player, itemKey);
+            }
+            if (sample == null) {
+                player.sendMessage("§c[Рынок] Предмет §f" + itemKey + " §cне найден в инвентаре. Возьмите в руку или проверьте инвентарь.");
+                ackFailed(actionId, "Item not found in inventory: " + itemKey);
+                return;
+            }
+
+            int available = plugin.getNationMarketInventoryService().countSimilar(player, sample);
+            int toSell = Math.min(amount, available);
+            if (toSell <= 0) {
+                player.sendMessage("§c[Рынок] Недостаточно предметов в инвентаре.");
+                ackFailed(actionId, "Not enough items");
+                return;
+            }
+
+            if (!plugin.getNationMarketInventoryService().removeSimilar(player, sample, toSell)) {
+                player.sendMessage("§c[Рынок] Не удалось изъять предметы из инвентаря.");
+                ackFailed(actionId, "Failed to remove items from inventory");
+                return;
+            }
+
+            String base64;
+            try {
+                base64 = plugin.getItemStackSnapshotService().serializeSingle(sample);
+            } catch (Exception ex) {
+                plugin.getNationMarketInventoryService().giveOrDrop(player, sample, toSell);
+                player.sendMessage("§c[Рынок] Ошибка сериализации предмета. Предметы возвращены.");
+                ackFailed(actionId, "Serialization failed: " + ex.getMessage());
+                return;
+            }
+
+            String enrichedKey  = svc.enrichItemKeyPublic(sample);
+            String displayName  = svc.displayNamePublic(sample);
+            boolean isPremium   = player.hasPermission("voidrp.battlepass.premium");
+            final int finalAmount = toSell;
+            final ItemStack finalSample = sample;
+
+            PlayerMarketSellOrderCreateRequest req = new PlayerMarketSellOrderCreateRequest(
+                    playerName, enrichedKey, displayName, base64,
+                    toSell, unitPrice, java.util.Map.of("created_from", "webgui"), isPremium
+            );
+
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                try {
+                    PlayerMarketCreateSellOrderResponse resp =
+                            plugin.getBackendClient().createPlayerMarketSellOrder(req);
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        Player p = Bukkit.getPlayerExact(playerName);
+                        if (resp.immediate_fills != null) {
+                            double earned = 0;
+                            for (PlayerMarketImmediateFill fill : resp.immediate_fills) {
+                                if (fill.funds_released_to_seller > 0 && plugin.getEconomy() != null) {
+                                    plugin.getEconomy().depositPlayer(p != null ? p : player, fill.funds_released_to_seller);
+                                    earned += fill.funds_released_to_seller;
+                                }
+                            }
+                            if (p != null && earned > 0) {
+                                p.sendMessage("§a[Рынок] Продано ×" + finalAmount + " §8→ §6+" + money(earned) + " ₽");
+                            } else if (p != null) {
+                                p.sendMessage("§a[Рынок] Ордер на продажу размещён ×" + finalAmount + " по " + money(unitPrice) + " ₽/шт.");
+                            }
+                        } else if (p != null) {
+                            p.sendMessage("§a[Рынок] Ордер на продажу размещён ×" + finalAmount + " по " + money(unitPrice) + " ₽/шт.");
+                        }
+                        ackDone(actionId);
+                    });
+                } catch (Exception ex) {
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        plugin.getNationMarketInventoryService().giveOrDrop(player, finalSample, finalAmount);
+                        Player p = Bukkit.getPlayerExact(playerName);
+                        if (p != null) p.sendMessage("§c[Рынок] Ошибка при создании ордера. Предметы возвращены.");
                     });
                     ackFailed(actionId, ex.getMessage());
                 }
