@@ -8,6 +8,7 @@ public final class GameSyncConfig {
     private final String backendBaseUrl;
     private final String apiPrefix;
     private final String gameAuthSecret;
+    private final String serverSlug;
     private final int connectTimeoutMs;
     private final int readTimeoutMs;
     private final boolean backendNationSourceEnabled;
@@ -111,6 +112,7 @@ public final class GameSyncConfig {
         this.backendBaseUrl = trimTrailingSlash(plugin.getConfig().getString("backend.base-url", "https://api.void-rp.ru"));
         this.apiPrefix = plugin.getConfig().getString("backend.api-prefix", "/api/v1");
         this.gameAuthSecret = plugin.getConfig().getString("backend.game-auth-secret", "");
+        this.serverSlug = plugin.getConfig().getString("backend.server-slug", "");
         this.connectTimeoutMs = plugin.getConfig().getInt("backend.connect-timeout-ms", 10000);
         this.readTimeoutMs = plugin.getConfig().getInt("backend.read-timeout-ms", 20000);
 
@@ -221,6 +223,9 @@ public final class GameSyncConfig {
     public String getBackendBaseUrl() { return backendBaseUrl; }
     public String getApiPrefix() { return apiPrefix; }
     public String getGameAuthSecret() { return gameAuthSecret; }
+
+    /** Optional per-server slug for explicit attribution (backend also resolves by secret). */
+    public String getServerSlug() { return serverSlug; }
     public int getConnectTimeoutMs() { return connectTimeoutMs; }
     public int getReadTimeoutMs() { return readTimeoutMs; }
     public boolean isBackendNationSourceEnabled() { return backendNationSourceEnabled; }

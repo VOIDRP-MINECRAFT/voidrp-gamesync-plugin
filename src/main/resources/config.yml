@@ -2,6 +2,10 @@ backend:
   base-url: "https://api.void-rp.ru"
   api-prefix: "/api/v1"
   game-auth-secret: "AAEfal24AG2rwgwOTsL9HefSbp_8TpZZy6A"
+  # Optional: multi-server slug for explicit data attribution. The backend also
+  # resolves the server from the secret above, so this is only needed when several
+  # servers share config templates. Leave empty for the default/single server.
+  server-slug: ""
   connect-timeout-ms: 8000
   read-timeout-ms: 12000
 

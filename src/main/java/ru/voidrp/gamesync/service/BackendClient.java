@@ -334,10 +334,19 @@ public final class BackendClient {
 
     private record TierUnlockRequest(String minecraft_uuid, String minecraft_nickname, String tier_name) {}
 
+    /** Adds the optional X-Server-Slug header for explicit multi-server attribution. */
+    private HttpRequest.Builder withServerSlug(HttpRequest.Builder builder) {
+        String slug = config.getServerSlug();
+        if (slug != null && !slug.isBlank()) {
+            builder.header("X-Server-Slug", slug);
+        }
+        return builder;
+    }
+
     private HttpResponse<String> get(String url) throws IOException, InterruptedException {
-        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+        HttpRequest request = withServerSlug(HttpRequest.newBuilder(URI.create(url))
                 .timeout(Duration.ofMillis(config.getReadTimeoutMs()))
-                .header("X-Game-Auth-Secret", config.getGameAuthSecret())
+                .header("X-Game-Auth-Secret", config.getGameAuthSecret()))
                 .GET()
                 .build();
 
@@ -361,10 +370,10 @@ public final class BackendClient {
     private HttpResponse<String> postJsonForResponse(String url, String json, String messagePrefix)
             throws IOException, InterruptedException {
 
-        HttpRequest request = HttpRequest.newBuilder(URI.create(url))
+        HttpRequest request = withServerSlug(HttpRequest.newBuilder(URI.create(url))
                 .timeout(Duration.ofMillis(config.getReadTimeoutMs()))
                 .header("Content-Type", "application/json")
-                .header("X-Game-Auth-Secret", config.getGameAuthSecret())
+                .header("X-Game-Auth-Secret", config.getGameAuthSecret()))
                 .POST(HttpRequest.BodyPublishers.ofString(json))
                 .build();
 
