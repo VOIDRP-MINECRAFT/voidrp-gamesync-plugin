@@ -191,6 +191,30 @@ nation-market:
   gui:
     title: "Рынок государств"
 
+tiktok:
+  # Система награды за переход по TikTok-ссылке.
+  # Публикация анонса: /vrgs tiktok <ссылка на видео> (из консоли или в игре).
+  # Каждому онлайн-игроку уходит персональная кликабельная ссылка; за переход
+  # он один раз получает СЛУЧАЙНУЮ награду из пула ниже (равная вероятность,
+  # количество случайно между min и max).
+  enabled: true
+  # Профиль для fallback-редиректа настраивается на backend (@voidrp.minecraft).
+  # Как часто проверять переходы и выдавать награды (тиков; 20 тиков = 1 сек).
+  poll-interval-ticks: 40
+  # Пул наград. Добавляй сколько угодно строк — выбор равновероятный.
+  # НЕ добавляй bedrock/командные блоки/спавн-яйца и прочую имбу — сломает баланс.
+  rewards:
+    - { item: "minecraft:diamond",            min: 1, max: 4,  name: "Алмазы" }
+    - { item: "minecraft:golden_apple",        min: 1, max: 3,  name: "Золотые яблоки" }
+    - { item: "minecraft:iron_ingot",          min: 4, max: 16, name: "Железо" }
+    - { item: "minecraft:gold_ingot",          min: 4, max: 16, name: "Золото" }
+    - { item: "minecraft:emerald",             min: 1, max: 6,  name: "Изумруды" }
+    - { item: "minecraft:experience_bottle",   min: 4, max: 16, name: "Бутыли опыта" }
+    - { item: "minecraft:ender_pearl",         min: 1, max: 4,  name: "Жемчуг Края" }
+    - { item: "minecraft:netherite_scrap",     min: 1, max: 2,  name: "Незеритовый лом" }
+    - { item: "minecraft:cooked_beef",         min: 8, max: 32, name: "Еда" }
+    - { item: "minecraft:oak_log",             min: 8, max: 32, name: "Древесина" }
+
 webgui:
   # Включить интеграцию с WebGUI модом (HTML-интерфейсы в браузере)
   # Пока false — переключить на true когда фронтенд-страницы будут готовы

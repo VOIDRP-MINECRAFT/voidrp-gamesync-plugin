@@ -1,0 +1,601 @@
+# ============================================================
+# VoidRP — пул наград за переход по TikTok-ссылке.
+# Автогенерация из item_names.json (реальные ID предметов сборки).
+# Только материалы: руды, слитки, самородки, камни, пыль, детали, сплавы.
+# Выбор равновероятный; количество случайно между min и max.
+# Правь свободно: добавляй/удаляй строки, меняй min/max. Затем /vrgs reload.
+# ============================================================
+rewards:
+  - {item: "ae2:certus_quartz_crystal", min: 2, max: 12, name: "Кристалл истинного кварца"}
+  - {item: "ae2:certus_quartz_dust", min: 8, max: 24, name: "Пыль истинного кварца"}
+  - {item: "ae2:charged_certus_quartz_crystal", min: 2, max: 12, name: "Заряженный кристалл истинного кварца"}
+  - {item: "ae2:ender_dust", min: 8, max: 24, name: "Эндер-пыль"}
+  - {item: "ae2:fluix_crystal", min: 2, max: 12, name: "Флюисовый кристалл"}
+  - {item: "ae2:fluix_dust", min: 8, max: 24, name: "Флюисовая пыль"}
+  - {item: "ae2:sky_dust", min: 8, max: 24, name: "Пыль небесного камня"}
+  - {item: "ae2:wireless_access_point", min: 4, max: 16, name: "МЭ беспроводная точка доступа"}
+  - {item: "ae2:wireless_booster", min: 4, max: 16, name: "Беспроводной усилитель"}
+  - {item: "ae2:wireless_crafting_terminal", min: 4, max: 16, name: "Беспроводной терминал изготовления"}
+  - {item: "ae2:wireless_receiver", min: 4, max: 16, name: "Беспроводной приёмник"}
+  - {item: "ae2:wireless_terminal", min: 4, max: 16, name: "Беспроводной терминал"}
+  - {item: "aether:ambrosium_ore", min: 3, max: 12, name: "Амброзиевая руда"}
+  - {item: "aether:ambrosium_shard", min: 2, max: 12, name: "Осколок Амброзиума"}
+  - {item: "aether:gravitite_ore", min: 3, max: 12, name: "Гравититовая Руда"}
+  - {item: "aether:holystone_pressure_plate", min: 4, max: 16, name: "Священнокаменная нажимная плита"}
+  - {item: "aether:life_shard", min: 2, max: 12, name: "Осколок Жизни"}
+  - {item: "aether:skyroot_pressure_plate", min: 4, max: 16, name: "Небесная нажимная плита"}
+  - {item: "aether:zanite_gemstone", min: 2, max: 12, name: "Занитный Самоцвет"}
+  - {item: "aether:zanite_ore", min: 3, max: 12, name: "Занитная руда"}
+  - {item: "alexsmobs:bear_dust", min: 8, max: 24, name: "Медвежья пыль"}
+  - {item: "alexsmobs:crystalized_banana_slug_mucus", min: 2, max: 12, name: "Кристаллизованная банановая склизь"}
+  - {item: "alexsmobs:dimensional_carver_shard_0", min: 2, max: 12, name: "Осколок пространственного резака"}
+  - {item: "alexsmobs:dimensional_carver_shard_1", min: 2, max: 12, name: "Осколок пространственного резака"}
+  - {item: "alexsmobs:dimensional_carver_shard_10", min: 2, max: 12, name: "Осколок пространственного резака"}
+  - {item: "alexsmobs:dimensional_carver_shard_2", min: 2, max: 12, name: "Осколок пространственного резака"}
+  - {item: "alexsmobs:dimensional_carver_shard_3", min: 2, max: 12, name: "Осколок пространственного резака"}
+  - {item: "alexsmobs:dimensional_carver_shard_4", min: 2, max: 12, name: "Осколок пространственного резака"}
+  - {item: "alexsmobs:dimensional_carver_shard_5", min: 2, max: 12, name: "Осколок пространственного резака"}
+  - {item: "alexsmobs:dimensional_carver_shard_6", min: 2, max: 12, name: "Осколок пространственного резака"}
+  - {item: "alexsmobs:dimensional_carver_shard_7", min: 2, max: 12, name: "Осколок пространственного резака"}
+  - {item: "alexsmobs:dimensional_carver_shard_8", min: 2, max: 12, name: "Осколок пространственного резака"}
+  - {item: "alexsmobs:dimensional_carver_shard_9", min: 2, max: 12, name: "Осколок пространственного резака"}
+  - {item: "alexsmobs:moose_headgear", min: 4, max: 16, name: "Лосиные рога"}
+  - {item: "avaritia:neutron_nugget", min: 16, max: 64, name: "Самородок нейтронов"}
+  - {item: "bigreactors:anglesite_crystal", min: 2, max: 12, name: "Англезит (PbSO4)"}
+  - {item: "bigreactors:anglesite_ore", min: 3, max: 12, name: "Руда англезита"}
+  - {item: "bigreactors:benitoite_crystal", min: 2, max: 12, name: "Бенитоит (BaTiSi3O9)"}
+  - {item: "bigreactors:benitoite_ore", min: 3, max: 12, name: "Руда бенитоита"}
+  - {item: "bigreactors:blutonium_dust", min: 8, max: 24, name: "Порошок блутония"}
+  - {item: "bigreactors:blutonium_ingot", min: 6, max: 32, name: "Слиток блутония"}
+  - {item: "bigreactors:blutonium_nugget", min: 16, max: 64, name: "Самородок блутония"}
+  - {item: "bigreactors:cyanite_dust", min: 8, max: 24, name: "Порошок цианита"}
+  - {item: "bigreactors:cyanite_ingot", min: 6, max: 32, name: "Слиток цианита"}
+  - {item: "bigreactors:deepslate_yellorite_ore", min: 3, max: 12, name: "Глубокий сланец руда Йеллория"}
+  - {item: "bigreactors:graphite_dust", min: 8, max: 24, name: "Порошок графита"}
+  - {item: "bigreactors:graphite_ingot", min: 6, max: 32, name: "Графитовый стержень"}
+  - {item: "bigreactors:inanite_dust", min: 8, max: 24, name: "Порошок инанита"}
+  - {item: "bigreactors:inanite_ingot", min: 6, max: 32, name: "Слиток инанита"}
+  - {item: "bigreactors:ludicrite_dust", min: 8, max: 24, name: "Порошок людикрита"}
+  - {item: "bigreactors:ludicrite_ingot", min: 6, max: 32, name: "Слиток людикрита"}
+  - {item: "bigreactors:magentite_dust", min: 8, max: 24, name: "Порошок магентита"}
+  - {item: "bigreactors:magentite_ingot", min: 6, max: 32, name: "Слиток магентита"}
+  - {item: "bigreactors:raw_yellorium", min: 4, max: 24, name: "Сырой Йеллория"}
+  - {item: "bigreactors:ridiculite_dust", min: 8, max: 24, name: "Порошок ридикулита"}
+  - {item: "bigreactors:ridiculite_ingot", min: 6, max: 32, name: "Слиток ридикулита"}
+  - {item: "bigreactors:yellorite_ore", min: 3, max: 12, name: "Руда Йеллория"}
+  - {item: "bigreactors:yellorium_dust", min: 8, max: 24, name: "Порошок Йеллория"}
+  - {item: "bigreactors:yellorium_ingot", min: 6, max: 32, name: "Слиток Йеллория"}
+  - {item: "bigreactors:yellorium_nugget", min: 16, max: 64, name: "Самородок Йеллория"}
+  - {item: "biomeswevegone:aspen_pressure_plate", min: 4, max: 16, name: "Осиновая нажимная плита"}
+  - {item: "biomeswevegone:baobab_pressure_plate", min: 4, max: 16, name: "Баобабовая нажимная плита"}
+  - {item: "biomeswevegone:blue_enchanted_pressure_plate", min: 4, max: 16, name: "Нажимная плита из голубой зачарованной древесины"}
+  - {item: "biomeswevegone:blue_glowcane_powder", min: 8, max: 24, name: "Зелёный порошок светящегося тростника"}
+  - {item: "biomeswevegone:cika_pressure_plate", min: 4, max: 16, name: "Циковая нажимная плита"}
+  - {item: "biomeswevegone:cypress_pressure_plate", min: 4, max: 16, name: "Кипарисовая нажимная плита"}
+  - {item: "biomeswevegone:ebony_pressure_plate", min: 4, max: 16, name: "Эбеновая нажимная плита"}
+  - {item: "biomeswevegone:fir_pressure_plate", min: 4, max: 16, name: "Пихтовая нажимная плита"}
+  - {item: "biomeswevegone:florus_pressure_plate", min: 4, max: 16, name: "Нажимная плита из флоруса"}
+  - {item: "biomeswevegone:green_enchanted_pressure_plate", min: 4, max: 16, name: "Нажимная плита из зелёной зачарованной древесины"}
+  - {item: "biomeswevegone:green_glowcane_powder", min: 8, max: 24, name: "Зелёный порошок светящегося тростника"}
+  - {item: "biomeswevegone:holly_pressure_plate", min: 4, max: 16, name: "Нажимная плита из остролиста"}
+  - {item: "biomeswevegone:jacaranda_pressure_plate", min: 4, max: 16, name: "Нажимная плита из жакаранды"}
+  - {item: "biomeswevegone:mahogany_pressure_plate", min: 4, max: 16, name: "Нажимная плита из махагания"}
+  - {item: "biomeswevegone:maple_pressure_plate", min: 4, max: 16, name: "Кленовая нажимная плита"}
+  - {item: "biomeswevegone:palm_pressure_plate", min: 4, max: 16, name: "Пальмовая нажимная плита"}
+  - {item: "biomeswevegone:pine_pressure_plate", min: 4, max: 16, name: "Сосновая нажимная плита"}
+  - {item: "biomeswevegone:rainbow_eucalyptus_pressure_plate", min: 4, max: 16, name: "Нажимная плита из радужного эвкалипта"}
+  - {item: "biomeswevegone:red_glowcane_powder", min: 8, max: 24, name: "Красный порошок светящегося тростника"}
+  - {item: "biomeswevegone:sakura_pressure_plate", min: 4, max: 16, name: "Нажимная плита из сакуры"}
+  - {item: "biomeswevegone:skyris_pressure_plate", min: 4, max: 16, name: "Нажимная плита из небесного дерева"}
+  - {item: "biomeswevegone:spirit_pressure_plate", min: 4, max: 16, name: "Нажимная плита из духовного дерева"}
+  - {item: "biomeswevegone:white_mangrove_pressure_plate", min: 4, max: 16, name: "Нажимная плита из белой мангры"}
+  - {item: "biomeswevegone:willow_pressure_plate", min: 4, max: 16, name: "Ивовая нажимная плита"}
+  - {item: "biomeswevegone:witch_hazel_pressure_plate", min: 4, max: 16, name: "Нажимная плита из гамамелиса"}
+  - {item: "biomeswevegone:yellow_glowcane_powder", min: 8, max: 24, name: "Жёлтый порошок светящегося тростника"}
+  - {item: "biomeswevegone:zelkova_pressure_plate", min: 4, max: 16, name: "Нажимная плита из дзельквы"}
+  - {item: "cataclysm:ancient_metal_ingot", min: 6, max: 32, name: "Слиток из древнего металла"}
+  - {item: "cataclysm:ancient_metal_nugget", min: 16, max: 64, name: "Кусочек из древнего металла"}
+  - {item: "cataclysm:black_steel_ingot", min: 6, max: 32, name: "Слиток чёрной стали"}
+  - {item: "cataclysm:black_steel_nugget", min: 16, max: 64, name: "Самородок чёрной стали"}
+  - {item: "cataclysm:crystallized_coral", min: 2, max: 12, name: "Кристаллизованный коралл"}
+  - {item: "cataclysm:crystallized_coral_fragments", min: 2, max: 12, name: "Осколок кристаллизованного коралла"}
+  - {item: "cataclysm:cursium_ingot", min: 6, max: 32, name: "Проклятый слиток"}
+  - {item: "cataclysm:enderite_ingot", min: 6, max: 32, name: "Эндеритовый слиток"}
+  - {item: "cataclysm:ignitium_ingot", min: 6, max: 32, name: "Игнитовый слиток"}
+  - {item: "cataclysm:void_crystal", min: 2, max: 12, name: "Кристалл пустоты"}
+  - {item: "cataclysm:void_shard", min: 2, max: 12, name: "Осколок пустоты"}
+  - {item: "copycats:copycat_heavy_weighted_pressure_plate", min: 4, max: 16, name: "Заполняемая большегрузная весовая пластина"}
+  - {item: "copycats:copycat_light_weighted_pressure_plate", min: 4, max: 16, name: "Заполняемая весовая пластина"}
+  - {item: "copycats:copycat_stone_pressure_plate", min: 4, max: 16, name: "Заполняемая каменная нажимная плита"}
+  - {item: "create:adjustable_chain_gearshift", min: 4, max: 16, name: "Регулируемая цепная коробка передач"}
+  - {item: "create:andesite_alloy", min: 6, max: 32, name: "Андезитовый сплав"}
+  - {item: "create:brass_ingot", min: 6, max: 32, name: "Латунный слиток"}
+  - {item: "create:brass_nugget", min: 16, max: 64, name: "Кусочек латуни"}
+  - {item: "create:brass_sheet", min: 4, max: 16, name: "Латунный лист"}
+  - {item: "create:copper_nugget", min: 16, max: 64, name: "Кусочек меди"}
+  - {item: "create:copper_sheet", min: 4, max: 16, name: "Медный лист"}
+  - {item: "create:crushed_raw_aluminum", min: 4, max: 24, name: "Дроблёный рудный алюминий"}
+  - {item: "create:crushed_raw_copper", min: 4, max: 24, name: "Дроблёная рудная медь"}
+  - {item: "create:crushed_raw_gold", min: 4, max: 24, name: "Дроблёное рудное золото"}
+  - {item: "create:crushed_raw_iron", min: 4, max: 24, name: "Дроблёное рудное железо"}
+  - {item: "create:crushed_raw_lead", min: 4, max: 24, name: "Дроблёный рудный свинец"}
+  - {item: "create:crushed_raw_nickel", min: 4, max: 24, name: "Дроблёный рудный никель"}
+  - {item: "create:crushed_raw_osmium", min: 4, max: 24, name: "Дроблёный рудный осмий"}
+  - {item: "create:crushed_raw_platinum", min: 4, max: 24, name: "Дроблёная рудная платина"}
+  - {item: "create:crushed_raw_quicksilver", min: 4, max: 24, name: "Дроблёная рудная ртуть"}
+  - {item: "create:crushed_raw_silver", min: 4, max: 24, name: "Дроблёное рудное серебро"}
+  - {item: "create:crushed_raw_tin", min: 4, max: 24, name: "Дроблёное рудное олово"}
+  - {item: "create:crushed_raw_uranium", min: 4, max: 24, name: "Дроблёный рудный уран"}
+  - {item: "create:crushed_raw_zinc", min: 4, max: 24, name: "Дроблёный рудный цинк"}
+  - {item: "create:deepslate_zinc_ore", min: 3, max: 12, name: "Цинконосный глубинный сланец"}
+  - {item: "create:experience_nugget", min: 16, max: 64, name: "Кусочек опыта"}
+  - {item: "create:gearbox", min: 4, max: 16, name: "Угловая передача"}
+  - {item: "create:gearshift", min: 4, max: 16, name: "Реверсивная передача"}
+  - {item: "create:golden_sheet", min: 4, max: 16, name: "Золотой лист"}
+  - {item: "create:industrial_iron_window", min: 8, max: 24, name: "Украшенное промышленным железом окно"}
+  - {item: "create:industrial_iron_window_pane", min: 8, max: 24, name: "Украшенная промышленным железом оконная панель"}
+  - {item: "create:iron_sheet", min: 4, max: 16, name: "Железный лист"}
+  - {item: "create:powdered_obsidian", min: 8, max: 24, name: "Обсидиановый порошок"}
+  - {item: "create:raw_zinc", min: 4, max: 24, name: "Рудный цинк"}
+  - {item: "create:sequenced_gearshift", min: 4, max: 16, name: "Последовательная коробка передач"}
+  - {item: "create:sturdy_sheet", min: 4, max: 16, name: "Прочный лист"}
+  - {item: "create:unprocessed_obsidian_sheet", min: 4, max: 16, name: "Незаконченный прочный лист"}
+  - {item: "create:vertical_gearbox", min: 4, max: 16, name: "Вертикальная угловая передача"}
+  - {item: "create:zinc_ingot", min: 6, max: 32, name: "Цинковый слиток"}
+  - {item: "create:zinc_nugget", min: 16, max: 64, name: "Кусочек цинка"}
+  - {item: "create:zinc_ore", min: 3, max: 12, name: "Цинковая руда"}
+  - {item: "create_connected:brass_gearbox", min: 4, max: 16, name: "Латунная угловая передача"}
+  - {item: "create_connected:inverted_gearshift", min: 4, max: 16, name: "Инвертированная реверсивная передача"}
+  - {item: "create_connected:parallel_gearbox", min: 4, max: 16, name: "Параллельная угловая передача"}
+  - {item: "create_connected:six_way_gearbox", min: 4, max: 16, name: "Шестисторонняя угловая передача"}
+  - {item: "create_connected:vertical_brass_gearbox", min: 4, max: 16, name: "Вертикальная латунная угловая передача"}
+  - {item: "create_connected:vertical_parallel_gearbox", min: 4, max: 16, name: "Вертикальная параллельная угловая передача"}
+  - {item: "create_connected:vertical_six_way_gearbox", min: 4, max: 16, name: "Вертикальная шестисторонняя угловая передача"}
+  - {item: "createaddition:brass_rod", min: 4, max: 16, name: "Латунный стержень"}
+  - {item: "createaddition:bronze_rod", min: 4, max: 16, name: "Бронзовый стержень"}
+  - {item: "createaddition:copper_rod", min: 4, max: 16, name: "Медный стержень"}
+  - {item: "createaddition:copper_wire", min: 4, max: 16, name: "Медный провод"}
+  - {item: "createaddition:diamond_grit", min: 8, max: 24, name: "Алмазная крошка"}
+  - {item: "createaddition:diamond_grit_sandpaper", min: 8, max: 24, name: "Наждачная бумага с алмазной крошкой"}
+  - {item: "createaddition:electrum_ingot", min: 6, max: 32, name: "Электрумовый слиток"}
+  - {item: "createaddition:electrum_nugget", min: 16, max: 64, name: "Кусочек электрума"}
+  - {item: "createaddition:electrum_rod", min: 4, max: 16, name: "Электрумовый стержень"}
+  - {item: "createaddition:electrum_sheet", min: 4, max: 16, name: "Электрумовый лист"}
+  - {item: "createaddition:electrum_wire", min: 4, max: 16, name: "Электрумовый провод"}
+  - {item: "createaddition:gold_rod", min: 4, max: 16, name: "Золотой стержень"}
+  - {item: "createaddition:gold_wire", min: 4, max: 16, name: "Золотой провод"}
+  - {item: "createaddition:iron_rod", min: 4, max: 16, name: "Железный стержень"}
+  - {item: "createaddition:iron_wire", min: 4, max: 16, name: "Железный провод"}
+  - {item: "createaddition:tesla_coil", min: 4, max: 16, name: "Катушка Теслы"}
+  - {item: "createaddition:zinc_sheet", min: 4, max: 16, name: "Цинковый лист"}
+  - {item: "createbigcannons:bronze_scrap", min: 2, max: 8, name: "Бронзовый лом"}
+  - {item: "createbigcannons:cast_iron_ingot", min: 6, max: 32, name: "Чугунный слиток"}
+  - {item: "createbigcannons:cast_iron_nugget", min: 16, max: 64, name: "Чугунный самородок"}
+  - {item: "createbigcannons:empty_powder_charge", min: 8, max: 24, name: "Пустой пороховой заряд"}
+  - {item: "createbigcannons:nethersteel_ingot", min: 6, max: 32, name: "Слиток незер-стали"}
+  - {item: "createbigcannons:nethersteel_nugget", min: 16, max: 64, name: "Самородок незер-стали"}
+  - {item: "createbigcannons:nitropowder", min: 8, max: 24, name: "Нитро-порох"}
+  - {item: "createbigcannons:partial_recoil_spring", min: 4, max: 16, name: "Частичная возвратная пружина"}
+  - {item: "createbigcannons:powder_charge", min: 8, max: 24, name: "Пороховой заряд"}
+  - {item: "createbigcannons:ram_rod", min: 4, max: 16, name: "Толкатель снарядов"}
+  - {item: "createbigcannons:recoil_spring", min: 4, max: 16, name: "Возвратная пружина"}
+  - {item: "createbigcannons:spring_wire", min: 4, max: 16, name: "Пружинная проволока"}
+  - {item: "createbigcannons:steel_scrap", min: 2, max: 8, name: "Стальной лом"}
+  - {item: "createdieselgenerators:sheet_metal_panel", min: 4, max: 16, name: "Листовая металлическая панель"}
+  - {item: "createdieselgenerators:wire_cutters", min: 4, max: 16, name: "Кусачки для проволоки"}
+  - {item: "deeperdarker:crystallized_amber", min: 2, max: 12, name: "Кристаллизированный янтарь"}
+  - {item: "deeperdarker:echo_pressure_plate", min: 4, max: 16, name: "Нажимная плита из эхо-дерева"}
+  - {item: "deeperdarker:gloomslate_coal_ore", min: 8, max: 32, name: "Мракосланцевая угольная руда"}
+  - {item: "deeperdarker:gloomslate_copper_ore", min: 3, max: 12, name: "Мракосланцевая медная руда"}
+  - {item: "deeperdarker:gloomslate_diamond_ore", min: 3, max: 12, name: "Мракосланцевая алмазная руда"}
+  - {item: "deeperdarker:gloomslate_emerald_ore", min: 3, max: 12, name: "Мракосланцевая изумрудная руда"}
+  - {item: "deeperdarker:gloomslate_gold_ore", min: 3, max: 12, name: "Мракосланцевая золотая руда"}
+  - {item: "deeperdarker:gloomslate_iron_ore", min: 3, max: 12, name: "Мракосланцевая железная руда"}
+  - {item: "deeperdarker:gloomslate_lapis_ore", min: 3, max: 12, name: "Мракосланцевая лазуритовая руда"}
+  - {item: "deeperdarker:gloomslate_redstone_ore", min: 3, max: 12, name: "Мракосланцевая редстоуновая руда"}
+  - {item: "deeperdarker:reinforced_echo_shard", min: 2, max: 12, name: "Укреплённый эхо-осколок"}
+  - {item: "deeperdarker:sculk_stone_coal_ore", min: 8, max: 32, name: "Угленосный скалковый камень"}
+  - {item: "deeperdarker:sculk_stone_copper_ore", min: 3, max: 12, name: "Меденосный скалк-камень"}
+  - {item: "deeperdarker:sculk_stone_diamond_ore", min: 3, max: 12, name: "Алмазоносный скалк-камень"}
+  - {item: "deeperdarker:sculk_stone_emerald_ore", min: 3, max: 12, name: "Изумрудоносный скалк-камень"}
+  - {item: "deeperdarker:sculk_stone_gold_ore", min: 3, max: 12, name: "Золотоносный скалк-камень"}
+  - {item: "deeperdarker:sculk_stone_iron_ore", min: 3, max: 12, name: "Железоносный скалк-камень"}
+  - {item: "deeperdarker:sculk_stone_lapis_ore", min: 3, max: 12, name: "Лазуритоносный скалк-камень"}
+  - {item: "deeperdarker:sculk_stone_redstone_ore", min: 3, max: 12, name: "Редстоуноносный скалк-камень"}
+  - {item: "deeperdarker:soul_crystal", min: 2, max: 12, name: "Кристалл души"}
+  - {item: "deeperdarker:soul_dust", min: 8, max: 24, name: "Пыль души"}
+  - {item: "endersdelight:ender_shard", min: 2, max: 12, name: "Эндер-осколки"}
+  - {item: "farmersdelight:raw_pasta", min: 4, max: 24, name: "Сырая паста"}
+  - {item: "farmersdelight:straw_bale", min: 4, max: 24, name: "Тюк соломы"}
+  - {item: "friendsandfoes:exposed_lightning_rod", min: 4, max: 16, name: "Потемневший громоотвод"}
+  - {item: "friendsandfoes:oxidized_lightning_rod", min: 4, max: 16, name: "Окисленный громоотвод"}
+  - {item: "friendsandfoes:waxed_exposed_lightning_rod", min: 4, max: 16, name: "Вощёный потемневший громоотвод"}
+  - {item: "friendsandfoes:waxed_lightning_rod", min: 4, max: 16, name: "Вощёный громоотвод"}
+  - {item: "friendsandfoes:waxed_oxidized_lightning_rod", min: 4, max: 16, name: "Вощёный окисленный громоотвод"}
+  - {item: "friendsandfoes:waxed_weathered_lightning_rod", min: 4, max: 16, name: "Вощёный состаренный громоотвод"}
+  - {item: "friendsandfoes:weathered_lightning_rod", min: 4, max: 16, name: "Состаренный громоотвод"}
+  - {item: "gardens_of_the_dead:soulblight_pressure_plate", min: 4, max: 16, name: "Душегубная нажимная плита"}
+  - {item: "gardens_of_the_dead:whistlecane_pressure_plate", min: 4, max: 16, name: "Свистростниковая нажимная плита"}
+  - {item: "handcrafted:black_sheet", min: 4, max: 16, name: "Черная простыня"}
+  - {item: "handcrafted:blue_plate", min: 4, max: 16, name: "Синяя тарелка"}
+  - {item: "handcrafted:blue_sheet", min: 4, max: 16, name: "Синяя простыня"}
+  - {item: "handcrafted:brown_sheet", min: 4, max: 16, name: "Коричневая простыня"}
+  - {item: "handcrafted:cyan_sheet", min: 4, max: 16, name: "Бирюзовая простыня"}
+  - {item: "handcrafted:gray_sheet", min: 4, max: 16, name: "Серая простыня"}
+  - {item: "handcrafted:green_sheet", min: 4, max: 16, name: "Зелёная простыня"}
+  - {item: "handcrafted:light_blue_sheet", min: 4, max: 16, name: "Светло-синяя простыня"}
+  - {item: "handcrafted:light_gray_sheet", min: 4, max: 16, name: "Светло-серая простыня"}
+  - {item: "handcrafted:lime_sheet", min: 4, max: 16, name: "Лаймовая простыня"}
+  - {item: "handcrafted:magenta_sheet", min: 4, max: 16, name: "Пурпурная простыня"}
+  - {item: "handcrafted:orange_sheet", min: 4, max: 16, name: "Оранжевая простыня"}
+  - {item: "handcrafted:pink_sheet", min: 4, max: 16, name: "Розовая простыня"}
+  - {item: "handcrafted:purple_sheet", min: 4, max: 16, name: "Фиолетовая простыня"}
+  - {item: "handcrafted:red_sheet", min: 4, max: 16, name: "Красная простыня"}
+  - {item: "handcrafted:terracotta_plate", min: 4, max: 16, name: "Терракотовая тарелка"}
+  - {item: "handcrafted:white_plate", min: 4, max: 16, name: "Белая тарелка"}
+  - {item: "handcrafted:white_sheet", min: 4, max: 16, name: "Белая простыня"}
+  - {item: "handcrafted:yellow_plate", min: 4, max: 16, name: "Жёлтая тарелка"}
+  - {item: "handcrafted:yellow_sheet", min: 4, max: 16, name: "Жёлтая простыня"}
+  - {item: "hybrid-aquatic:prismarine_rod", min: 4, max: 16, name: "Призмариновый прут"}
+  - {item: "illagerinvasion:hallowed_gem", min: 2, max: 12, name: "Священный камень"}
+  - {item: "illagerinvasion:illusionary_dust", min: 8, max: 24, name: "Иллюзорная пыль"}
+  - {item: "illagerinvasion:platinum_sheet", min: 4, max: 16, name: "Платиновый лист"}
+  - {item: "illagerinvasion:unusual_dust", min: 8, max: 24, name: "Необычная пыль"}
+  - {item: "immersive_aircraft:gyrodyne", min: 4, max: 16, name: "Винтокрыл"}
+  - {item: "immersive_aircraft:gyrodyne.description", min: 4, max: 16, name: "Вертолёт с мускульным приводом. Хорошенько толкните его, и он взлетит!"}
+  - {item: "immersive_aircraft:improved_landing_gear", min: 4, max: 16, name: "Улучшенное шасси"}
+  - {item: "immersive_aircraft:industrial_gears", min: 8, max: 24, name: "Промышленные механизмы"}
+  - {item: "immersiveengineering:alloy_smelter", min: 6, max: 32, name: "Плавильная печь"}
+  - {item: "immersiveengineering:alloybrick", min: 6, max: 32, name: "Кирпич плавильной печи"}
+  - {item: "immersiveengineering:bullet.crystalwill", min: 2, max: 12, name: "Кристаллизованные патроны"}
+  - {item: "immersiveengineering:coal_coke", min: 8, max: 32, name: "Коксовый уголь"}
+  - {item: "immersiveengineering:coil_hv", min: 4, max: 16, name: "Катушка высоковольтного провода"}
+  - {item: "immersiveengineering:coil_lv", min: 4, max: 16, name: "Катушка медного провода"}
+  - {item: "immersiveengineering:coil_mv", min: 4, max: 16, name: "Катушка электрумового провода"}
+  - {item: "immersiveengineering:coke", min: 8, max: 32, name: "Блок коксового угля"}
+  - {item: "immersiveengineering:coke_oven", min: 8, max: 32, name: "Коксовая печь"}
+  - {item: "immersiveengineering:cokebrick", min: 8, max: 32, name: "Кирпич коксовой печи"}
+  - {item: "immersiveengineering:concrete_sheet", min: 4, max: 16, name: "Бетонный лист"}
+  - {item: "immersiveengineering:deepslate_ore_aluminum", min: 3, max: 12, name: "Алюминиеносный глубинный сланец"}
+  - {item: "immersiveengineering:deepslate_ore_lead", min: 3, max: 12, name: "Свинценосный глубинный сланец"}
+  - {item: "immersiveengineering:deepslate_ore_nickel", min: 3, max: 12, name: "Никеленосный глубинный сланец"}
+  - {item: "immersiveengineering:deepslate_ore_silver", min: 3, max: 12, name: "Серебреносный глубинный сланец"}
+  - {item: "immersiveengineering:deepslate_ore_uranium", min: 3, max: 12, name: "Ураноносный глубинный сланец"}
+  - {item: "immersiveengineering:dust_aluminum", min: 8, max: 24, name: "Алюминиевая пыль"}
+  - {item: "immersiveengineering:dust_coke", min: 8, max: 32, name: "Коксовая пыль"}
+  - {item: "immersiveengineering:dust_constantan", min: 8, max: 24, name: "Константановая пыль"}
+  - {item: "immersiveengineering:dust_copper", min: 8, max: 24, name: "Медная пыль"}
+  - {item: "immersiveengineering:dust_electrum", min: 8, max: 24, name: "Электрумовая пыль"}
+  - {item: "immersiveengineering:dust_gold", min: 8, max: 24, name: "Золотая пыль"}
+  - {item: "immersiveengineering:dust_hop_graphite", min: 8, max: 24, name: "Пыль HOP-графита"}
+  - {item: "immersiveengineering:dust_iron", min: 8, max: 24, name: "Железная пыль"}
+  - {item: "immersiveengineering:dust_lead", min: 8, max: 24, name: "Свинцовая пыль"}
+  - {item: "immersiveengineering:dust_nickel", min: 8, max: 24, name: "Никелевая пыль"}
+  - {item: "immersiveengineering:dust_saltpeter", min: 8, max: 24, name: "Нитратная пыль"}
+  - {item: "immersiveengineering:dust_silver", min: 8, max: 24, name: "Серебряная пыль"}
+  - {item: "immersiveengineering:dust_steel", min: 8, max: 24, name: "Стальная пыль"}
+  - {item: "immersiveengineering:dust_sulfur", min: 8, max: 24, name: "Серная пыль"}
+  - {item: "immersiveengineering:dust_uranium", min: 8, max: 24, name: "Урановая пыль"}
+  - {item: "immersiveengineering:graphite_electrode", min: 4, max: 16, name: "Графитовый электрод"}
+  - {item: "immersiveengineering:ingot_aluminum", min: 6, max: 32, name: "Алюминиевый слиток"}
+  - {item: "immersiveengineering:ingot_constantan", min: 6, max: 32, name: "Константановый слиток"}
+  - {item: "immersiveengineering:ingot_copper", min: 6, max: 32, name: "Медный слиток"}
+  - {item: "immersiveengineering:ingot_electrum", min: 6, max: 32, name: "Электрумовый слиток"}
+  - {item: "immersiveengineering:ingot_hop_graphite", min: 6, max: 32, name: "Слиток HOP-графита"}
+  - {item: "immersiveengineering:ingot_lead", min: 6, max: 32, name: "Свинцовый слиток"}
+  - {item: "immersiveengineering:ingot_nickel", min: 6, max: 32, name: "Никелевый слиток"}
+  - {item: "immersiveengineering:ingot_silver", min: 6, max: 32, name: "Серебряный слиток"}
+  - {item: "immersiveengineering:ingot_steel", min: 6, max: 32, name: "Стальной слиток"}
+  - {item: "immersiveengineering:ingot_uranium", min: 6, max: 32, name: "Урановый слиток"}
+  - {item: "immersiveengineering:lightning_rod", min: 4, max: 16, name: "Молниетвод"}
+  - {item: "immersiveengineering:map_orevein", min: 3, max: 12, name: "Карта месторождений полезных ископаемых"}
+  - {item: "immersiveengineering:mold_gear", min: 4, max: 16, name: "Металлическая пресс-форма: Шестерня"}
+  - {item: "immersiveengineering:mold_plate", min: 4, max: 16, name: "Металлическая пресс-форма: Пластина"}
+  - {item: "immersiveengineering:mold_rod", min: 4, max: 16, name: "Металлическая пресс-форма: Стержень"}
+  - {item: "immersiveengineering:mold_wire", min: 4, max: 16, name: "Металлическая пресс-форма: Провод"}
+  - {item: "immersiveengineering:nugget_aluminum", min: 16, max: 64, name: "Алюминиевый самородок"}
+  - {item: "immersiveengineering:nugget_constantan", min: 16, max: 64, name: "Константановый самородок"}
+  - {item: "immersiveengineering:nugget_copper", min: 16, max: 64, name: "Медный самородок"}
+  - {item: "immersiveengineering:nugget_electrum", min: 16, max: 64, name: "Электрумовый самородок"}
+  - {item: "immersiveengineering:nugget_iron", min: 16, max: 64, name: "Железный самородок"}
+  - {item: "immersiveengineering:nugget_lead", min: 16, max: 64, name: "Свинцовый самородок"}
+  - {item: "immersiveengineering:nugget_nickel", min: 16, max: 64, name: "Никелевый самородок"}
+  - {item: "immersiveengineering:nugget_silver", min: 16, max: 64, name: "Серебряный самородок"}
+  - {item: "immersiveengineering:nugget_steel", min: 16, max: 64, name: "Стальной самородок"}
+  - {item: "immersiveengineering:nugget_uranium", min: 16, max: 64, name: "Урановый самородок"}
+  - {item: "immersiveengineering:ore_aluminum", min: 3, max: 12, name: "Алюминиевая руда"}
+  - {item: "immersiveengineering:ore_copper", min: 3, max: 12, name: "Медная руда"}
+  - {item: "immersiveengineering:ore_lead", min: 3, max: 12, name: "Свинцовая руда"}
+  - {item: "immersiveengineering:ore_nickel", min: 3, max: 12, name: "Никелевая руда"}
+  - {item: "immersiveengineering:ore_silver", min: 3, max: 12, name: "Серебряная руда"}
+  - {item: "immersiveengineering:ore_uranium", min: 3, max: 12, name: "Урановая руда"}
+  - {item: "immersiveengineering:plate_aluminum", min: 4, max: 16, name: "Алюминиевая пластина"}
+  - {item: "immersiveengineering:plate_constantan", min: 4, max: 16, name: "Константановая пластина"}
+  - {item: "immersiveengineering:plate_copper", min: 4, max: 16, name: "Медная пластина"}
+  - {item: "immersiveengineering:plate_electrum", min: 4, max: 16, name: "Электрумовая пластина"}
+  - {item: "immersiveengineering:plate_gold", min: 4, max: 16, name: "Золотая пластина"}
+  - {item: "immersiveengineering:plate_iron", min: 4, max: 16, name: "Железная пластина"}
+  - {item: "immersiveengineering:plate_lead", min: 4, max: 16, name: "Свинцовая пластина"}
+  - {item: "immersiveengineering:plate_nickel", min: 4, max: 16, name: "Никелевая пластина"}
+  - {item: "immersiveengineering:plate_silver", min: 4, max: 16, name: "Серебряная пластина"}
+  - {item: "immersiveengineering:plate_steel", min: 4, max: 16, name: "Стальная пластина"}
+  - {item: "immersiveengineering:plate_uranium", min: 4, max: 16, name: "Урановая пластина"}
+  - {item: "immersiveengineering:raw_aluminum", min: 4, max: 24, name: "Рудный алюминий"}
+  - {item: "immersiveengineering:raw_lead", min: 4, max: 24, name: "Рудный свинец"}
+  - {item: "immersiveengineering:raw_nickel", min: 4, max: 24, name: "Рудный никель"}
+  - {item: "immersiveengineering:raw_silver", min: 4, max: 24, name: "Рудное серебро"}
+  - {item: "immersiveengineering:raw_uranium", min: 4, max: 24, name: "Рудный уран"}
+  - {item: "immersiveengineering:razor_wire", min: 4, max: 16, name: "Колючая проволока"}
+  - {item: "immersiveengineering:sawdust", min: 8, max: 24, name: "Спасательная подушка"}
+  - {item: "immersiveengineering:sheetmetal_aluminum", min: 4, max: 16, name: "Алюминиевый листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_black", min: 4, max: 16, name: "Чёрный листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_blue", min: 4, max: 16, name: "Синий листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_brown", min: 4, max: 16, name: "Коричневый листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_cyan", min: 4, max: 16, name: "Бирюзовый листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_gray", min: 4, max: 16, name: "Серый листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_green", min: 4, max: 16, name: "Зелёный листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_light_blue", min: 4, max: 16, name: "Голубой листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_light_gray", min: 4, max: 16, name: "Светло-серый листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_lime", min: 4, max: 16, name: "Лаймовый листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_magenta", min: 4, max: 16, name: "Пурпурный листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_orange", min: 4, max: 16, name: "Оранжевый листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_pink", min: 4, max: 16, name: "Розовый листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_purple", min: 4, max: 16, name: "Фиолетовый листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_red", min: 4, max: 16, name: "Красный листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_white", min: 4, max: 16, name: "Белый листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_colored_yellow", min: 4, max: 16, name: "Жёлтый листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_constantan", min: 4, max: 16, name: "Константановый листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_copper", min: 4, max: 16, name: "Медный листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_electrum", min: 4, max: 16, name: "Электрумовый листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_gold", min: 4, max: 16, name: "Золотой листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_iron", min: 4, max: 16, name: "Железный листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_lead", min: 4, max: 16, name: "Свинцовый листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_nickel", min: 4, max: 16, name: "Никелевый листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_silver", min: 4, max: 16, name: "Серебряный листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_steel", min: 4, max: 16, name: "Стальной листовой металл"}
+  - {item: "immersiveengineering:sheetmetal_uranium", min: 4, max: 16, name: "Урановый листовой металл"}
+  - {item: "immersiveengineering:tesla_coil", min: 4, max: 16, name: "Катушка Теслы"}
+  - {item: "immersiveengineering:wire_aluminum", min: 4, max: 16, name: "Алюминиевый провод"}
+  - {item: "immersiveengineering:wire_copper", min: 4, max: 16, name: "Медный провод"}
+  - {item: "immersiveengineering:wire_electrum", min: 4, max: 16, name: "Электрумовый провод"}
+  - {item: "immersiveengineering:wire_lead", min: 4, max: 16, name: "Свинцовый провод"}
+  - {item: "immersiveengineering:wire_steel", min: 4, max: 16, name: "Стальной провод"}
+  - {item: "immersiveengineering:wirecoil_copper", min: 4, max: 16, name: "Моток низковольтного провода"}
+  - {item: "immersiveengineering:wirecoil_copper_ins", min: 4, max: 16, name: "Изолированный моток низковольтного провода"}
+  - {item: "immersiveengineering:wirecoil_electrum", min: 4, max: 16, name: "Моток средневольтного провода"}
+  - {item: "immersiveengineering:wirecoil_electrum_ins", min: 4, max: 16, name: "Изолированный моток средневольтного провода"}
+  - {item: "immersiveengineering:wirecoil_redstone", min: 4, max: 16, name: "Моток редстоунового провода"}
+  - {item: "immersiveengineering:wirecoil_steel", min: 4, max: 16, name: "Моток высоковольтного провода"}
+  - {item: "immersiveengineering:wirecoil_structure_rope", min: 4, max: 16, name: "Моток пенькового каната"}
+  - {item: "immersiveengineering:wirecoil_structure_steel", min: 4, max: 16, name: "Моток стального троса"}
+  - {item: "immersiveengineering:wirecutter", min: 4, max: 16, name: "Кусачки инженера"}
+  - {item: "industrialforegoing:diamond_gear", min: 4, max: 16, name: "Алмазная шестерня"}
+  - {item: "industrialforegoing:gold_gear", min: 4, max: 16, name: "Золотая шестерня"}
+  - {item: "industrialforegoing:iron_gear", min: 4, max: 16, name: "Железная шестерня"}
+  - {item: "industrialforegoing:ore_laser_base", min: 3, max: 12, name: "Лазерная основа"}
+  - {item: "industrialforegoing:pink_slime_ingot", min: 6, max: 32, name: "Слиток розовой слизи"}
+  - {item: "kubejs:coke_bound_brick", min: 8, max: 32, name: "Коксованный кирпич"}
+  - {item: "kubejs:copper_coil", min: 4, max: 16, name: "Медная катушка"}
+  - {item: "kubejs:industrial_bolt", min: 8, max: 24, name: "Промышленный болт"}
+  - {item: "kubejs:industrial_steel_compound", min: 8, max: 24, name: "Стальной промышленный состав"}
+  - {item: "kubejs:reinforced_casing_plate", min: 4, max: 16, name: "Усиленная пластина корпуса"}
+  - {item: "mahoutsukai:powdered_diamond", min: 8, max: 24, name: "Алмазная пыль"}
+  - {item: "mahoutsukai:powdered_emerald", min: 8, max: 24, name: "Изумрудная пыль"}
+  - {item: "mahoutsukai:powdered_ender", min: 8, max: 24, name: "Пыль эндер-жемчуга"}
+  - {item: "mahoutsukai:powdered_eye", min: 8, max: 24, name: "Пыль ока эндера"}
+  - {item: "mahoutsukai:powdered_gold", min: 8, max: 24, name: "Золотая пыль"}
+  - {item: "mahoutsukai:powdered_iron", min: 8, max: 24, name: "Железная пыль"}
+  - {item: "mahoutsukai:powdered_quartz", min: 8, max: 24, name: "Кварцевая пыль"}
+  - {item: "mekanism:alloy_atomic", min: 6, max: 32, name: "Атомный сплав"}
+  - {item: "mekanism:alloy_infused", min: 6, max: 32, name: "Наполненный сплав"}
+  - {item: "mekanism:alloy_reinforced", min: 6, max: 32, name: "Укреплённый сплав"}
+  - {item: "mekanism:chemical_crystallizer", min: 2, max: 12, name: "Химический кристаллизатор"}
+  - {item: "mekanism:crystal_copper", min: 2, max: 12, name: "Медный кристалл"}
+  - {item: "mekanism:crystal_gold", min: 2, max: 12, name: "Золотой кристалл"}
+  - {item: "mekanism:crystal_iron", min: 2, max: 12, name: "Железный кристалл"}
+  - {item: "mekanism:crystal_lead", min: 2, max: 12, name: "Свинцовый кристалл"}
+  - {item: "mekanism:crystal_osmium", min: 2, max: 12, name: "Осмиевый кристалл"}
+  - {item: "mekanism:crystal_tin", min: 2, max: 12, name: "Оловянный кристалл"}
+  - {item: "mekanism:crystal_uranium", min: 2, max: 12, name: "Урановый кристалл"}
+  - {item: "mekanism:deepslate_fluorite_ore", min: 3, max: 12, name: "Флюоритноносный глубинный сланец"}
+  - {item: "mekanism:deepslate_lead_ore", min: 3, max: 12, name: "Свинцовоносный глубинный сланец"}
+  - {item: "mekanism:deepslate_osmium_ore", min: 3, max: 12, name: "Осмиеносный глубинный сланец"}
+  - {item: "mekanism:deepslate_tin_ore", min: 3, max: 12, name: "Оловоносный глубинный сланец"}
+  - {item: "mekanism:deepslate_uranium_ore", min: 3, max: 12, name: "Ураноносный глубинный сланец"}
+  - {item: "mekanism:dirty_dust_copper", min: 8, max: 24, name: "Загрязнённая медная пыль"}
+  - {item: "mekanism:dirty_dust_gold", min: 8, max: 24, name: "Загрязнённая золотая пыль"}
+  - {item: "mekanism:dirty_dust_iron", min: 8, max: 24, name: "Загрязнённая железная пыль"}
+  - {item: "mekanism:dirty_dust_lead", min: 8, max: 24, name: "Загрязнённая свинцовая пыль"}
+  - {item: "mekanism:dirty_dust_osmium", min: 8, max: 24, name: "Загрязнённая осмиевая пыль"}
+  - {item: "mekanism:dirty_dust_tin", min: 8, max: 24, name: "Загрязнённая оловянная пыль"}
+  - {item: "mekanism:dirty_dust_uranium", min: 8, max: 24, name: "Загрязнённая урановая пыль"}
+  - {item: "mekanism:dust_bronze", min: 8, max: 24, name: "Бронзовая пыль"}
+  - {item: "mekanism:dust_charcoal", min: 8, max: 32, name: "Древесноугольная пыль"}
+  - {item: "mekanism:dust_coal", min: 8, max: 32, name: "Угольная пыль"}
+  - {item: "mekanism:dust_copper", min: 8, max: 24, name: "Медная пыль"}
+  - {item: "mekanism:dust_diamond", min: 8, max: 24, name: "Алмазная пыль"}
+  - {item: "mekanism:dust_emerald", min: 8, max: 24, name: "Изумрудная пыль"}
+  - {item: "mekanism:dust_fluorite", min: 8, max: 24, name: "Флюоритовая пыль"}
+  - {item: "mekanism:dust_gold", min: 8, max: 24, name: "Золотая пыль"}
+  - {item: "mekanism:dust_iron", min: 8, max: 24, name: "Железная пыль"}
+  - {item: "mekanism:dust_lapis_lazuli", min: 8, max: 24, name: "Лазуритовая пыль"}
+  - {item: "mekanism:dust_lead", min: 8, max: 24, name: "Свинцовая пыль"}
+  - {item: "mekanism:dust_lithium", min: 8, max: 24, name: "Литиевая пыль"}
+  - {item: "mekanism:dust_obsidian", min: 8, max: 24, name: "Обсидиановая пыль"}
+  - {item: "mekanism:dust_osmium", min: 8, max: 24, name: "Осмиевая пыль"}
+  - {item: "mekanism:dust_quartz", min: 8, max: 24, name: "Кварцевая пыль"}
+  - {item: "mekanism:dust_refined_obsidian", min: 8, max: 24, name: "Пыль очищенного обсидиана"}
+  - {item: "mekanism:dust_steel", min: 8, max: 24, name: "Стальная пыль"}
+  - {item: "mekanism:dust_sulfur", min: 8, max: 24, name: "Серная пыль"}
+  - {item: "mekanism:dust_tin", min: 8, max: 24, name: "Оловянная пыль"}
+  - {item: "mekanism:dust_uranium", min: 8, max: 24, name: "Урановая пыль"}
+  - {item: "mekanism:fluorite_gem", min: 2, max: 12, name: "Флюорит"}
+  - {item: "mekanism:fluorite_ore", min: 3, max: 12, name: "Флюоритовая руда"}
+  - {item: "mekanism:hdpe_rod", min: 4, max: 16, name: "Полиэтиленовый стержень"}
+  - {item: "mekanism:hdpe_sheet", min: 4, max: 16, name: "Полиэтиленовый лист"}
+  - {item: "mekanism:industrial_alarm", min: 8, max: 24, name: "Промышленная сигнализация"}
+  - {item: "mekanism:ingot_bronze", min: 6, max: 32, name: "Бронзовый слиток"}
+  - {item: "mekanism:ingot_lead", min: 6, max: 32, name: "Свинцовый слиток"}
+  - {item: "mekanism:ingot_osmium", min: 6, max: 32, name: "Осмиевый слиток"}
+  - {item: "mekanism:ingot_refined_glowstone", min: 6, max: 32, name: "Очищенный слиток светокамня"}
+  - {item: "mekanism:ingot_refined_obsidian", min: 6, max: 32, name: "Очищенный слиток обсидиана"}
+  - {item: "mekanism:ingot_steel", min: 6, max: 32, name: "Стальной слиток"}
+  - {item: "mekanism:ingot_tin", min: 6, max: 32, name: "Оловянный слиток"}
+  - {item: "mekanism:ingot_uranium", min: 6, max: 32, name: "Урановый слиток"}
+  - {item: "mekanism:lead_ore", min: 3, max: 12, name: "Свинцовая руда"}
+  - {item: "mekanism:nugget_bronze", min: 16, max: 64, name: "Бронзовый кусочек"}
+  - {item: "mekanism:nugget_lead", min: 16, max: 64, name: "Свинцовый кусочек"}
+  - {item: "mekanism:nugget_osmium", min: 16, max: 64, name: "Осмиевый кусочек"}
+  - {item: "mekanism:nugget_refined_glowstone", min: 16, max: 64, name: "Очищенный кусочек светокамня"}
+  - {item: "mekanism:nugget_refined_obsidian", min: 16, max: 64, name: "Очищенный кусочек обсидиана"}
+  - {item: "mekanism:nugget_steel", min: 16, max: 64, name: "Стальной кусочек"}
+  - {item: "mekanism:nugget_tin", min: 16, max: 64, name: "Оловянный кусочек"}
+  - {item: "mekanism:nugget_uranium", min: 16, max: 64, name: "Урановый кусочек"}
+  - {item: "mekanism:osmium_ore", min: 3, max: 12, name: "Осмиевая руда"}
+  - {item: "mekanism:raw_lead", min: 4, max: 24, name: "Рудной свинец"}
+  - {item: "mekanism:raw_osmium", min: 4, max: 24, name: "Рудной осмий"}
+  - {item: "mekanism:raw_tin", min: 4, max: 24, name: "Рудное олово"}
+  - {item: "mekanism:raw_uranium", min: 4, max: 24, name: "Неочищенный уран"}
+  - {item: "mekanism:sawdust", min: 8, max: 24, name: "Опилки"}
+  - {item: "mekanism:shard_copper", min: 2, max: 12, name: "Медный осколок"}
+  - {item: "mekanism:shard_gold", min: 2, max: 12, name: "Золотой осколок"}
+  - {item: "mekanism:shard_iron", min: 2, max: 12, name: "Железный осколок"}
+  - {item: "mekanism:shard_lead", min: 2, max: 12, name: "Свинцовый осколок"}
+  - {item: "mekanism:shard_osmium", min: 2, max: 12, name: "Осмиевый осколок"}
+  - {item: "mekanism:shard_tin", min: 2, max: 12, name: "Оловянный осколок"}
+  - {item: "mekanism:shard_uranium", min: 2, max: 12, name: "Урановый осколок"}
+  - {item: "mekanism:supercharged_coil", min: 4, max: 16, name: "Суперзаряжающая катушка"}
+  - {item: "mekanism:tin_ore", min: 3, max: 12, name: "Оловянная руда"}
+  - {item: "mekanism:uranium_ore", min: 3, max: 12, name: "Урановая руда"}
+  - {item: "mekanismgenerators:control_rod_assembly", min: 4, max: 16, name: "Контролирующие стержни"}
+  - {item: "mekanismgenerators:electromagnetic_coil", min: 4, max: 16, name: "Электромагнитная катушка"}
+  - {item: "minecraft:amethyst_shard", min: 2, max: 12, name: "Осколок аметиста"}
+  - {item: "minecraft:blaze_powder", min: 8, max: 24, name: "Порошок огня"}
+  - {item: "minecraft:blaze_rod", min: 4, max: 16, name: "Стержень огня"}
+  - {item: "minecraft:coal", min: 8, max: 32, name: "Уголь"}
+  - {item: "minecraft:copper_ingot", min: 6, max: 32, name: "Медный слиток"}
+  - {item: "minecraft:end_crystal", min: 2, max: 12, name: "Кристалл края"}
+  - {item: "minecraft:gold_ingot", min: 6, max: 32, name: "Золотой слиток"}
+  - {item: "minecraft:iron_ingot", min: 6, max: 32, name: "Железный слиток"}
+  - {item: "minecraft:prismarine_crystals", min: 2, max: 12, name: "Кристаллы призмарина"}
+  - {item: "minecraft:prismarine_shard", min: 2, max: 12, name: "Осколок призмарина"}
+  - {item: "minecraft:raw_copper", min: 4, max: 24, name: "Сырая медь"}
+  - {item: "minecraft:raw_gold", min: 4, max: 24, name: "Сырое золото"}
+  - {item: "minecraft:raw_iron", min: 4, max: 24, name: "Сырое железо"}
+  - {item: "mynethersdelight:plate_of_cold_striderloaf", min: 4, max: 16, name: "Тарелка холодного лавомерулета"}
+  - {item: "mynethersdelight:plate_of_ghasta_with_cream", min: 4, max: 16, name: "Тарелка гасты со сливками"}
+  - {item: "mynethersdelight:plate_of_striderloaf", min: 4, max: 16, name: "Тарелка лавомерулета"}
+  - {item: "mynethersdelight:plate_of_stuffed_hoglin", min: 4, max: 16, name: "Тарелка фаршированного хоглина"}
+  - {item: "mynethersdelight:plate_of_stuffed_hoglin_ham", min: 4, max: 16, name: "Тарелка ветчины фаршированного хоглина"}
+  - {item: "mynethersdelight:plate_of_stuffed_hoglin_snout", min: 4, max: 16, name: "Тарелка с рылом фаршированного хоглина"}
+  - {item: "mynethersdelight:powdery_button", min: 8, max: 24, name: "Пороховая кнопка"}
+  - {item: "mynethersdelight:powdery_cabinet", min: 8, max: 24, name: "Пороховая кладовая"}
+  - {item: "mynethersdelight:powdery_cane", min: 8, max: 24, name: "Пороховой тростник"}
+  - {item: "mynethersdelight:powdery_hanging_sign", min: 8, max: 24, name: "Пороховая подвесная табличка"}
+  - {item: "mynethersdelight:powdery_mosaic", min: 8, max: 24, name: "Пороховая мозаика"}
+  - {item: "mynethersdelight:powdery_pressure_plate", min: 8, max: 24, name: "Пороховая нажимная плита"}
+  - {item: "mynethersdelight:powdery_sign", min: 8, max: 24, name: "Пороховая табличка"}
+  - {item: "mynethersdelight:powdery_torch", min: 8, max: 24, name: "Пороховой факел"}
+  - {item: "mynethersdelight:powdery_trapdoor", min: 8, max: 24, name: "Пороховой люк"}
+  - {item: "mynethersdelight:raw_stuffed_hoglin", min: 4, max: 24, name: "Сырой фаршированный хоглин"}
+  - {item: "quark:ancient_pressure_plate", min: 4, max: 16, name: "Нажимная плита из древнего дерева"}
+  - {item: "quark:azalea_pressure_plate", min: 4, max: 16, name: "Азалиевая нажимная плита"}
+  - {item: "quark:black_crystal_lamp", min: 2, max: 12, name: "Чёрный хрустальный фонарь"}
+  - {item: "quark:black_shard", min: 2, max: 12, name: "Чёрный стеклянный осколок"}
+  - {item: "quark:blossom_pressure_plate", min: 4, max: 16, name: "Нажимная плита из табебуйи"}
+  - {item: "quark:blue_crystal_lamp", min: 2, max: 12, name: "Голубой хрустальный фонарь"}
+  - {item: "quark:blue_shard", min: 2, max: 12, name: "Синий стеклянный осколок"}
+  - {item: "quark:brown_shard", min: 2, max: 12, name: "Коричневый стеклянный осколок"}
+  - {item: "quark:clear_shard", min: 2, max: 12, name: "Стеклянный осколок"}
+  - {item: "quark:cyan_shard", min: 2, max: 12, name: "Бирюзовый стеклянный осколок"}
+  - {item: "quark:dirty_shard", min: 2, max: 12, name: "Грязный стеклянный осколок"}
+  - {item: "quark:gray_shard", min: 2, max: 12, name: "Бирюзовый стеклянный осколок"}
+  - {item: "quark:green_crystal_lamp", min: 2, max: 12, name: "Зелёный хрустальный фонарь"}
+  - {item: "quark:green_shard", min: 2, max: 12, name: "Зелёный стеклянный осколок"}
+  - {item: "quark:indigo_crystal_lamp", min: 2, max: 12, name: "Синий хрустальный фонарь"}
+  - {item: "quark:iron_plate", min: 4, max: 16, name: "Листовое железо"}
+  - {item: "quark:iron_rod", min: 4, max: 16, name: "Железный стержень"}
+  - {item: "quark:light_blue_shard", min: 2, max: 12, name: "Голубой стеклянный осколок"}
+  - {item: "quark:light_gray_shard", min: 2, max: 12, name: "Светло-серый стеклянный осколок"}
+  - {item: "quark:lime_shard", min: 2, max: 12, name: "Лаймовый стеклянный осколок"}
+  - {item: "quark:magenta_shard", min: 2, max: 12, name: "Пурпурный стеклянный осколок"}
+  - {item: "quark:myalite_crystal", min: 2, max: 12, name: "Кристалл миалита"}
+  - {item: "quark:obsidian_pressure_plate", min: 4, max: 16, name: "Обсидиановая нажимная плита"}
+  - {item: "quark:orange_crystal_lamp", min: 2, max: 12, name: "Оранжевый хрустальный фонарь"}
+  - {item: "quark:orange_shard", min: 2, max: 12, name: "Оранжевый стеклянный осколок"}
+  - {item: "quark:pink_shard", min: 2, max: 12, name: "Розовый стеклянный осколок"}
+  - {item: "quark:purple_shard", min: 2, max: 12, name: "Фиолетовый стеклянный осколок"}
+  - {item: "quark:raw_copper_bricks", min: 4, max: 24, name: "Рудные медные кирпичи"}
+  - {item: "quark:raw_gold_bricks", min: 4, max: 24, name: "Рудные золотые кирпичи"}
+  - {item: "quark:raw_iron_bricks", min: 4, max: 24, name: "Рудные железные кирпичи"}
+  - {item: "quark:red_crystal_lamp", min: 2, max: 12, name: "Красный хрустальный фонарь"}
+  - {item: "quark:red_shard", min: 2, max: 12, name: "Красный стеклянный осколок"}
+  - {item: "quark:rusty_iron_plate", min: 4, max: 16, name: "Ржавое листовое железо"}
+  - {item: "quark:smithing_template.rune.additions_slot_description", min: 4, max: 16, name: "Добавьте пылающий порошок, краску или ничего не добавляйте"}
+  - {item: "quark:smithing_template.rune.applies_to", min: 4, max: 16, name: "Зачарованные предметы"}
+  - {item: "quark:smithing_template.rune.base_slot_description", min: 4, max: 16, name: "Добавьте зачарованный предмет"}
+  - {item: "quark:smithing_template.rune.ingredients", min: 4, max: 16, name: "Пылающий порошок, краска или ничего"}
+  - {item: "quark:violet_crystal_lamp", min: 2, max: 12, name: "Фиолетовый хрустальный фонарь"}
+  - {item: "quark:white_crystal_lamp", min: 2, max: 12, name: "Белый хрустальный фонарь"}
+  - {item: "quark:white_shard", min: 2, max: 12, name: "Белый стеклянный осколок"}
+  - {item: "quark:yellow_crystal_lamp", min: 2, max: 12, name: "Желтый хрустальный фонарь"}
+  - {item: "quark:yellow_shard", min: 2, max: 12, name: "Жёлтый стеклянный осколок"}
+  - {item: "samurai_dynasty:amethyst_ingot", min: 6, max: 32, name: "Покрытый аметистом стальной слиток"}
+  - {item: "samurai_dynasty:aquamarine_ore", min: 3, max: 12, name: "Аквамариновая руда"}
+  - {item: "samurai_dynasty:deepslate_aquamarine_ore", min: 3, max: 12, name: "Аквамариноносный глубинный сланец"}
+  - {item: "samurai_dynasty:deepslate_jade_ore", min: 3, max: 12, name: "Нефритоносный глубинный сланец"}
+  - {item: "samurai_dynasty:deepslate_onyx_ore", min: 3, max: 12, name: "Ониксоносный глубинный сланец"}
+  - {item: "samurai_dynasty:deepslate_ruby_ore", min: 3, max: 12, name: "Рубиноносный глубинный сланец"}
+  - {item: "samurai_dynasty:deepslate_silver_ore", min: 3, max: 12, name: "Сереброносный глубинный сланец"}
+  - {item: "samurai_dynasty:jade_ore", min: 3, max: 12, name: "Нефритовая руда"}
+  - {item: "samurai_dynasty:mask_straw_hat", min: 4, max: 24, name: "Соломенная шляпа"}
+  - {item: "samurai_dynasty:onyx_ore", min: 3, max: 12, name: "Ониксовая руда"}
+  - {item: "samurai_dynasty:quartz_ingot", min: 6, max: 32, name: "Покрытый кварцем стальной слиток"}
+  - {item: "samurai_dynasty:raw_silver", min: 4, max: 24, name: "Рудное серебро"}
+  - {item: "samurai_dynasty:ruby_ore", min: 3, max: 12, name: "Рубиновая руда"}
+  - {item: "samurai_dynasty:silver_ingot", min: 6, max: 32, name: "Серебряный слиток"}
+  - {item: "samurai_dynasty:silver_nugget", min: 16, max: 64, name: "Кусочек серебра"}
+  - {item: "samurai_dynasty:silver_ore", min: 3, max: 12, name: "Серебряная руда"}
+  - {item: "samurai_dynasty:steel_ingot", min: 6, max: 32, name: "Стальной слиток"}
+  - {item: "samurai_dynasty:steel_nugget", min: 16, max: 64, name: "Кусочек стали"}
+  - {item: "samurai_dynasty:straw_hat", min: 4, max: 24, name: "Соломенная шляпа"}
+  - {item: "supplementaries:blaze_rod", min: 4, max: 16, name: "Огненный стержень"}
+  - {item: "supplementaries:crystal_display", min: 2, max: 12, name: "Кристаллический дисплей"}
+  - {item: "tfmg:aluminum_ingot", min: 6, max: 32, name: "Алюминиевый слиток"}
+  - {item: "tfmg:cast_iron_ingot", min: 6, max: 32, name: "Чугунный слиток"}
+  - {item: "tfmg:charcoal_dust", min: 8, max: 32, name: "Пыль древесного угля"}
+  - {item: "tfmg:coal_coke", min: 8, max: 32, name: "Коксовый уголь"}
+  - {item: "tfmg:coal_coke_dust", min: 8, max: 32, name: "Коксовая пыль"}
+  - {item: "tfmg:coke_oven", min: 8, max: 32, name: "Коксовая печь"}
+  - {item: "tfmg:heavy_plate", min: 4, max: 16, name: "Тяжёлая пластина"}
+  - {item: "tfmg:ingot_mold", min: 6, max: 32, name: "Форма слитка для выплавки"}
+  - {item: "tfmg:nitrate_dust", min: 8, max: 24, name: "Нитратная пыль"}
+  - {item: "tfmg:plastic_sheet", min: 4, max: 16, name: "Пластиковый лист"}
+  - {item: "tfmg:steel_ingot", min: 6, max: 32, name: "Стальной слиток"}
+  - {item: "tfmg:sulfur_dust", min: 8, max: 24, name: "Серная пыль"}
+  - {item: "tfmg:thermite_powder", min: 8, max: 24, name: "Термитный порошок"}
+  - {item: "tfmg:unprocessed_heavy_plate", min: 4, max: 16, name: "Незаконченная тяжёлая плита"}
+  - {item: "toms_storage:adv_wireless_terminal", min: 4, max: 16, name: "Улучшенный беспроводной терминал"}
+  - {item: "toms_storage:wireless_terminal", min: 4, max: 16, name: "Беспроводной терминал"}
+  - {item: "twilightforest:canopy_pressure_plate", min: 4, max: 16, name: "Нажимная плита из кронового дерева"}
+  - {item: "twilightforest:dark_pressure_plate", min: 4, max: 16, name: "Нажимная плита из тёмного дерева"}
+  - {item: "twilightforest:fiery_ingot", min: 6, max: 32, name: "Огненный слиток"}
+  - {item: "twilightforest:filled_ore_map", min: 3, max: 12, name: "Карта лабиринта и руд"}
+  - {item: "twilightforest:knightmetal_ingot", min: 6, max: 32, name: "Рыцарометаллический слиток"}
+  - {item: "twilightforest:mangrove_pressure_plate", min: 4, max: 16, name: "Мангровая нажимная плита"}
+  - {item: "twilightforest:mining_pressure_plate", min: 4, max: 16, name: "Нажимная плита из шахтного дерева"}
+  - {item: "twilightforest:ore_magnet", min: 3, max: 12, name: "Рудный магнит"}
+  - {item: "twilightforest:ore_map", min: 3, max: 12, name: "Пустая карта лабиринта и руд"}
+  - {item: "twilightforest:ore_meter", min: 3, max: 12, name: "Рудометр"}
+  - {item: "twilightforest:raw_meef", min: 4, max: 24, name: "Сырая минотаврятина"}
+  - {item: "twilightforest:raw_venison", min: 4, max: 24, name: "Сырая оленина"}
+  - {item: "twilightforest:sorting_pressure_plate", min: 4, max: 16, name: "Нажимная плита из сортировочного дерева"}
+  - {item: "twilightforest:steeleaf_ingot", min: 6, max: 32, name: "Слиток стальной листвы"}
+  - {item: "twilightforest:time_pressure_plate", min: 4, max: 16, name: "Нажимная плита из дерева времени"}
+  - {item: "twilightforest:transformation_powder", min: 8, max: 24, name: "Порошок превращений"}
+  - {item: "twilightforest:transformation_pressure_plate", min: 4, max: 16, name: "Нажимная плита из дерева превращений"}
+  - {item: "twilightforest:twilight_oak_pressure_plate", min: 4, max: 16, name: "Нажимная плита из сумеречного дуба"}
+  - {item: "vanillabackport:pale_oak_pressure_plate", min: 4, max: 16, name: "Нажимная плита из бледного дуба"}
+  - {item: "waystones:attuned_shard", min: 2, max: 12, name: "Настроенный осколок"}
+  - {item: "waystones:warp_dust", min: 8, max: 24, name: "Пыль перемещения"}
+  - {item: "waystones:warp_plate", min: 4, max: 16, name: "Плита перемещения"}

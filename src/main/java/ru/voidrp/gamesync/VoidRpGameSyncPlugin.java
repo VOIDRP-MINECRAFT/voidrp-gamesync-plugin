@@ -56,6 +56,7 @@ import ru.voidrp.gamesync.service.ModdedShopItemFixupService;
 import ru.voidrp.gamesync.service.SyncScheduler;
 import ru.voidrp.gamesync.service.TerritoryPointsResolver;
 import ru.voidrp.gamesync.service.WebActionPollService;
+import ru.voidrp.gamesync.service.TikTokRewardService;
 import ru.voidrp.gamesync.service.WebGuiBridgeService;
 import ru.voidrp.gamesync.store.PluginDataStore;
 
@@ -92,6 +93,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
     private PlayerMarketGuiService playerMarketGuiService;
     private WebGuiBridgeService webGuiBridgeService;
     private WebActionPollService webActionPollService;
+    private TikTokRewardService tikTokRewardService;
 
     @Override
     public void onEnable() {
@@ -99,6 +101,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         saveDefaultConfig();
         saveResourceIfMissing("nations.yml");
         saveResourceIfMissing("data.yml");
+        saveResourceIfMissing("tiktok_rewards.yml");
 
         setupEconomy();
         buildServices();
@@ -121,6 +124,8 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         if (gameSyncConfig.isWebGuiEnabled()) {
             webActionPollService.start();
         }
+
+        tikTokRewardService.start();
 
         getLogger().info("VoidRpGameSync enabled.");
     }
@@ -145,6 +150,9 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         if (webActionPollService != null) {
             webActionPollService.stop();
         }
+        if (tikTokRewardService != null) {
+            tikTokRewardService.stop();
+        }
         if (playerMarketGuiService != null) {
             playerMarketGuiService.closeAll();
         }
@@ -158,6 +166,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         if (economyShopVisualSyncService != null) economyShopVisualSyncService.stop();
         if (allianceCacheService != null) allianceCacheService.stop();
         if (webActionPollService != null) webActionPollService.stop();
+        if (tikTokRewardService != null) tikTokRewardService.stop();
         buildServices();
         if (gameSyncConfig.isSyncEnabled()) syncScheduler.start();
         if (gameSyncConfig.isEconomyMarketEnabled()) {
@@ -171,6 +180,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         if (gameSyncConfig.isWebGuiEnabled()) {
             webActionPollService.start();
         }
+        tikTokRewardService.start();
     }
 
     private void buildServices() {
@@ -204,6 +214,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         this.playerMarketGuiService = new PlayerMarketGuiService(this);
         this.webGuiBridgeService = new WebGuiBridgeService(this);
         this.webActionPollService = new WebActionPollService(this);
+        this.tikTokRewardService = new TikTokRewardService(this);
     }
 
     private void registerCommands() {
@@ -320,6 +331,10 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
 
     public BackendClient getBackendClient() {
         return backendClient;
+    }
+
+    public TikTokRewardService getTikTokRewardService() {
+        return tikTokRewardService;
     }
 
     public NationRegistry getNationRegistry() {

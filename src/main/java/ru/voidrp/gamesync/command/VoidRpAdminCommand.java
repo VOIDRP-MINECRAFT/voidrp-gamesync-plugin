@@ -65,6 +65,10 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
                 handleMarket(sender, args);
                 return true;
             }
+            case "tiktok" -> {
+                handleTikTok(sender, args);
+                return true;
+            }
             default -> {
                 sendHelp(sender);
                 return true;
@@ -300,6 +304,21 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage("§cНеизвестный режим reward.");
     }
 
+    private void handleTikTok(CommandSender sender, String[] args) {
+        if (args.length < 2) {
+            sender.sendMessage("§eИспользование: /vrgs tiktok <ссылка на видео>");
+            return;
+        }
+        // Join the rest of the args in case the URL contains spaces (it shouldn't,
+        // but be forgiving) — take everything after the subcommand.
+        StringBuilder url = new StringBuilder();
+        for (int i = 1; i < args.length; i++) {
+            if (i > 1) url.append(' ');
+            url.append(args[i]);
+        }
+        plugin.getTikTokRewardService().announce(url.toString().trim(), sender);
+    }
+
     private void sendHelp(CommandSender sender) {
         sender.sendMessage("§6/vrgs reload");
         sender.sendMessage("§6/vrgs sync all");
@@ -309,6 +328,7 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage("§6/vrgs skin clear <player>");
         sender.sendMessage("§6/vrgs territory debug <slug>");
         sender.sendMessage("§6/vrgs reward <resolve|apply> <player>");
+        sender.sendMessage("§6/vrgs tiktok <ссылка> §7— анонс ролика + награда за переход");
     }
 
     @Override
@@ -318,7 +338,7 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 1) {
-            return filter(List.of("reload", "sync", "skin", "territory", "reward", "market"), args[0]);
+            return filter(List.of("reload", "sync", "skin", "territory", "reward", "market", "tiktok"), args[0]);
         }
 
         if (args.length == 2) {

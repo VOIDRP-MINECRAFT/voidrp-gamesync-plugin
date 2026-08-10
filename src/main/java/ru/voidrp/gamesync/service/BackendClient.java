@@ -334,6 +334,30 @@ public final class BackendClient {
 
     private record TierUnlockRequest(String minecraft_uuid, String minecraft_nickname, String tier_name) {}
 
+    // ── TikTok click-reward endpoints ──────────────────────────────────────────
+
+    public ru.voidrp.gamesync.model.TikTokCampaignResponse createTikTokCampaign(String videoUrl)
+            throws IOException, InterruptedException {
+        String url = apiUrl("/game-sync/tiktok/campaign");
+        HttpResponse<String> response = postJsonForResponse(
+                url, gson.toJson(new TikTokCampaignRequest(videoUrl, true)), "TikTok campaign create failed");
+        return gson.fromJson(response.body(), ru.voidrp.gamesync.model.TikTokCampaignResponse.class);
+    }
+
+    public ru.voidrp.gamesync.model.TikTokPendingRewardsResponse pollTikTokRewards()
+            throws IOException, InterruptedException {
+        HttpResponse<String> response = get(apiUrl("/game-sync/tiktok/pending-rewards"));
+        return gson.fromJson(response.body(), ru.voidrp.gamesync.model.TikTokPendingRewardsResponse.class);
+    }
+
+    public void ackTikTokRewards(java.util.List<String> ids) throws IOException, InterruptedException {
+        String url = apiUrl("/game-sync/tiktok/pending-rewards/ack");
+        postJson(url, gson.toJson(new TikTokAckRequest(ids)), "TikTok reward ack failed");
+    }
+
+    private record TikTokCampaignRequest(String video_url, boolean deactivate_previous) {}
+    private record TikTokAckRequest(java.util.List<String> ids) {}
+
     /** Adds the optional X-Server-Slug header for explicit multi-server attribution. */
     private HttpRequest.Builder withServerSlug(HttpRequest.Builder builder) {
         String slug = config.getServerSlug();
