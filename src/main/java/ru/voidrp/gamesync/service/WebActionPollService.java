@@ -77,6 +77,7 @@ public final class WebActionPollService {
             case "cancel_buy"   -> processCancelBuy(action);
             case "pickup"       -> processPickup(action);
             case "command"      -> processCommand(action);
+            case "open_gui"     -> processOpenGui(action);
             default             -> ackFailed(action.action_id, "Unknown action_type: " + action.action_type);
         }
     }
@@ -113,6 +114,47 @@ public final class WebActionPollService {
             // Runs server-side AS THE PLAYER (permission-checked) — the client
             // run_command bridge doesn't execute plugin commands on this server.
             player.performCommand(full);
+            ackDone(actionId);
+        });
+    }
+
+    // ── open_gui (opens a WEBGUI page in-game, e.g. from a notification) ───────
+
+    private static final java.util.Set<String> ALLOWED_PAGES = java.util.Set.of(
+        "menu", "market", "nmarket", "treasury", "research", "alliance", "battlepass", "quests");
+
+    private void processOpenGui(WebActionItem action) {
+        String actionId = action.action_id;
+        String playerName = action.player_name;
+        String pageRaw = str(action.payload, "page");
+        final String page = pageRaw == null ? "" : pageRaw.toLowerCase(java.util.Locale.ROOT);
+        if (!ALLOWED_PAGES.contains(page)) {
+            ackFailed(actionId, "Page not allowed: " + page);
+            return;
+        }
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            Player player = Bukkit.getPlayerExact(playerName);
+            if (player == null || !player.isOnline()) {
+                ackFailed(actionId, "Player offline");
+                return;
+            }
+            var cfg = plugin.getGameSyncConfig();
+            String url = switch (page) {
+                case "menu"       -> cfg.getWebGuiMenuUrl();
+                case "market"     -> cfg.getWebGuiMarketUrl();
+                case "nmarket"    -> cfg.getWebGuiNationMarketUrl();
+                case "treasury"   -> cfg.getWebGuiTreasuryUrl();
+                case "research"   -> cfg.getWebGuiResearchUrl();
+                case "alliance"   -> cfg.getWebGuiAllianceUrl();
+                case "battlepass" -> cfg.getWebGuiBattlepassUrl();
+                case "quests"     -> cfg.getWebGuiQuestsUrl();
+                default           -> null;
+            };
+            if (url == null || url.isBlank()) {
+                ackFailed(actionId, "No url for page: " + page);
+                return;
+            }
+            plugin.getWebGuiBridgeService().openGui(player, url);
             ackDone(actionId);
         });
     }
