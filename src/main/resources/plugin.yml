@@ -69,6 +69,11 @@ commands:
     usage: /pm [sell|buy|cancel|confirm]
     permission: voidrp.pm.use
     aliases: [pmarket, playermarket]
+  nres:
+    description: Nation research (tech tree) — view and buy upgrades
+    usage: /nres [buy <исследование>]
+    permission: voidrp.gamesync.research.use
+    aliases: [nresearch]
 
 permissions:
   voidrp.gamesync.admin:
@@ -92,6 +97,8 @@ permissions:
   voidrp.alliance.use:
     default: true
   voidrp.pm.use:
+    default: true
+  voidrp.gamesync.research.use:
     default: true
   voidrp.battlepass.premium:
     default: false

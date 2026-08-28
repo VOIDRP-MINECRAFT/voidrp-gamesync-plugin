@@ -21,10 +21,12 @@ import ru.voidrp.gamesync.command.PlayerNationTreasuryCommand;
 import ru.voidrp.gamesync.command.PlayerNationTreasuryHistoryCommand;
 import ru.voidrp.gamesync.command.PlayerNationWithdrawCommand;
 import ru.voidrp.gamesync.command.AllianceCommand;
+import ru.voidrp.gamesync.command.NationResearchCommand;
 import ru.voidrp.gamesync.command.VoidRpAdminCommand;
 import ru.voidrp.gamesync.config.GameSyncConfig;
 import ru.voidrp.gamesync.config.NationRegistry;
 import ru.voidrp.gamesync.listener.AlliancePvpListener;
+import ru.voidrp.gamesync.listener.GatherBonusListener;
 import ru.voidrp.gamesync.listener.ModdedShopDisplayListener;
 import ru.voidrp.gamesync.listener.NationMarketGuiListener;
 import ru.voidrp.gamesync.listener.PlayerJoinRewardListener;
@@ -34,6 +36,7 @@ import ru.voidrp.gamesync.listener.TabListListener;
 import ru.voidrp.gamesync.listener.TierTrackingListener;
 import ru.voidrp.gamesync.listener.WebGuiPlayerJoinListener;
 import ru.voidrp.gamesync.service.AllianceCacheService;
+import ru.voidrp.gamesync.service.NationResearchEffectService;
 import ru.voidrp.gamesync.service.BackendClient;
 import ru.voidrp.gamesync.service.PlayerMarketGuiService;
 import ru.voidrp.gamesync.service.PlayerMarketService;
@@ -89,6 +92,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
     private NationMarketConfirmService nationMarketConfirmService;
     private NationMarketGuiService nationMarketGuiService;
     private AllianceCacheService allianceCacheService;
+    private NationResearchEffectService nationResearchEffectService;
     private PlayerMarketService playerMarketService;
     private PlayerMarketGuiService playerMarketGuiService;
     private WebGuiBridgeService webGuiBridgeService;
@@ -120,6 +124,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         }
 
         allianceCacheService.start();
+        nationResearchEffectService.start();
 
         if (gameSyncConfig.isWebGuiEnabled()) {
             webActionPollService.start();
@@ -147,6 +152,9 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         if (allianceCacheService != null) {
             allianceCacheService.stop();
         }
+        if (nationResearchEffectService != null) {
+            nationResearchEffectService.stop();
+        }
         if (webActionPollService != null) {
             webActionPollService.stop();
         }
@@ -165,6 +173,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         if (economyMarketSyncService != null) economyMarketSyncService.stop();
         if (economyShopVisualSyncService != null) economyShopVisualSyncService.stop();
         if (allianceCacheService != null) allianceCacheService.stop();
+        if (nationResearchEffectService != null) nationResearchEffectService.stop();
         if (webActionPollService != null) webActionPollService.stop();
         if (tikTokRewardService != null) tikTokRewardService.stop();
         buildServices();
@@ -177,6 +186,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
             moddedShopItemFixupService.scheduleFixup();
         }
         allianceCacheService.start();
+        nationResearchEffectService.start();
         if (gameSyncConfig.isWebGuiEnabled()) {
             webActionPollService.start();
         }
@@ -210,6 +220,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         this.nationMarketConfirmService = new NationMarketConfirmService();
         this.nationMarketGuiService = new NationMarketGuiService(this, itemStackSnapshotService, nationMarketInventoryService);
         this.allianceCacheService = new AllianceCacheService(this, backendClient);
+        this.nationResearchEffectService = new NationResearchEffectService(this);
         this.playerMarketService = new PlayerMarketService(this);
         this.playerMarketGuiService = new PlayerMarketGuiService(this);
         this.webGuiBridgeService = new WebGuiBridgeService(this);
@@ -253,6 +264,10 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         AllianceCommand allianceCommand = new AllianceCommand(this);
         registerCommand("alliance", allianceCommand, allianceCommand);
         registerCommand("ally", allianceCommand, allianceCommand);
+
+        NationResearchCommand researchCommand = new NationResearchCommand(this);
+        registerCommand("nres", researchCommand, researchCommand);
+        registerCommand("nresearch", researchCommand, researchCommand);
 
         PlayerMarketCommand playerMarketCommand = new PlayerMarketCommand(this);
         registerCommand("pm", playerMarketCommand, playerMarketCommand);
@@ -298,6 +313,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerMarketListener(this, pmCmd), this);
         Bukkit.getPluginManager().registerEvents(new TierTrackingListener(this), this);
         Bukkit.getPluginManager().registerEvents(new AlliancePvpListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new GatherBonusListener(this), this);
         Bukkit.getPluginManager().registerEvents(
                 new ModdedShopDisplayListener(this, economyShopGuiBridgeService.getModdedShopConfig()), this);
         this.tabListListener = new TabListListener(this);
@@ -407,6 +423,10 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
 
     public NationMarketGuiService getNationMarketGuiService() {
         return nationMarketGuiService;
+    }
+
+    public NationResearchEffectService getNationResearchEffectService() {
+        return nationResearchEffectService;
     }
 
     public AllianceCacheService getAllianceCacheService() {

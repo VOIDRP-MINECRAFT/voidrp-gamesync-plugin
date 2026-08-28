@@ -76,8 +76,45 @@ public final class WebActionPollService {
             case "cancel_sell"  -> processCancelSell(action);
             case "cancel_buy"   -> processCancelBuy(action);
             case "pickup"       -> processPickup(action);
+            case "command"      -> processCommand(action);
             default             -> ackFailed(action.action_id, "Unknown action_type: " + action.action_type);
         }
+    }
+
+    // ── command (whitelisted, opens an in-game GUI for the player) ─────────────
+
+    private static final java.util.Set<String> ALLOWED_COMMANDS = java.util.Set.of(
+        "dailyquest", "bossquest", "delivery", "shop", "nmarket", "battlepass", "nationdonate", "bp");
+    // Only these characters may appear in a web-queued command (the backend already
+    // validated it; this is a second guard against injection).
+    private static final java.util.regex.Pattern SAFE_COMMAND =
+        java.util.regex.Pattern.compile("^[A-Za-z0-9 ._-]{1,80}$");
+
+    private void processCommand(WebActionItem action) {
+        String actionId = action.action_id;
+        String playerName = action.player_name;
+        String command = str(action.payload, "command");
+        if (command == null || command.isBlank()) {
+            ackFailed(actionId, "Empty command");
+            return;
+        }
+        String full = command.trim();
+        String base = full.split(" ")[0].toLowerCase(java.util.Locale.ROOT);
+        if (!ALLOWED_COMMANDS.contains(base) || !SAFE_COMMAND.matcher(full).matches()) {
+            ackFailed(actionId, "Command not allowed: " + base);
+            return;
+        }
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            Player player = Bukkit.getPlayerExact(playerName);
+            if (player == null || !player.isOnline()) {
+                ackFailed(actionId, "Player offline");
+                return;
+            }
+            // Runs server-side AS THE PLAYER (permission-checked) — the client
+            // run_command bridge doesn't execute plugin commands on this server.
+            player.performCommand(full);
+            ackDone(actionId);
+        });
     }
 
     // ── buy ───────────────────────────────────────────────────────────────────

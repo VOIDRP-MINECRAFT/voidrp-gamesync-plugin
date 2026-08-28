@@ -22,6 +22,12 @@ sync:
   sync-on-player-join: true
   player-join-delay-ticks: 80
 
+# Weekly top-nation season rewards. Pays real treasury prizes to the top nations
+# and broadcasts the results, so it is OFF by default — enable when you want the
+# season system live (the backend still only pays once per 7-day period).
+nation-season:
+  auto-rewards: false
+
 territory:
   source: "worldguard"
   worldguard:
@@ -227,6 +233,7 @@ webgui:
     market: "https://void-rp.ru/game-ui/market"
     nation-market: "https://void-rp.ru/game-ui/nmarket"
     treasury: "https://void-rp.ru/game-ui/treasury"
+    research: "https://void-rp.ru/game-ui/research"
     alliance: "https://void-rp.ru/game-ui/alliance"
     battlepass: "https://void-rp.ru/game-ui/battlepass"
     quests: "https://void-rp.ru/game-ui/quests"

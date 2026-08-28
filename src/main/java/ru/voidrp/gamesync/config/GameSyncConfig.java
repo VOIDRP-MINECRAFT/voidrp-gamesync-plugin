@@ -91,11 +91,14 @@ public final class GameSyncConfig {
     private final double startingBalanceAmount;
     private final long startingBalanceDelayTicks;
 
+    private final boolean seasonAutoRewardsEnabled;
+
     private final boolean webGuiEnabled;
     private final String webGuiMenuUrl;
     private final String webGuiMarketUrl;
     private final String webGuiNationMarketUrl;
     private final String webGuiTreasuryUrl;
+    private final String webGuiResearchUrl;
     private final String webGuiAllianceUrl;
     private final String webGuiBattlepassUrl;
     private final String webGuiQuestsUrl;
@@ -118,6 +121,8 @@ public final class GameSyncConfig {
 
         this.backendNationSourceEnabled = plugin.getConfig().getBoolean("nation-source.backend-enabled", true);
         this.fallbackYmlEnabled = plugin.getConfig().getBoolean("nation-source.fallback-yml-enabled", true);
+
+        this.seasonAutoRewardsEnabled = plugin.getConfig().getBoolean("nation-season.auto-rewards", false);
 
         this.syncEnabled = plugin.getConfig().getBoolean("sync.enabled", true);
         this.syncPeriodTicks = Math.max(20L, plugin.getConfig().getLong("sync.period-seconds", 300L) * 20L);
@@ -208,6 +213,7 @@ public final class GameSyncConfig {
         this.webGuiMarketUrl = plugin.getConfig().getString("webgui.urls.market", "https://void-rp.ru/game-ui/market");
         this.webGuiNationMarketUrl = plugin.getConfig().getString("webgui.urls.nation-market", "https://void-rp.ru/game-ui/nmarket");
         this.webGuiTreasuryUrl = plugin.getConfig().getString("webgui.urls.treasury", "https://void-rp.ru/game-ui/treasury");
+        this.webGuiResearchUrl = plugin.getConfig().getString("webgui.urls.research", "https://void-rp.ru/game-ui/research");
         this.webGuiAllianceUrl = plugin.getConfig().getString("webgui.urls.alliance", "https://void-rp.ru/game-ui/alliance");
         this.webGuiBattlepassUrl = plugin.getConfig().getString("webgui.urls.battlepass", "https://void-rp.ru/game-ui/battlepass");
         this.webGuiQuestsUrl = plugin.getConfig().getString("webgui.urls.quests", "https://void-rp.ru/game-ui/quests");
@@ -308,11 +314,14 @@ public final class GameSyncConfig {
     public double getStartingBalanceAmount() { return startingBalanceAmount; }
     public long getStartingBalanceDelayTicks() { return startingBalanceDelayTicks; }
 
+    public boolean isSeasonAutoRewardsEnabled() { return seasonAutoRewardsEnabled; }
+
     public boolean isWebGuiEnabled() { return webGuiEnabled; }
     public String getWebGuiMenuUrl() { return webGuiMenuUrl; }
     public String getWebGuiMarketUrl() { return webGuiMarketUrl; }
     public String getWebGuiNationMarketUrl() { return webGuiNationMarketUrl; }
     public String getWebGuiTreasuryUrl() { return webGuiTreasuryUrl; }
+    public String getWebGuiResearchUrl() { return webGuiResearchUrl; }
     public String getWebGuiAllianceUrl() { return webGuiAllianceUrl; }
     public String getWebGuiBattlepassUrl() { return webGuiBattlepassUrl; }
     public String getWebGuiQuestsUrl() { return webGuiQuestsUrl; }

@@ -25,6 +25,11 @@ import ru.voidrp.gamesync.model.GameNationDonationRequest;
 import ru.voidrp.gamesync.model.GameNationListResponse;
 import ru.voidrp.gamesync.model.GameNationTreasuryWithdrawRequest;
 import ru.voidrp.gamesync.model.MarketPriceItem;
+import ru.voidrp.gamesync.model.NationResearchEffectsResponse;
+import ru.voidrp.gamesync.model.NationResearchInterestResponse;
+import ru.voidrp.gamesync.model.NationResearchOverviewResponse;
+import ru.voidrp.gamesync.model.NationResearchPurchaseResponse;
+import ru.voidrp.gamesync.model.NationSeasonAwardResponse;
 import ru.voidrp.gamesync.model.MarketPriceSnapshotResponse;
 import ru.voidrp.gamesync.model.MarketTransactionPushRequest;
 import ru.voidrp.gamesync.model.NationDefinition;
@@ -216,6 +221,47 @@ public final class BackendClient {
     }
 
     private record NationCapitalRequest(int capital_x, int capital_z, String capital_world) {}
+
+    // ── Nation research (tech tree) endpoints ─────────────────────────────────
+
+    public NationResearchOverviewResponse getNationResearchOverview(String minecraftNickname)
+            throws IOException, InterruptedException {
+        String url = apiUrl("/game-sync/nation-research/overview?minecraft_nickname=" + encode(minecraftNickname));
+        HttpResponse<String> response = get(url);
+        return gson.fromJson(response.body(), NationResearchOverviewResponse.class);
+    }
+
+    public NationResearchPurchaseResponse purchaseNationResearch(String minecraftNickname, String researchKey)
+            throws IOException, InterruptedException {
+        String url = apiUrl("/game-sync/nation-research/purchase");
+        String json = gson.toJson(new ResearchPurchaseRequest(minecraftNickname, researchKey));
+        HttpResponse<String> response = postJsonForResponse(url, json, "Nation research purchase failed");
+        return gson.fromJson(response.body(), NationResearchPurchaseResponse.class);
+    }
+
+    public NationResearchEffectsResponse fetchNationResearchEffects() throws IOException, InterruptedException {
+        HttpResponse<String> response = get(apiUrl("/game-sync/nation-research/effects"));
+        return gson.fromJson(response.body(), NationResearchEffectsResponse.class);
+    }
+
+    public NationResearchInterestResponse applyNationResearchInterest() throws IOException, InterruptedException {
+        String url = apiUrl("/game-sync/nation-research/apply-interest");
+        HttpResponse<String> response = postJsonForResponse(url, "{}", "Nation research interest tick failed");
+        return gson.fromJson(response.body(), NationResearchInterestResponse.class);
+    }
+
+    public NationSeasonAwardResponse awardTopNations() throws IOException, InterruptedException {
+        String url = apiUrl("/game-sync/season/award-top");
+        HttpResponse<String> response = postJsonForResponse(url, "{}", "Season top-nation reward tick failed");
+        return gson.fromJson(response.body(), NationSeasonAwardResponse.class);
+    }
+
+    private record ResearchPurchaseRequest(String minecraft_nickname, String research_key) {}
+
+    /** Pushes a raw daily-quest snapshot JSON (built by the DailyQuests plugin). */
+    public void pushDailyQuestSnapshot(String jsonBody) throws IOException, InterruptedException {
+        postJson(apiUrl("/game-sync/quests/snapshot"), jsonBody, "Daily quest snapshot push failed");
+    }
 
     // ── Alliance endpoints ────────────────────────────────────────────────────
 

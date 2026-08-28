@@ -32,7 +32,9 @@ public final class WebGuiBridgeService {
     public WebGuiBridgeService(VoidRpGameSyncPlugin plugin) {
         this.plugin = plugin;
         registerChannel(OPEN_WEB_CHANNEL);
-        registerChannel(MAIN_MENU_CHANNEL);
+        // NOTE: the F6 main-menu URL is owned by the NeoForge mod (it signs it with a
+        // token on login). The plugin no longer registers/sends on MAIN_MENU_CHANNEL —
+        // doing so conflicted with the mod's payload on this Youer/Mohist server.
         loadWebviewConfig();
     }
 
@@ -74,22 +76,23 @@ public final class WebGuiBridgeService {
             plugin.getLogger().warning("[WebGUI] webgui disabled in config — skipping openGui for " + player.getName());
             return;
         }
-        // Sign the URL with a fresh per-player token BEFORE dispatch. Both the NeoForge
-        // bridge and the plugin-message fallback must receive the signed URL, otherwise
-        // the page loads without ?webgui_token= and the backend rejects it ("session not confirmed").
-        String signed = signUrl(player, url);
+        // The NeoForge WebGUI mod signs its OWN per-player token. If we pre-sign here
+        // and hand the mod a URL that already has ?webgui_token=, the mod appends a
+        // SECOND webgui_token param — which some pages join into a comma-separated
+        // "token,token" value the backend rejects (401). So give the mod the RAW url
+        // (single source of truth = mod) and only sign ourselves for the plugin-message
+        // fallback, used when the mod is not present.
         plugin.getLogger().info("[WebGUI] openGui → " + player.getName() + " : " + url);
-        if (!tryViaForge(player, signed, MODE_GUI)) {
-            sendWebPacket(player, signed, MODE_GUI);
+        if (!tryViaForge(player, url, MODE_GUI)) {
+            sendWebPacket(player, signUrl(player, url), MODE_GUI);
         }
     }
 
     public void openHud(Player player, String url) {
         if (!plugin.getGameSyncConfig().isWebGuiEnabled()) return;
-        String signed = signUrl(player, url);
         plugin.getLogger().info("[WebGUI] openHud → " + player.getName() + " : " + url);
-        if (!tryViaForge(player, signed, MODE_HUD)) {
-            sendWebPacket(player, signed, MODE_HUD);
+        if (!tryViaForge(player, url, MODE_HUD)) {
+            sendWebPacket(player, signUrl(player, url), MODE_HUD);
         }
     }
 
@@ -113,15 +116,9 @@ public final class WebGuiBridgeService {
         }
     }
 
+    /** No-op: the F6 main-menu URL is owned + signed by the NeoForge mod (see constructor). */
     public void sendMainMenuUrl(Player player, String url) {
-        if (!plugin.getGameSyncConfig().isWebGuiEnabled()) return;
-        try {
-            ByteArrayOutputStream buf = new ByteArrayOutputStream();
-            writeString(buf, url == null ? "" : url);
-            player.sendPluginMessage(plugin, MAIN_MENU_CHANNEL, buf.toByteArray());
-        } catch (IOException e) {
-            plugin.getLogger().warning("Failed to send main menu URL: " + e.getMessage());
-        }
+        // intentionally empty — kept for call-site compatibility
     }
 
     private void sendWebPacket(Player player, String url, int mode) {
@@ -176,6 +173,7 @@ public final class WebGuiBridgeService {
     public void openMarket(Player player)       { openGui(player, plugin.getGameSyncConfig().getWebGuiMarketUrl()); }
     public void openNationMarket(Player player) { openGui(player, plugin.getGameSyncConfig().getWebGuiNationMarketUrl()); }
     public void openTreasury(Player player)     { openGui(player, plugin.getGameSyncConfig().getWebGuiTreasuryUrl()); }
+    public void openResearch(Player player)     { openGui(player, plugin.getGameSyncConfig().getWebGuiResearchUrl()); }
     public void openAlliance(Player player)     { openGui(player, plugin.getGameSyncConfig().getWebGuiAllianceUrl()); }
     public void openBattlepass(Player player)   { openGui(player, plugin.getGameSyncConfig().getWebGuiBattlepassUrl()); }
     public void openQuests(Player player)       { openGui(player, plugin.getGameSyncConfig().getWebGuiQuestsUrl()); }
