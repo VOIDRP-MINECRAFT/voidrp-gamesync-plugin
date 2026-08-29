@@ -13,7 +13,8 @@ public record PlayerStatSnapshot(
     @SerializedName("current_balance") double currentBalance,
     @SerializedName("source") String source,
     @SerializedName("last_seen_at") String lastSeenAt,
-    @SerializedName("completed_quests") int completedQuests
+    @SerializedName("completed_quests") int completedQuests,
+    @SerializedName("best_kill_streak") int bestKillStreak
 ) {}
 
 

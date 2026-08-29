@@ -239,7 +239,8 @@ public final class NationSyncService {
                     cached.currentBalance(),
                     "cached",
                     cached.lastSeenAt(),
-                    completedQuests
+                    completedQuests,
+                    cached.bestKillStreak()
             );
         }
 
@@ -258,6 +259,7 @@ public final class NationSyncService {
                 0D,
                 "missing",
                 null,
+                0,
                 0
         );
     }
@@ -296,7 +298,8 @@ public final class NationSyncService {
                 currentBalance,
                 "live",
                 Instant.now().toString(),
-                completedQuests
+                completedQuests,
+                (int) dataStore.getStatCounter(uuid, "best_kill_streak")
         );
     }
 
@@ -351,7 +354,8 @@ public final class NationSyncService {
                 currentBalance,
                 "stats_file",
                 lastSeenAt,
-                completedQuests
+                completedQuests,
+                (int) dataStore.getStatCounter(uuid, "best_kill_streak")
         );
     }
 

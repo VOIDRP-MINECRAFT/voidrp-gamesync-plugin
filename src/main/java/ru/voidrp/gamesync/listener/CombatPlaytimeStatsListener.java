@@ -29,6 +29,8 @@ public final class CombatPlaytimeStatsListener implements Listener {
     private final VoidRpGameSyncPlugin plugin;
     // player UUID -> epoch-ms of the last playtime checkpoint (join or last flush)
     private final Map<UUID, Long> checkpoints = new ConcurrentHashMap<>();
+    // player UUID -> current PvP kill streak (transient; best is persisted)
+    private final Map<UUID, Integer> killStreaks = new ConcurrentHashMap<>();
 
     public CombatPlaytimeStatsListener(VoidRpGameSyncPlugin plugin) {
         this.plugin = plugin;
@@ -54,6 +56,7 @@ public final class CombatPlaytimeStatsListener implements Listener {
     public void onQuit(PlayerQuitEvent event) {
         flush(event.getPlayer().getUniqueId());
         checkpoints.remove(event.getPlayer().getUniqueId());
+        killStreaks.remove(event.getPlayer().getUniqueId());
     }
 
     private void flushAll() {
@@ -80,9 +83,17 @@ public final class CombatPlaytimeStatsListener implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         Player victim = event.getEntity();
         store().addStatCounter(victim.getUniqueId(), "deaths", 1L);
+        killStreaks.put(victim.getUniqueId(), 0); // death ends the streak
+
         Player killer = victim.getKiller();
         if (killer != null && !killer.getUniqueId().equals(victim.getUniqueId())) {
-            store().addStatCounter(killer.getUniqueId(), "kills", 1L);
+            UUID kid = killer.getUniqueId();
+            store().addStatCounter(kid, "kills", 1L);
+            int streak = killStreaks.merge(kid, 1, Integer::sum);
+            long best = store().getStatCounter(kid, "best_kill_streak");
+            if (streak > best) {
+                store().addStatCounter(kid, "best_kill_streak", streak - best); // raise best to streak
+            }
         }
     }
 

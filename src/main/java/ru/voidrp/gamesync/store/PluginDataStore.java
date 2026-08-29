@@ -137,7 +137,8 @@ public final class PluginDataStore {
             yaml.getDouble(base + ".current-balance", 0D),
             yaml.getString(base + ".source", "cached"),
             yaml.getString(base + ".last-seen-at", null),
-            yaml.getInt(base + ".completed-quests", 0)
+            yaml.getInt(base + ".completed-quests", 0),
+            yaml.getInt(base + ".best-kill-streak", 0)
         );
     }
 
@@ -154,6 +155,7 @@ public final class PluginDataStore {
         yaml.set(base + ".source", snapshot.source());
         yaml.set(base + ".last-seen-at", snapshot.lastSeenAt());
         yaml.set(base + ".completed-quests", snapshot.completedQuests());
+        yaml.set(base + ".best-kill-streak", snapshot.bestKillStreak());
     }
 
     public void clearPlayerStatSnapshot(UUID playerId) {
