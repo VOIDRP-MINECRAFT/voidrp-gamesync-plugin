@@ -77,7 +77,7 @@ public final class PluginDataStore {
         return yaml.getBoolean("achievements." + playerId + "." + key, false);
     }
 
-    public void setAchievementAwarded(UUID playerId, String key) {
+    public synchronized void setAchievementAwarded(UUID playerId, String key) {
         yaml.set("achievements." + playerId + "." + key, true);
         saveNow();
     }
@@ -91,7 +91,7 @@ public final class PluginDataStore {
         return yaml.getInt("login-streak." + playerId + ".count", 0);
     }
 
-    public void setLoginStreak(UUID playerId, String isoDay, int count) {
+    public synchronized void setLoginStreak(UUID playerId, String isoDay, int count) {
         yaml.set("login-streak." + playerId + ".last-day", isoDay);
         yaml.set("login-streak." + playerId + ".count", count);
         saveNow();
@@ -203,7 +203,7 @@ public final class PluginDataStore {
         yaml.set("tier-tracking." + playerId + "." + tierName, true);
     }
 
-    public void saveNow() {
+    public synchronized void saveNow() {
         for (Map.Entry<UUID, AtomicLong[]> entry : blockStats.entrySet()) {
             yaml.set("block-stats." + entry.getKey() + ".broken", entry.getValue()[0].get());
             yaml.set("block-stats." + entry.getKey() + ".placed", entry.getValue()[1].get());

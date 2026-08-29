@@ -121,11 +121,14 @@ public final class BackendClient {
         postJson(url, gson.toJson(payload), "Notification push failed");
     }
 
-    /** Add a finished chunk of playtime to a player's daily activity bucket (today). */
-    public void pushPlaytime(String nickname, long seconds) throws IOException, InterruptedException {
+    /** Add a finished chunk of playtime to a player's daily activity bucket for {@code day}. */
+    public void pushPlaytime(String nickname, long seconds, String day) throws IOException, InterruptedException {
         java.util.Map<String, Object> payload = new java.util.HashMap<>();
         payload.put("minecraft_nickname", nickname);
         payload.put("seconds", seconds);
+        if (day != null) {
+            payload.put("day", day);
+        }
         postJson(apiUrl("/game-sync/playtime"), gson.toJson(payload), "Playtime push failed");
     }
 

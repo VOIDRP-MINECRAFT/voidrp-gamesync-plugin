@@ -99,9 +99,11 @@ public final class CombatPlaytimeStatsListener implements Listener {
             return;
         }
         pendingPlaytime.put(uuid, 0L);
+        // Server-local day so the activity chart lines up with the login-streak day boundary.
+        String day = java.time.LocalDate.now(java.time.ZoneId.systemDefault()).toString();
         org.bukkit.Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try {
-                plugin.getBackendClient().pushPlaytime(name, pending);
+                plugin.getBackendClient().pushPlaytime(name, pending, day);
             } catch (Exception ignored) {
                 // best-effort; re-queue so the seconds are not lost on transient failure
                 pendingPlaytime.merge(uuid, pending, Long::sum);
