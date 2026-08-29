@@ -272,8 +272,10 @@ public final class NationSyncService {
         int pvpKills = safeGetStatistic(onlinePlayer, Statistic.PLAYER_KILLS);
         int mobKills = safeGetStatistic(onlinePlayer, Statistic.MOB_KILLS);
         int deaths = safeGetStatistic(onlinePlayer, Statistic.DEATHS);
-        long blocksBroken = sumMineBlockStats(onlinePlayer);
-        long blocksPlaced = sumUsedBlockItems(onlinePlayer);
+        // Event-tracked counts include modded blocks; vanilla Statistic misses them.
+        UUID uuid = offlinePlayer.getUniqueId();
+        long blocksBroken = Math.max(sumMineBlockStats(onlinePlayer), dataStore.getBlocksBroken(uuid));
+        long blocksPlaced = Math.max(sumUsedBlockItems(onlinePlayer), dataStore.getBlocksPlaced(uuid));
         double currentBalance = resolveCurrentBalance(offlinePlayer);
 
         return new PlayerStatSnapshot(
@@ -305,8 +307,10 @@ public final class NationSyncService {
         int pvpKills = readCustomStatFromRoot(root, "minecraft:player_kills");
         int mobKills = readCustomStatFromRoot(root, "minecraft:mob_kills");
         int deaths = readCustomStatFromRoot(root, "minecraft:deaths");
-        long blocksBroken = readCategorySumFromRoot(root, "minecraft:mined");
-        long blocksPlaced = readPlacedBlocksEstimateFromRoot(root);
+        // Event-tracked counts include modded blocks; the vanilla stats file misses them.
+        UUID uuid = offlinePlayer.getUniqueId();
+        long blocksBroken = Math.max(readCategorySumFromRoot(root, "minecraft:mined"), dataStore.getBlocksBroken(uuid));
+        long blocksPlaced = Math.max(readPlacedBlocksEstimateFromRoot(root), dataStore.getBlocksPlaced(uuid));
         double currentBalance = resolveCurrentBalance(offlinePlayer);
 
         String lastSeenAt = null;

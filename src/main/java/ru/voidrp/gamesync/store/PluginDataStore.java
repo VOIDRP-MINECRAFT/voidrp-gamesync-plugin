@@ -2,7 +2,10 @@ package ru.voidrp.gamesync.store;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,10 +18,39 @@ public final class PluginDataStore {
     private final File file;
     private final YamlConfiguration yaml;
 
+    // Event-tracked block break/place counters, kept in memory and flushed to yaml on
+    // saveNow(). Bukkit's Statistic.MINE_BLOCK/USE_ITEM only see vanilla Materials, so on
+    // the modded pack most mining/placing was invisible; counting via block events covers
+    // modded blocks too. [0] = broken, [1] = placed.
+    private final Map<UUID, AtomicLong[]> blockStats = new ConcurrentHashMap<>();
+
     public PluginDataStore(JavaPlugin plugin) {
         this.plugin = plugin;
         this.file = new File(plugin.getDataFolder(), "data.yml");
         this.yaml = YamlConfiguration.loadConfiguration(file);
+    }
+
+    private AtomicLong[] blockEntry(UUID playerId) {
+        return blockStats.computeIfAbsent(playerId, id -> new AtomicLong[] {
+                new AtomicLong(yaml.getLong("block-stats." + id + ".broken", 0L)),
+                new AtomicLong(yaml.getLong("block-stats." + id + ".placed", 0L)),
+        });
+    }
+
+    public long getBlocksBroken(UUID playerId) {
+        return blockEntry(playerId)[0].get();
+    }
+
+    public long getBlocksPlaced(UUID playerId) {
+        return blockEntry(playerId)[1].get();
+    }
+
+    public void addBlockBroken(UUID playerId, long delta) {
+        blockEntry(playerId)[0].addAndGet(delta);
+    }
+
+    public void addBlockPlaced(UUID playerId, long delta) {
+        blockEntry(playerId)[1].addAndGet(delta);
     }
 
     public String getRewardBundle(UUID playerId) {
@@ -126,6 +158,10 @@ public final class PluginDataStore {
     }
 
     public void saveNow() {
+        for (Map.Entry<UUID, AtomicLong[]> entry : blockStats.entrySet()) {
+            yaml.set("block-stats." + entry.getKey() + ".broken", entry.getValue()[0].get());
+            yaml.set("block-stats." + entry.getKey() + ".placed", entry.getValue()[1].get());
+        }
         try {
             yaml.save(file);
         } catch (IOException exception) {

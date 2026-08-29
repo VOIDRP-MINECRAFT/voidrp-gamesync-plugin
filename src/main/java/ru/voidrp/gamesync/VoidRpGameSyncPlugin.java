@@ -314,6 +314,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new TierTrackingListener(this), this);
         Bukkit.getPluginManager().registerEvents(new AlliancePvpListener(this), this);
         Bukkit.getPluginManager().registerEvents(new GatherBonusListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new ru.voidrp.gamesync.listener.BlockStatsListener(this), this);
         Bukkit.getPluginManager().registerEvents(
                 new ModdedShopDisplayListener(this, economyShopGuiBridgeService.getModdedShopConfig()), this);
         this.tabListListener = new TabListListener(this);
