@@ -228,19 +228,24 @@ public final class TerritoryPointsResolver {
         return (int) total;
     }
 
-    // FTB Chunks stores each player's claims in <world>/ftbchunks/<uuid>.snbt as a
-    // chunks:{ "dim": [ { x, z, time } ... ] } map. A nation's territory is the sum of
-    // its members' claimed chunks (FTB Chunks forbids claiming an already-claimed chunk,
-    // so members never overlap and a plain sum has no double counting).
+    // FTB Chunks claims belong to an FTB *team*, not a player, and are stored in
+    // <world>/ftbchunks/<teamId>.snbt as chunks:{ "dim": [ { x, z, time } ... ] }.
+    // A solo player's team id equals their player UUID; a party team gets its own
+    // random UUID and lists its members in <world>/ftbteams/party/<teamId>.snbt.
+    // So a nation's territory = sum of the claims of the DISTINCT teams its members
+    // belong to (dedup, so two members of the same party team count that team once).
     private static final Pattern FTB_CHUNK_ENTRY = Pattern.compile("\\{\\s*x:\\s*-?\\d+\\s*,\\s*z:\\s*-?\\d+");
     private static final Pattern FTB_DIM_HEADER = Pattern.compile("\"([\\w.-]+:[\\w./-]+)\"\\s*:\\s*\\[");
+    private static final Pattern FTB_TEAM_ID = Pattern.compile("id:\\s*\"([0-9a-fA-F-]{36})\"");
+    private static final Pattern FTB_RANK_MEMBER = Pattern.compile("([0-9a-fA-F-]{36}):\\s*\"\\w+\"");
 
     private Integer resolveViaFtbChunks(NationDefinition definition, TerritoryDebugReport debugReport) {
         List<World> worlds = Bukkit.getWorlds();
         if (worlds.isEmpty()) {
             return null;
         }
-        Path ftbDir = worlds.get(0).getWorldFolder().toPath().resolve("ftbchunks");
+        Path worldPath = worlds.get(0).getWorldFolder().toPath();
+        Path ftbDir = worldPath.resolve("ftbchunks");
 
         List<String> rawMembers = definition.allMembersIncludingRoles();
         if (debugReport != null) {
@@ -267,8 +272,18 @@ public final class TerritoryPointsResolver {
 
         long totalChunks = 0L;
         try {
+            // player UUID -> party team id (players not in a party keep their own team)
+            java.util.Map<String, String> playerToTeam = buildPartyMemberMap(worldPath);
+
+            // resolve each member to their effective team, then sum distinct teams once
+            Set<String> countedTeams = new HashSet<>();
             for (UUID uuid : resolvedMembers.uuids) {
-                Path file = ftbDir.resolve(uuid.toString() + ".snbt");
+                String key = uuid.toString().toLowerCase(Locale.ROOT);
+                String teamId = playerToTeam.getOrDefault(key, uuid.toString());
+                if (!countedTeams.add(teamId.toLowerCase(Locale.ROOT))) {
+                    continue;
+                }
+                Path file = ftbDir.resolve(teamId + ".snbt");
                 if (!Files.isRegularFile(file)) {
                     continue;
                 }
@@ -276,7 +291,7 @@ public final class TerritoryPointsResolver {
                 totalChunks += claimed;
                 if (debugReport != null && claimed > 0) {
                     debugReport.matches.add(new TerritoryMatch(
-                            "ftbchunks", uuid.toString(), "member_uuid", uuid.toString(), claimed, "chunks"));
+                            "ftbchunks", teamId, "team", uuid.toString(), claimed, "chunks"));
                     debugReport.regionsScanned++;
                 }
             }
@@ -293,6 +308,63 @@ public final class TerritoryPointsResolver {
             return Integer.MAX_VALUE;
         }
         return (int) total;
+    }
+
+    // Maps every party-team member's player UUID -> that party team's id, by reading
+    // the ranks:{ <uuid>: "owner|member|..." } block of each <world>/ftbteams/party/*.snbt.
+    private java.util.Map<String, String> buildPartyMemberMap(Path worldPath) throws java.io.IOException {
+        java.util.Map<String, String> map = new java.util.HashMap<>();
+        Path partyDir = worldPath.resolve("ftbteams").resolve("party");
+        if (!Files.isDirectory(partyDir)) {
+            return map;
+        }
+        try (java.util.stream.Stream<Path> files = Files.list(partyDir)) {
+            for (Path file : (Iterable<Path>) files::iterator) {
+                if (!file.getFileName().toString().endsWith(".snbt")) {
+                    continue;
+                }
+                String text = Files.readString(file, StandardCharsets.UTF_8);
+                Matcher idMatch = FTB_TEAM_ID.matcher(text);
+                if (!idMatch.find()) {
+                    continue;
+                }
+                String teamId = idMatch.group(1);
+                String ranks = extractBlock(text, "ranks:");
+                if (ranks == null) {
+                    continue;
+                }
+                Matcher member = FTB_RANK_MEMBER.matcher(ranks);
+                while (member.find()) {
+                    map.put(member.group(1).toLowerCase(Locale.ROOT), teamId);
+                }
+            }
+        }
+        return map;
+    }
+
+    // Returns the { ... } block that follows the given label, matched by brace depth.
+    private String extractBlock(String text, String label) {
+        int i = text.indexOf(label);
+        if (i < 0) {
+            return null;
+        }
+        int open = text.indexOf('{', i);
+        if (open < 0) {
+            return null;
+        }
+        int depth = 0;
+        for (int j = open; j < text.length(); j++) {
+            char c = text.charAt(j);
+            if (c == '{') {
+                depth++;
+            } else if (c == '}') {
+                depth--;
+                if (depth == 0) {
+                    return text.substring(open, j + 1);
+                }
+            }
+        }
+        return null;
     }
 
     private long countClaimedChunks(Path file, Set<String> dimWhitelist) throws java.io.IOException {
