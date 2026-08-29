@@ -31,6 +31,9 @@ public final class CombatPlaytimeStatsListener implements Listener {
     private final Map<UUID, Long> checkpoints = new ConcurrentHashMap<>();
     // player UUID -> current PvP kill streak (transient; best is persisted)
     private final Map<UUID, Integer> killStreaks = new ConcurrentHashMap<>();
+    // player UUID -> seconds accrued but not yet pushed to the backend daily bucket
+    private final Map<UUID, Long> pendingPlaytime = new ConcurrentHashMap<>();
+    private static final long PLAYTIME_PUSH_THRESHOLD_SECONDS = 600L; // batch pushes to ~10 min
 
     public CombatPlaytimeStatsListener(VoidRpGameSyncPlugin plugin) {
         this.plugin = plugin;
@@ -54,9 +57,13 @@ public final class CombatPlaytimeStatsListener implements Listener {
 
     @EventHandler
     public void onQuit(PlayerQuitEvent event) {
-        flush(event.getPlayer().getUniqueId());
-        checkpoints.remove(event.getPlayer().getUniqueId());
-        killStreaks.remove(event.getPlayer().getUniqueId());
+        UUID uuid = event.getPlayer().getUniqueId();
+        String name = event.getPlayer().getName();
+        flush(uuid);
+        pushPendingPlaytime(uuid, name); // flush whatever is left to the daily bucket
+        checkpoints.remove(uuid);
+        killStreaks.remove(uuid);
+        pendingPlaytime.remove(uuid);
     }
 
     private void flushAll() {
@@ -76,7 +83,30 @@ public final class CombatPlaytimeStatsListener implements Listener {
         if (seconds > 0) {
             store().addStatCounter(uuid, "playtime_seconds", seconds);
             checkpoints.put(uuid, now);
+            long pending = pendingPlaytime.merge(uuid, seconds, Long::sum);
+            if (pending >= PLAYTIME_PUSH_THRESHOLD_SECONDS) {
+                org.bukkit.entity.Player p = org.bukkit.Bukkit.getPlayer(uuid);
+                if (p != null) {
+                    pushPendingPlaytime(uuid, p.getName());
+                }
+            }
         }
+    }
+
+    private void pushPendingPlaytime(UUID uuid, String name) {
+        Long pending = pendingPlaytime.get(uuid);
+        if (pending == null || pending <= 0) {
+            return;
+        }
+        pendingPlaytime.put(uuid, 0L);
+        org.bukkit.Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                plugin.getBackendClient().pushPlaytime(name, pending);
+            } catch (Exception ignored) {
+                // best-effort; re-queue so the seconds are not lost on transient failure
+                pendingPlaytime.merge(uuid, pending, Long::sum);
+            }
+        });
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
