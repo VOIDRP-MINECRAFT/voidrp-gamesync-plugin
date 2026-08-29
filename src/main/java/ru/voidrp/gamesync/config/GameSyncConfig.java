@@ -21,6 +21,9 @@ public final class GameSyncConfig {
     private final String territorySourceMode;
     private final String territoryWorldGuardCountMode;
     private final boolean territoryWorldGuardFallbackToManual;
+    private final int territoryFtbChunksBlocksPerChunk;
+    private final java.util.List<String> territoryFtbChunksDimensions;
+    private final boolean territoryFtbChunksFallbackToManual;
     private final boolean resolveOnJoin;
     private final long joinDelayTicks;
     private final boolean autoApplyOnJoin;
@@ -133,6 +136,10 @@ public final class GameSyncConfig {
         this.territorySourceMode = plugin.getConfig().getString("territory.source", "manual");
         this.territoryWorldGuardCountMode = plugin.getConfig().getString("territory.worldguard.count-mode", "2d");
         this.territoryWorldGuardFallbackToManual = plugin.getConfig().getBoolean("territory.worldguard.fallback_to_manual", true);
+        // territory unit for the ftbchunks source: 1 = count claimed chunks, 256 = block area parity
+        this.territoryFtbChunksBlocksPerChunk = Math.max(1, plugin.getConfig().getInt("territory.ftbchunks.blocks-per-chunk", 1));
+        this.territoryFtbChunksDimensions = plugin.getConfig().getStringList("territory.ftbchunks.dimensions");
+        this.territoryFtbChunksFallbackToManual = plugin.getConfig().getBoolean("territory.ftbchunks.fallback_to_manual", true);
 
         this.resolveOnJoin = plugin.getConfig().getBoolean("referrals.resolve-on-join", true);
         this.joinDelayTicks = Math.max(1L, plugin.getConfig().getLong("referrals.join-delay-ticks", 60L));
@@ -244,6 +251,9 @@ public final class GameSyncConfig {
     public String getTerritorySourceMode() { return territorySourceMode; }
     public String getTerritoryWorldGuardCountMode() { return territoryWorldGuardCountMode; }
     public boolean isTerritoryWorldGuardFallbackToManual() { return territoryWorldGuardFallbackToManual; }
+    public int getTerritoryFtbChunksBlocksPerChunk() { return territoryFtbChunksBlocksPerChunk; }
+    public java.util.List<String> getTerritoryFtbChunksDimensions() { return territoryFtbChunksDimensions; }
+    public boolean isTerritoryFtbChunksFallbackToManual() { return territoryFtbChunksFallbackToManual; }
     public boolean isResolveOnJoin() { return resolveOnJoin; }
     public long getJoinDelayTicks() { return joinDelayTicks; }
     public boolean isAutoApplyOnJoin() { return autoApplyOnJoin; }

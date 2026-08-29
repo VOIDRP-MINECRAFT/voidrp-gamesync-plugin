@@ -29,9 +29,16 @@ nation-season:
   auto-rewards: false
 
 territory:
-  source: "worldguard"
+  # manual | worldguard | ftbchunks
+  source: "ftbchunks"
   worldguard:
     count-mode: "2d"
+    fallback_to_manual: true
+  ftbchunks:
+    # 1 = territory value is the number of claimed chunks; 256 = block-area parity
+    blocks-per-chunk: 1
+    # empty = count claims in every dimension; otherwise only these (e.g. "minecraft:overworld")
+    dimensions: []
     fallback_to_manual: true
 
 referrals:

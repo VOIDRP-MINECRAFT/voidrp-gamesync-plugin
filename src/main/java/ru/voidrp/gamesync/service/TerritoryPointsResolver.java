@@ -1,11 +1,16 @@
 package ru.voidrp.gamesync.service;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -53,6 +58,14 @@ public final class TerritoryPointsResolver {
             return 0;
         }
 
+        if (source.equalsIgnoreCase("ftbchunks")) {
+            Integer resolved = resolveViaFtbChunks(definition, null);
+            if (resolved != null) {
+                return resolved;
+            }
+            return config.isTerritoryFtbChunksFallbackToManual() ? manualValue : 0;
+        }
+
         return manualValue;
     }
 
@@ -71,6 +84,21 @@ public final class TerritoryPointsResolver {
         if (source == null || source.isBlank() || source.equalsIgnoreCase("manual")) {
             report.finalValue = manualValue;
             report.resolutionMode = "manual";
+            return report;
+        }
+
+        if (source.equalsIgnoreCase("ftbchunks")) {
+            Integer resolved = resolveViaFtbChunks(definition, report);
+            report.worldguardValue = resolved == null ? 0 : resolved;
+            if (resolved != null) {
+                report.finalValue = resolved;
+                report.resolutionMode = "ftbchunks-by-nation-members";
+            } else {
+                report.finalValue = config.isTerritoryFtbChunksFallbackToManual() ? manualValue : 0;
+                report.resolutionMode = config.isTerritoryFtbChunksFallbackToManual()
+                        ? "ftbchunks-error-fallback-manual"
+                        : "ftbchunks-error-zero";
+            }
             return report;
         }
 
@@ -198,6 +226,95 @@ public final class TerritoryPointsResolver {
             return Integer.MAX_VALUE;
         }
         return (int) total;
+    }
+
+    // FTB Chunks stores each player's claims in <world>/ftbchunks/<uuid>.snbt as a
+    // chunks:{ "dim": [ { x, z, time } ... ] } map. A nation's territory is the sum of
+    // its members' claimed chunks (FTB Chunks forbids claiming an already-claimed chunk,
+    // so members never overlap and a plain sum has no double counting).
+    private static final Pattern FTB_CHUNK_ENTRY = Pattern.compile("\\{\\s*x:\\s*-?\\d+\\s*,\\s*z:\\s*-?\\d+");
+    private static final Pattern FTB_DIM_HEADER = Pattern.compile("\"([\\w.-]+:[\\w./-]+)\"\\s*:\\s*\\[");
+
+    private Integer resolveViaFtbChunks(NationDefinition definition, TerritoryDebugReport debugReport) {
+        List<World> worlds = Bukkit.getWorlds();
+        if (worlds.isEmpty()) {
+            return null;
+        }
+        Path ftbDir = worlds.get(0).getWorldFolder().toPath().resolve("ftbchunks");
+
+        List<String> rawMembers = definition.allMembersIncludingRoles();
+        if (debugReport != null) {
+            debugReport.membersChecked = rawMembers.size();
+        }
+
+        ResolvedMembers resolvedMembers = resolveMembers(rawMembers);
+        if (debugReport != null) {
+            debugReport.memberUuidsResolved = resolvedMembers.uuids.size();
+            debugReport.memberNamesResolved = resolvedMembers.names.size();
+            debugReport.unresolvedMembers.addAll(resolvedMembers.unresolved);
+        }
+
+        if (resolvedMembers.uuids.isEmpty()) {
+            return 0;
+        }
+
+        Set<String> dimWhitelist = new HashSet<>();
+        for (String dim : config.getTerritoryFtbChunksDimensions()) {
+            if (dim != null && !dim.isBlank()) {
+                dimWhitelist.add(dim.trim().toLowerCase(Locale.ROOT));
+            }
+        }
+
+        long totalChunks = 0L;
+        try {
+            for (UUID uuid : resolvedMembers.uuids) {
+                Path file = ftbDir.resolve(uuid.toString() + ".snbt");
+                if (!Files.isRegularFile(file)) {
+                    continue;
+                }
+                long claimed = countClaimedChunks(file, dimWhitelist);
+                totalChunks += claimed;
+                if (debugReport != null && claimed > 0) {
+                    debugReport.matches.add(new TerritoryMatch(
+                            "ftbchunks", uuid.toString(), "member_uuid", uuid.toString(), claimed, "chunks"));
+                    debugReport.regionsScanned++;
+                }
+            }
+        } catch (Exception exception) {
+            plugin.getLogger().warning("Failed to calculate FTB Chunks territory for " + definition.slug() + ": " + exception.getMessage());
+            if (debugReport != null) {
+                debugReport.error = exception.getMessage();
+            }
+            return null;
+        }
+
+        long total = totalChunks * config.getTerritoryFtbChunksBlocksPerChunk();
+        if (total > Integer.MAX_VALUE) {
+            return Integer.MAX_VALUE;
+        }
+        return (int) total;
+    }
+
+    private long countClaimedChunks(Path file, Set<String> dimWhitelist) throws java.io.IOException {
+        long count = 0L;
+        String currentDim = null;
+        boolean allDims = dimWhitelist.isEmpty();
+        for (String line : Files.readAllLines(file, StandardCharsets.UTF_8)) {
+            Matcher dimMatch = FTB_DIM_HEADER.matcher(line);
+            if (dimMatch.find()) {
+                currentDim = dimMatch.group(1).toLowerCase(Locale.ROOT);
+                continue;
+            }
+            if (line.indexOf(']') >= 0 && line.indexOf('{') < 0) {
+                currentDim = null;
+            }
+            if (FTB_CHUNK_ENTRY.matcher(line).find()) {
+                if (allDims || (currentDim != null && dimWhitelist.contains(currentDim))) {
+                    count++;
+                }
+            }
+        }
+        return count;
     }
 
     private MatchResult findMatch(DefaultDomain domain, ResolvedMembers members, String sourcePrefix) {
