@@ -49,6 +49,7 @@ import ru.voidrp.gamesync.service.LuckPermsNationMetaService;
 import ru.voidrp.gamesync.service.NationMarketConfirmService;
 import ru.voidrp.gamesync.service.NationMarketGuiService;
 import ru.voidrp.gamesync.service.NationMarketInventoryService;
+import ru.voidrp.gamesync.service.AchievementRewardService;
 import ru.voidrp.gamesync.service.NationSyncService;
 import ru.voidrp.gamesync.service.ReferralRewardService;
 import ru.voidrp.gamesync.service.RewardCacheService;
@@ -74,6 +75,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
     private LuckPermsNationMetaService luckPermsNationMetaService;
     private TerritoryPointsResolver territoryPointsResolver;
     private NationSyncService nationSyncService;
+    private AchievementRewardService achievementRewardService;
     private SyncScheduler syncScheduler;
     private SkinCommandService skinCommandService;
     private DynmapMarkerService dynmapMarkerService;
@@ -316,6 +318,10 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new GatherBonusListener(this), this);
         Bukkit.getPluginManager().registerEvents(new ru.voidrp.gamesync.listener.BlockStatsListener(this), this);
         Bukkit.getPluginManager().registerEvents(new ru.voidrp.gamesync.listener.CombatPlaytimeStatsListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new ru.voidrp.gamesync.listener.LoginStreakListener(this), this);
+        this.achievementRewardService = new AchievementRewardService(this);
+        // Award achievement rewards on a periodic main-thread tick (every 3 min).
+        Bukkit.getScheduler().runTaskTimer(this, () -> achievementRewardService.checkAllOnline(), 1200L, 3600L);
         Bukkit.getPluginManager().registerEvents(
                 new ModdedShopDisplayListener(this, economyShopGuiBridgeService.getModdedShopConfig()), this);
         this.tabListListener = new TabListListener(this);

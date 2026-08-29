@@ -72,6 +72,31 @@ public final class PluginDataStore {
         counter(playerId, key).addAndGet(delta);
     }
 
+    // Achievement award tracking (one-time reward per key).
+    public boolean isAchievementAwarded(UUID playerId, String key) {
+        return yaml.getBoolean("achievements." + playerId + "." + key, false);
+    }
+
+    public void setAchievementAwarded(UUID playerId, String key) {
+        yaml.set("achievements." + playerId + "." + key, true);
+        saveNow();
+    }
+
+    // Login-streak tracking.
+    public String getLoginStreakDay(UUID playerId) {
+        return yaml.getString("login-streak." + playerId + ".last-day", null);
+    }
+
+    public int getLoginStreakCount(UUID playerId) {
+        return yaml.getInt("login-streak." + playerId + ".count", 0);
+    }
+
+    public void setLoginStreak(UUID playerId, String isoDay, int count) {
+        yaml.set("login-streak." + playerId + ".last-day", isoDay);
+        yaml.set("login-streak." + playerId + ".count", count);
+        saveNow();
+    }
+
     public String getRewardBundle(UUID playerId) {
         return yaml.getString("reward-cache." + playerId + ".bundle");
     }
