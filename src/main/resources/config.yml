@@ -115,6 +115,13 @@ economy-market:
     # Как часто плагин забирает текущие рыночные цены из backend.
     period-seconds: 60
 
+  recalculate:
+    # Периодический полный пересчёт цен: спад спроса к базовой цене + запись
+    # снимка истории цен (backend троттлит снимки до ~1 в час). Без этого история
+    # цен не пополняется и спарклайны в game-ui пустые.
+    enabled: true
+    period-minutes: 60
+
   economyshopgui:
     # Stage 3: подключение к EconomyShopGUI Free/Premium через runtime bridge.
     enabled: true

@@ -50,6 +50,8 @@ public final class GameSyncConfig {
 
     private final boolean economyMarketEnabled;
     private final long economyMarketSyncPeriodTicks;
+    private final boolean economyMarketRecalculateEnabled;
+    private final long economyMarketRecalculatePeriodTicks;
     private final boolean economyShopGuiBridgeEnabled;
     private final boolean economyMarketRealPriceEnabled;
     private final boolean economyMarketApplyBuyPrice;
@@ -170,6 +172,10 @@ public final class GameSyncConfig {
 
         this.economyMarketEnabled = plugin.getConfig().getBoolean("economy-market.enabled", true);
         this.economyMarketSyncPeriodTicks = Math.max(20L, plugin.getConfig().getLong("economy-market.sync.period-seconds", 60L) * 20L);
+        // Periodic full price recalculation: applies demand decay toward baseline and
+        // records a price-history snapshot (backend throttles snapshots to ~hourly).
+        this.economyMarketRecalculateEnabled = plugin.getConfig().getBoolean("economy-market.recalculate.enabled", true);
+        this.economyMarketRecalculatePeriodTicks = Math.max(1200L, plugin.getConfig().getLong("economy-market.recalculate.period-minutes", 60L) * 60L * 20L);
         this.economyShopGuiBridgeEnabled = plugin.getConfig().getBoolean("economy-market.economyshopgui.enabled", true);
         this.economyMarketRealPriceEnabled = plugin.getConfig().getBoolean("economy-market.real-price.enabled", true);
         this.economyMarketApplyBuyPrice = plugin.getConfig().getBoolean("economy-market.real-price.apply-buy", true);
@@ -280,6 +286,8 @@ public final class GameSyncConfig {
 
     public boolean isEconomyMarketEnabled() { return economyMarketEnabled; }
     public long getEconomyMarketSyncPeriodTicks() { return economyMarketSyncPeriodTicks; }
+    public boolean isEconomyMarketRecalculateEnabled() { return economyMarketRecalculateEnabled; }
+    public long getEconomyMarketRecalculatePeriodTicks() { return economyMarketRecalculatePeriodTicks; }
     public boolean isEconomyShopGuiBridgeEnabled() { return economyShopGuiBridgeEnabled; }
     public boolean isEconomyMarketRealPriceEnabled() { return economyMarketRealPriceEnabled; }
     public boolean isEconomyMarketApplyBuyPrice() { return economyMarketApplyBuyPrice; }
