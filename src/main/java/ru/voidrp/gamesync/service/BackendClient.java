@@ -115,6 +115,12 @@ public final class BackendClient {
         postJson(url, gson.toJson(payload), "Nation treasury donation failed");
     }
 
+    /** Push an in-game notification (HUD toast + notification center) to a player by nickname. */
+    public void pushNotification(java.util.Map<String, Object> payload) throws IOException, InterruptedException {
+        String url = apiUrl("/game-sync/notifications");
+        postJson(url, gson.toJson(payload), "Notification push failed");
+    }
+
     public NationTreasuryActionResponse withdrawFromNationTreasury(GameNationTreasuryWithdrawRequest payload)
             throws IOException, InterruptedException {
 

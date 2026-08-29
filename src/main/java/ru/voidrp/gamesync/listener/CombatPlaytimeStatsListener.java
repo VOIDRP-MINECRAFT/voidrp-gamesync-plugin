@@ -94,7 +94,28 @@ public final class CombatPlaytimeStatsListener implements Listener {
             if (streak > best) {
                 store().addStatCounter(kid, "best_kill_streak", streak - best); // raise best to streak
             }
+            if (streak >= 5 && streak % 5 == 0) {
+                notifyKillStreak(killer.getName(), streak);
+            }
         }
+    }
+
+    // Fire a HUD toast / notification-center card when a player hits a 5-kill milestone.
+    private void notifyKillStreak(String nickname, int streak) {
+        java.util.Map<String, Object> payload = new java.util.HashMap<>();
+        payload.put("minecraft_nickname", nickname);
+        payload.put("type", "kill_streak");
+        payload.put("title", "Серия из " + streak + " убийств!");
+        payload.put("body", "Ты в ударе — не останавливайся.");
+        payload.put("icon", streak >= 15 ? "crown" : "shield");
+        payload.put("accent", streak >= 15 ? "#f59e0b" : "#fb7185");
+        org.bukkit.Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                plugin.getBackendClient().pushNotification(payload);
+            } catch (Exception ignored) {
+                // best-effort: a missed streak toast is not worth logging spam
+            }
+        });
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
