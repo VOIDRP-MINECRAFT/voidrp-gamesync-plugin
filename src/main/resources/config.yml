@@ -251,4 +251,6 @@ webgui:
     alliance: "https://void-rp.ru/game-ui/alliance"
     battlepass: "https://void-rp.ru/game-ui/battlepass"
     quests: "https://void-rp.ru/game-ui/quests"
+    leaderboards: "https://void-rp.ru/game-ui/leaderboards"
+    notifications: "https://void-rp.ru/game-ui/notifications"
     hud: "https://void-rp.ru/game-ui/hud"

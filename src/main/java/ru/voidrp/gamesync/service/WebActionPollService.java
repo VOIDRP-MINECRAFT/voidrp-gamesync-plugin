@@ -121,7 +121,8 @@ public final class WebActionPollService {
     // ── open_gui (opens a WEBGUI page in-game, e.g. from a notification) ───────
 
     private static final java.util.Set<String> ALLOWED_PAGES = java.util.Set.of(
-        "menu", "market", "nmarket", "treasury", "research", "alliance", "battlepass", "quests");
+        "menu", "market", "nmarket", "treasury", "research", "alliance", "battlepass", "quests",
+        "leaderboards", "notifications");
 
     private void processOpenGui(WebActionItem action) {
         String actionId = action.action_id;
@@ -148,6 +149,8 @@ public final class WebActionPollService {
                 case "alliance"   -> cfg.getWebGuiAllianceUrl();
                 case "battlepass" -> cfg.getWebGuiBattlepassUrl();
                 case "quests"     -> cfg.getWebGuiQuestsUrl();
+                case "leaderboards" -> cfg.getWebGuiLeaderboardsUrl();
+                case "notifications" -> cfg.getWebGuiNotificationsUrl();
                 default           -> null;
             };
             if (url == null || url.isBlank()) {

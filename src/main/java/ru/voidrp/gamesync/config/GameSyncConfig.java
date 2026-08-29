@@ -107,6 +107,8 @@ public final class GameSyncConfig {
     private final String webGuiAllianceUrl;
     private final String webGuiBattlepassUrl;
     private final String webGuiQuestsUrl;
+    private final String webGuiLeaderboardsUrl;
+    private final String webGuiNotificationsUrl;
     private final String webGuiHudUrl;
     private final boolean webGuiAutoHudOnJoin;
 
@@ -230,6 +232,8 @@ public final class GameSyncConfig {
         this.webGuiAllianceUrl = plugin.getConfig().getString("webgui.urls.alliance", "https://void-rp.ru/game-ui/alliance");
         this.webGuiBattlepassUrl = plugin.getConfig().getString("webgui.urls.battlepass", "https://void-rp.ru/game-ui/battlepass");
         this.webGuiQuestsUrl = plugin.getConfig().getString("webgui.urls.quests", "https://void-rp.ru/game-ui/quests");
+        this.webGuiLeaderboardsUrl = plugin.getConfig().getString("webgui.urls.leaderboards", "https://void-rp.ru/game-ui/leaderboards");
+        this.webGuiNotificationsUrl = plugin.getConfig().getString("webgui.urls.notifications", "https://void-rp.ru/game-ui/notifications");
         this.webGuiHudUrl = plugin.getConfig().getString("webgui.urls.hud", "https://void-rp.ru/game-ui/hud");
         this.webGuiAutoHudOnJoin = plugin.getConfig().getBoolean("webgui.auto-hud-on-join", false);
 
@@ -343,6 +347,8 @@ public final class GameSyncConfig {
     public String getWebGuiAllianceUrl() { return webGuiAllianceUrl; }
     public String getWebGuiBattlepassUrl() { return webGuiBattlepassUrl; }
     public String getWebGuiQuestsUrl() { return webGuiQuestsUrl; }
+    public String getWebGuiLeaderboardsUrl() { return webGuiLeaderboardsUrl; }
+    public String getWebGuiNotificationsUrl() { return webGuiNotificationsUrl; }
     public String getWebGuiHudUrl() { return webGuiHudUrl; }
     public boolean isWebGuiAutoHudOnJoin() { return webGuiAutoHudOnJoin; }
 
