@@ -43,7 +43,11 @@ public final class AchievementRewardService {
     /** Runs a check for every online player. Call on a periodic (main-thread) task. */
     public void checkAllOnline() {
         for (Player player : Bukkit.getOnlinePlayers()) {
-            checkPlayer(player);
+            try {
+                checkPlayer(player);
+            } catch (Exception ignored) {
+                // one player's transient failure must not abort the rest of the tick
+            }
         }
     }
 

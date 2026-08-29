@@ -85,7 +85,11 @@ public final class WeeklyChallengeService {
         String week = weekId(today);
         List<Challenge> active = activeFor(today);
         for (Player player : Bukkit.getOnlinePlayers()) {
-            checkPlayer(player, week, active);
+            try {
+                checkPlayer(player, week, active);
+            } catch (Exception ignored) {
+                // one player's transient failure must not abort the rest of the tick
+            }
         }
     }
 
