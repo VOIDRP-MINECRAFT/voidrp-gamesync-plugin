@@ -53,6 +53,25 @@ public final class PluginDataStore {
         blockEntry(playerId)[1].addAndGet(delta);
     }
 
+    // Generic persistent per-player counters (kills/deaths/mob_kills/playtime), used because
+    // vanilla stats DON'T persist on this server — the stats file is username-keyed and empty,
+    // so every `getStatistic` read is session-only. These live under stat-counters.<uuid>.<key>.
+    private final Map<UUID, Map<String, AtomicLong>> statCounters = new ConcurrentHashMap<>();
+
+    private AtomicLong counter(UUID playerId, String key) {
+        return statCounters
+                .computeIfAbsent(playerId, id -> new ConcurrentHashMap<>())
+                .computeIfAbsent(key, k -> new AtomicLong(yaml.getLong("stat-counters." + playerId + "." + k, 0L)));
+    }
+
+    public long getStatCounter(UUID playerId, String key) {
+        return counter(playerId, key).get();
+    }
+
+    public void addStatCounter(UUID playerId, String key, long delta) {
+        counter(playerId, key).addAndGet(delta);
+    }
+
     public String getRewardBundle(UUID playerId) {
         return yaml.getString("reward-cache." + playerId + ".bundle");
     }
@@ -161,6 +180,11 @@ public final class PluginDataStore {
         for (Map.Entry<UUID, AtomicLong[]> entry : blockStats.entrySet()) {
             yaml.set("block-stats." + entry.getKey() + ".broken", entry.getValue()[0].get());
             yaml.set("block-stats." + entry.getKey() + ".placed", entry.getValue()[1].get());
+        }
+        for (Map.Entry<UUID, Map<String, AtomicLong>> entry : statCounters.entrySet()) {
+            for (Map.Entry<String, AtomicLong> c : entry.getValue().entrySet()) {
+                yaml.set("stat-counters." + entry.getKey() + "." + c.getKey(), c.getValue().get());
+            }
         }
         try {
             yaml.save(file);

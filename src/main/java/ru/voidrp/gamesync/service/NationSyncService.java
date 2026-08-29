@@ -268,12 +268,19 @@ public final class NationSyncService {
             return null;
         }
 
-        int playtimeMinutes = ticksToMinutes(safeGetStatistic(onlinePlayer, Statistic.PLAY_ONE_MINUTE));
-        int pvpKills = safeGetStatistic(onlinePlayer, Statistic.PLAYER_KILLS);
-        int mobKills = safeGetStatistic(onlinePlayer, Statistic.MOB_KILLS);
-        int deaths = safeGetStatistic(onlinePlayer, Statistic.DEATHS);
-        // Event-tracked counts include modded blocks; vanilla Statistic misses them.
+        // Vanilla stats don't persist on this server (session-only), so prefer the plugin's
+        // persistent event counters and only fall back to the live vanilla stat if it's higher.
         UUID uuid = offlinePlayer.getUniqueId();
+        int playtimeMinutes = Math.max(
+                ticksToMinutes(safeGetStatistic(onlinePlayer, Statistic.PLAY_ONE_MINUTE)),
+                (int) (dataStore.getStatCounter(uuid, "playtime_seconds") / 60L));
+        int pvpKills = Math.max(safeGetStatistic(onlinePlayer, Statistic.PLAYER_KILLS),
+                (int) dataStore.getStatCounter(uuid, "kills"));
+        int mobKills = Math.max(safeGetStatistic(onlinePlayer, Statistic.MOB_KILLS),
+                (int) dataStore.getStatCounter(uuid, "mobkills"));
+        int deaths = Math.max(safeGetStatistic(onlinePlayer, Statistic.DEATHS),
+                (int) dataStore.getStatCounter(uuid, "deaths"));
+        // Event-tracked counts include modded blocks; vanilla Statistic misses them.
         long blocksBroken = Math.max(sumMineBlockStats(onlinePlayer), dataStore.getBlocksBroken(uuid));
         long blocksPlaced = Math.max(sumUsedBlockItems(onlinePlayer), dataStore.getBlocksPlaced(uuid));
         double currentBalance = resolveCurrentBalance(offlinePlayer);
@@ -298,17 +305,32 @@ public final class NationSyncService {
             return null;
         }
 
-        JsonObject root = readStatsFile(offlinePlayer.getUniqueId());
-        if (root == null) {
+        UUID uuid = offlinePlayer.getUniqueId();
+        JsonObject root = readStatsFile(uuid);
+        boolean hasCounters = dataStore.getStatCounter(uuid, "playtime_seconds") > 0
+                || dataStore.getStatCounter(uuid, "kills") > 0
+                || dataStore.getStatCounter(uuid, "deaths") > 0
+                || dataStore.getBlocksBroken(uuid) > 0
+                || dataStore.getBlocksPlaced(uuid) > 0;
+        // The vanilla stats file is username-keyed here so it's usually absent; still emit a
+        // snapshot from the persistent plugin counters. Bail only if we truly have nothing.
+        if (root == null && !hasCounters) {
             return null;
         }
+        if (root == null) {
+            root = new JsonObject();
+        }
 
-        int playtimeMinutes = ticksToMinutes(readCustomStatFromRoot(root, "minecraft:play_time"));
-        int pvpKills = readCustomStatFromRoot(root, "minecraft:player_kills");
-        int mobKills = readCustomStatFromRoot(root, "minecraft:mob_kills");
-        int deaths = readCustomStatFromRoot(root, "minecraft:deaths");
-        // Event-tracked counts include modded blocks; the vanilla stats file misses them.
-        UUID uuid = offlinePlayer.getUniqueId();
+        // Persistent plugin counters are authoritative (vanilla stats file is empty here).
+        int playtimeMinutes = Math.max(
+                ticksToMinutes(readCustomStatFromRoot(root, "minecraft:play_time")),
+                (int) (dataStore.getStatCounter(uuid, "playtime_seconds") / 60L));
+        int pvpKills = Math.max(readCustomStatFromRoot(root, "minecraft:player_kills"),
+                (int) dataStore.getStatCounter(uuid, "kills"));
+        int mobKills = Math.max(readCustomStatFromRoot(root, "minecraft:mob_kills"),
+                (int) dataStore.getStatCounter(uuid, "mobkills"));
+        int deaths = Math.max(readCustomStatFromRoot(root, "minecraft:deaths"),
+                (int) dataStore.getStatCounter(uuid, "deaths"));
         long blocksBroken = Math.max(readCategorySumFromRoot(root, "minecraft:mined"), dataStore.getBlocksBroken(uuid));
         long blocksPlaced = Math.max(readPlacedBlocksEstimateFromRoot(root), dataStore.getBlocksPlaced(uuid));
         double currentBalance = resolveCurrentBalance(offlinePlayer);
