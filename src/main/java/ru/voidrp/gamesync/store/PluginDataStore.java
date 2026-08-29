@@ -82,6 +82,41 @@ public final class PluginDataStore {
         saveNow();
     }
 
+    // Weekly-challenge tracking: current week id, per-metric baseline at week start, done keys.
+    public String getWeeklyWeek(UUID playerId) {
+        return yaml.getString("weekly." + playerId + ".week", null);
+    }
+
+    public long getWeeklyBaseline(UUID playerId, String metric) {
+        return yaml.getLong("weekly." + playerId + ".base." + metric, 0L);
+    }
+
+    public boolean isWeeklyDone(UUID playerId, String key) {
+        return yaml.getBoolean("weekly." + playerId + ".done." + key, false);
+    }
+
+    public synchronized void setWeeklyDone(UUID playerId, String key) {
+        yaml.set("weekly." + playerId + ".done." + key, true);
+        saveNow();
+    }
+
+    /** Start a new weekly window: store the week id, clear baselines + done flags. */
+    public synchronized void resetWeekly(UUID playerId, String weekId) {
+        yaml.set("weekly." + playerId + ".week", weekId);
+        yaml.set("weekly." + playerId + ".done", null);
+        yaml.set("weekly." + playerId + ".base", null);
+        saveNow();
+    }
+
+    /** Set a metric's weekly baseline the first time it's needed this week (lazy, idempotent). */
+    public synchronized void ensureWeeklyBaseline(UUID playerId, String metric, long value) {
+        String path = "weekly." + playerId + ".base." + metric;
+        if (!yaml.contains(path)) {
+            yaml.set(path, value);
+            saveNow();
+        }
+    }
+
     // Login-streak tracking.
     public String getLoginStreakDay(UUID playerId) {
         return yaml.getString("login-streak." + playerId + ".last-day", null);

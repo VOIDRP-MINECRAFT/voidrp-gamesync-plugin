@@ -121,6 +121,11 @@ public final class BackendClient {
         postJson(url, gson.toJson(payload), "Notification push failed");
     }
 
+    /** Push a player's current weekly-challenge state for display in the game-ui. */
+    public void pushWeeklyChallenges(java.util.Map<String, Object> payload) throws IOException, InterruptedException {
+        postJson(apiUrl("/game-sync/weekly-challenges"), gson.toJson(payload), "Weekly challenges push failed");
+    }
+
     /** Add a finished chunk of playtime to a player's daily activity bucket for {@code day}. */
     public void pushPlaytime(String nickname, long seconds, String day) throws IOException, InterruptedException {
         java.util.Map<String, Object> payload = new java.util.HashMap<>();
