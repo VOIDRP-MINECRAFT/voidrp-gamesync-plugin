@@ -78,8 +78,50 @@ public final class WebActionPollService {
             case "pickup"       -> processPickup(action);
             case "command"      -> processCommand(action);
             case "open_gui"     -> processOpenGui(action);
+            case "give_reward"  -> processGiveReward(action);
             default             -> ackFailed(action.action_id, "Unknown action_type: " + action.action_type);
         }
+    }
+
+    // ── give_reward (Void Upgrader win — deliver a pool item) ─────────────────
+    // item_key comes from the server-controlled reward pool, not user input.
+    private static final java.util.regex.Pattern SAFE_ITEM_KEY =
+        java.util.regex.Pattern.compile("^[a-z0-9_.-]+:[a-z0-9_./-]+$");
+
+    private void processGiveReward(WebActionItem action) {
+        String actionId = action.action_id;
+        String playerName = action.player_name;
+        String itemKey = str(action.payload, "item_key");
+        String giveCommand = str(action.payload, "give_command");
+        String display = str(action.payload, "display");
+        int amount = intVal(action.payload, "amount");
+        final int amt = Math.max(1, Math.min(6400, amount <= 0 ? 1 : amount));
+
+        boolean hasCommand = giveCommand != null && !giveCommand.isBlank();
+        String key = itemKey == null ? "" : itemKey.toLowerCase(java.util.Locale.ROOT);
+        if (!hasCommand && !SAFE_ITEM_KEY.matcher(key).matches()) {
+            ackFailed(actionId, "Invalid item_key: " + itemKey);
+            return;
+        }
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            Player player = Bukkit.getPlayerExact(playerName);
+            if (player == null || !player.isOnline()) {
+                // Leave the action pending (no ack) so the reward is delivered when the
+                // player is back online, instead of being lost on a brief disconnect.
+                return;
+            }
+            String cmd = hasCommand
+                ? giveCommand.replace("{player}", player.getName())
+                : "minecraft:give " + player.getName() + " " + key + " " + amt;
+            boolean ok = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), cmd);
+            if (ok) {
+                player.sendMessage("§d◆ §fАпгрейд удался! Награда выдана" + (display != null && !display.isBlank() ? "§7: §f" + display : ""));
+                ackDone(actionId);
+            } else {
+                ackFailed(actionId, "give failed: " + cmd);
+            }
+        });
     }
 
     // ── command (whitelisted, opens an in-game GUI for the player) ─────────────
