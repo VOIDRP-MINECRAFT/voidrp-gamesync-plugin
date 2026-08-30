@@ -121,6 +121,17 @@ public final class BackendClient {
         postJson(url, gson.toJson(payload), "Notification push failed");
     }
 
+    /** Grant (or deduct with a negative amount) Void Coins to a player; returns the new balance. */
+    public long grantVoidCoins(String nickname, long amount) throws IOException, InterruptedException {
+        com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+        body.addProperty("nickname", nickname);
+        body.addProperty("amount", amount);
+        HttpResponse<String> response = postJsonForResponse(
+            apiUrl("/game-sync/void-coins/grant"), gson.toJson(body), "Void coin grant failed");
+        com.google.gson.JsonObject o = gson.fromJson(response.body(), com.google.gson.JsonObject.class);
+        return o != null && o.has("void_coins") ? o.get("void_coins").getAsLong() : 0L;
+    }
+
     /** Whether the player wants the HUD opened on join (account setting). Defaults to true. */
     public boolean getHudAutoOpen(String nickname) {
         try {

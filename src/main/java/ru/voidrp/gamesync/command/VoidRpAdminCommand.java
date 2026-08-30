@@ -69,6 +69,10 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
                 handleTikTok(sender, args);
                 return true;
             }
+            case "voidcoin", "voidcoins", "vc" -> {
+                handleVoidCoin(sender, args);
+                return true;
+            }
             default -> {
                 sendHelp(sender);
                 return true;
@@ -276,6 +280,42 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
         }
     }
 
+    private void handleVoidCoin(CommandSender sender, String[] args) {
+        // /vrgs voidcoin <player> <amount>   (amount may be negative to deduct)
+        if (args.length < 3) {
+            sender.sendMessage("§eИспользование: §f/vrgs voidcoin <игрок> <кол-во> §7(отрицательное — снять)");
+            return;
+        }
+        final String targetName = args[1];
+        final long amount;
+        try {
+            amount = Long.parseLong(args[2]);
+        } catch (NumberFormatException e) {
+            sender.sendMessage("§cНеверное количество: §f" + args[2]);
+            return;
+        }
+        if (amount == 0) {
+            sender.sendMessage("§cКоличество не может быть 0.");
+            return;
+        }
+        sender.sendMessage("§7Изменяем Void Coin у §f" + targetName + "§7 на §d" + (amount > 0 ? "+" : "") + amount + "§7...");
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                long balance = plugin.getBackendClient().grantVoidCoins(targetName, amount);
+                Bukkit.getScheduler().runTask(plugin, () -> {
+                    sender.sendMessage("§a[VoidCoin] §f" + targetName + "§a: баланс теперь §d" + balance + " ◆");
+                    Player online = Bukkit.getPlayerExact(targetName);
+                    if (online != null && online.isOnline() && amount > 0) {
+                        online.sendMessage("§d◆ Вы получили §f" + amount + " Void Coin§d! Баланс: §f" + balance);
+                    }
+                });
+            } catch (Exception ex) {
+                Bukkit.getScheduler().runTask(plugin, () ->
+                    sender.sendMessage("§cОшибка выдачи Void Coin: §f" + ex.getMessage()));
+            }
+        });
+    }
+
     private void handleReward(CommandSender sender, String[] args) {
         if (args.length < 3) {
             sender.sendMessage("§eИспользование: /vrgs reward <resolve|apply> <player>");
@@ -329,6 +369,7 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage("§6/vrgs territory debug <slug>");
         sender.sendMessage("§6/vrgs reward <resolve|apply> <player>");
         sender.sendMessage("§6/vrgs tiktok <ссылка> §7— анонс ролика + награда за переход");
+        sender.sendMessage("§6/vrgs voidcoin <игрок> <кол-во> §7— выдать/снять Void Coin (премиум-валюта)");
     }
 
     @Override
@@ -338,7 +379,7 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 1) {
-            return filter(List.of("reload", "sync", "skin", "territory", "reward", "market", "tiktok"), args[0]);
+            return filter(List.of("reload", "sync", "skin", "territory", "reward", "market", "tiktok", "voidcoin"), args[0]);
         }
 
         if (args.length == 2) {
@@ -348,6 +389,7 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
                 case "territory" -> filter(List.of("debug"), args[1]);
                 case "reward" -> filter(List.of("resolve", "apply"), args[1]);
                 case "market" -> filter(List.of("status", "reload", "recalculate", "visual-sync", "price"), args[1]);
+                case "voidcoin", "voidcoins", "vc" -> filter(onlinePlayers(), args[1]);
                 default -> List.of();
             };
         }
