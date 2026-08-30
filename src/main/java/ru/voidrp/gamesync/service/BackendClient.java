@@ -121,6 +121,17 @@ public final class BackendClient {
         postJson(url, gson.toJson(payload), "Notification push failed");
     }
 
+    /** Whether the player wants the HUD opened on join (account setting). Defaults to true. */
+    public boolean getHudAutoOpen(String nickname) {
+        try {
+            HttpResponse<String> response = get(apiUrl("/game-sync/player-settings?nickname=" + encode(nickname)));
+            com.google.gson.JsonObject o = gson.fromJson(response.body(), com.google.gson.JsonObject.class);
+            return o == null || !o.has("hud_auto_open") || o.get("hud_auto_open").getAsBoolean();
+        } catch (Exception ignored) {
+            return true; // fail-open: default behaviour if the backend is unreachable
+        }
+    }
+
     /** Push a player's current weekly-challenge state for display in the game-ui. */
     public void pushWeeklyChallenges(java.util.Map<String, Object> payload) throws IOException, InterruptedException {
         postJson(apiUrl("/game-sync/weekly-challenges"), gson.toJson(payload), "Weekly challenges push failed");

@@ -35,11 +35,20 @@ public final class WebGuiPlayerJoinListener implements Listener {
             // only the plugin signs the URL with a token, so a plugin-driven HUD avoids
             // the "session not confirmed" error a tokenless mod-driven HUD would cause.
             if (plugin.getGameSyncConfig().isWebGuiAutoHudOnJoin()) {
-                // Cache-bust like the menu: CEF caches the HUD page, so a per-join version
-                // param forces a fresh load and always shows the latest build.
-                String hudUrl = plugin.getGameSyncConfig().getWebGuiHudUrl();
-                hudUrl += (hudUrl.contains("?") ? "&" : "?") + "v=" + (System.currentTimeMillis() / 1000L);
-                plugin.getWebGuiBridgeService().openHud(player, hudUrl);
+                // Respect the player's account setting (fail-open). Fetch off-thread, then
+                // open the HUD on the main thread if allowed.
+                Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                    boolean allow = plugin.getBackendClient().getHudAutoOpen(player.getName());
+                    if (!allow) return;
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (!player.isOnline()) return;
+                        // Cache-bust like the menu: CEF caches the HUD page, so a per-join
+                        // version param forces a fresh load and always shows the latest build.
+                        String hudUrl = plugin.getGameSyncConfig().getWebGuiHudUrl();
+                        hudUrl += (hudUrl.contains("?") ? "&" : "?") + "v=" + (System.currentTimeMillis() / 1000L);
+                        plugin.getWebGuiBridgeService().openHud(player, hudUrl);
+                    });
+                });
             }
         }, 60L);
     }
