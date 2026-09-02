@@ -254,3 +254,11 @@ webgui:
     leaderboards: "https://void-rp.ru/game-ui/leaderboards"
     notifications: "https://void-rp.ru/game-ui/notifications"
     hud: "https://void-rp.ru/game-ui/hud"
+
+# Запрещённые предметы: удаляются из инвентаря (заход + подбор + периодический скан)
+# с сообщением в чат. Матчинг по namespaced-id (getType().getKey()).
+banned-items:
+  ids:
+    - "reliquary:rod_of_lyssa"   # Удочка лисы (Rod of Lyssa) — ворует предметы из чужих инвентарей
+  message: "§c⛔ Этот предмет запрещён на сервере и был удалён из инвентаря."
+  scan-period-ticks: 100          # ~5 сек между полными сканами инвентарей

@@ -321,6 +321,9 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new ru.voidrp.gamesync.listener.BlockStatsListener(this), this);
         Bukkit.getPluginManager().registerEvents(new ru.voidrp.gamesync.listener.CombatPlaytimeStatsListener(this), this);
         Bukkit.getPluginManager().registerEvents(new ru.voidrp.gamesync.listener.LoginStreakListener(this), this);
+        ru.voidrp.gamesync.listener.BannedItemsListener bannedItems = new ru.voidrp.gamesync.listener.BannedItemsListener(this);
+        Bukkit.getPluginManager().registerEvents(bannedItems, this);
+        bannedItems.start();   // periodic full-inventory sweep for forbidden items
         this.achievementRewardService = new AchievementRewardService(this);
         this.weeklyChallengeService = new WeeklyChallengeService(this);
         // Award achievement + weekly-challenge rewards on a periodic main-thread tick (every 3 min).
