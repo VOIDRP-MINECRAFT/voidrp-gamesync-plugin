@@ -73,6 +73,10 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
                 handleVoidCoin(sender, args);
                 return true;
             }
+            case "cosmetic", "cosmetics" -> {
+                handleCosmetic(sender, args);
+                return true;
+            }
             default -> {
                 sendHelp(sender);
                 return true;
@@ -316,6 +320,58 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
         });
     }
 
+    private void handleCosmetic(CommandSender sender, String[] args) {
+        // /vrgs cosmetic grant <player> <slug>   |   /vrgs cosmetic list
+        if (args.length < 2) {
+            sender.sendMessage("§eИспользование: §f/vrgs cosmetic <grant|list> ...");
+            return;
+        }
+        String mode = args[1].toLowerCase(Locale.ROOT);
+        if (mode.equals("list")) {
+            sender.sendMessage("§7Загружаем каталог косметики...");
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                try {
+                    List<String[]> list = plugin.getBackendClient().listCosmetics();
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (list.isEmpty()) { sender.sendMessage("§eКаталог пуст."); return; }
+                        sender.sendMessage("§d[Косметика] §7каталог (" + list.size() + "):");
+                        for (String[] c : list) sender.sendMessage("  §f" + c[0] + " §7— " + c[1]);
+                    });
+                } catch (Exception ex) {
+                    Bukkit.getScheduler().runTask(plugin, () ->
+                        sender.sendMessage("§cОшибка каталога: §f" + ex.getMessage()));
+                }
+            });
+            return;
+        }
+        if (mode.equals("grant")) {
+            if (args.length < 4) {
+                sender.sendMessage("§eИспользование: §f/vrgs cosmetic grant <игрок> <slug>");
+                return;
+            }
+            final String targetName = args[2];
+            final String slug = args[3];
+            sender.sendMessage("§7Выдаём косметику §f" + slug + "§7 игроку §f" + targetName + "§7...");
+            Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+                try {
+                    String name = plugin.getBackendClient().grantCosmetic(targetName, slug);
+                    Bukkit.getScheduler().runTask(plugin, () -> {
+                        sender.sendMessage("§a[Косметика] §f" + targetName + "§a получил §d" + name + "§a. Включить: WebGUI → Косметика.");
+                        Player online = Bukkit.getPlayerExact(targetName);
+                        if (online != null && online.isOnline()) {
+                            online.sendMessage("§d✦ Вам выдана косметика §f" + name + "§d! Наденьте её в WebGUI → Косметика.");
+                        }
+                    });
+                } catch (Exception ex) {
+                    Bukkit.getScheduler().runTask(plugin, () ->
+                        sender.sendMessage("§cОшибка выдачи: §f" + ex.getMessage()));
+                }
+            });
+            return;
+        }
+        sender.sendMessage("§eИспользование: §f/vrgs cosmetic <grant|list> ...");
+    }
+
     private void handleReward(CommandSender sender, String[] args) {
         if (args.length < 3) {
             sender.sendMessage("§eИспользование: /vrgs reward <resolve|apply> <player>");
@@ -379,7 +435,7 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 1) {
-            return filter(List.of("reload", "sync", "skin", "territory", "reward", "market", "tiktok", "voidcoin"), args[0]);
+            return filter(List.of("reload", "sync", "skin", "territory", "reward", "market", "tiktok", "voidcoin", "cosmetic"), args[0]);
         }
 
         if (args.length == 2) {
@@ -390,6 +446,7 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
                 case "reward" -> filter(List.of("resolve", "apply"), args[1]);
                 case "market" -> filter(List.of("status", "reload", "recalculate", "visual-sync", "price"), args[1]);
                 case "voidcoin", "voidcoins", "vc" -> filter(onlinePlayers(), args[1]);
+                case "cosmetic", "cosmetics" -> filter(List.of("grant", "list"), args[1]);
                 default -> List.of();
             };
         }
@@ -407,6 +464,9 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
             }
             if (sub.equals("territory")) {
                 return List.of();
+            }
+            if ((sub.equals("cosmetic") || sub.equals("cosmetics")) && args[1].equalsIgnoreCase("grant")) {
+                return filter(onlinePlayers(), args[2]);
             }
         }
 

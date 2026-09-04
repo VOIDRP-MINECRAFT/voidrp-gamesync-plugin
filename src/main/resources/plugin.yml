@@ -20,6 +20,10 @@ commands:
     description: VoidRP GameSync admin command
     usage: /vrgs
     permission: voidrp.gamesync.admin
+  cosmetics:
+    description: Open the Figura cosmetics menu
+    usage: /cosmetics
+    aliases: [cos, kosmetika, косметика]
   nationdonate:
     description: Donate your money to your nation treasury
     usage: /nationdonate <amount> [comment]

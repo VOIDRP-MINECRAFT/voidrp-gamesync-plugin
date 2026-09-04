@@ -236,6 +236,10 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         VoidRpAdminCommand adminCommand = new VoidRpAdminCommand(this);
         registerCommand("vrgs", adminCommand, adminCommand);
 
+        ru.voidrp.gamesync.cosmetics.CosmeticsGui cosmeticsGui = new ru.voidrp.gamesync.cosmetics.CosmeticsGui(this);
+        registerCommand("cosmetics", cosmeticsGui, null);
+        Bukkit.getPluginManager().registerEvents(cosmeticsGui, this);
+
         PlayerNationDonateCommand donateCommand = new PlayerNationDonateCommand(this);
         registerCommand("nationdonate", donateCommand, donateCommand);
         registerCommand("ndonate", donateCommand, donateCommand);

@@ -132,6 +132,64 @@ public final class BackendClient {
         return o != null && o.has("void_coins") ? o.get("void_coins").getAsLong() : 0L;
     }
 
+    /** Grant a Figura cosmetic (by catalog slug) to a player by nick; returns the cosmetic's display name. */
+    public String grantCosmetic(String nickname, String slug) throws IOException, InterruptedException {
+        com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+        body.addProperty("nickname", nickname);
+        body.addProperty("slug", slug);
+        HttpResponse<String> response = postJsonForResponse(
+            apiUrl("/game-sync/cosmetics/grant"), gson.toJson(body), "Cosmetic grant failed");
+        com.google.gson.JsonObject o = gson.fromJson(response.body(), com.google.gson.JsonObject.class);
+        return o != null && o.has("name") ? o.get("name").getAsString() : slug;
+    }
+
+    /** A player's owned cosmetics: each row = {slug, name, slot, equipped("1"/"0")}. */
+    public java.util.List<String[]> getOwnedCosmetics(String nickname) throws IOException, InterruptedException {
+        HttpResponse<String> response = get(apiUrl("/game-sync/cosmetics/owned?nickname=" + encode(nickname)));
+        java.util.List<String[]> out = new java.util.ArrayList<>();
+        com.google.gson.JsonObject o = gson.fromJson(response.body(), com.google.gson.JsonObject.class);
+        if (o != null && o.has("owned")) {
+            for (com.google.gson.JsonElement e : o.getAsJsonArray("owned")) {
+                com.google.gson.JsonObject c = e.getAsJsonObject();
+                out.add(new String[]{c.get("slug").getAsString(),
+                        c.has("name") ? c.get("name").getAsString() : c.get("slug").getAsString(),
+                        c.has("slot") ? c.get("slot").getAsString() : "full",
+                        (c.has("equipped") && c.get("equipped").getAsBoolean()) ? "1" : "0"});
+            }
+        }
+        return out;
+    }
+
+    /** Toggle a cosmetic on/off for a player (equip if off, unequip if on). */
+    public void toggleCosmetic(String nickname, String slug) throws IOException, InterruptedException {
+        com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+        body.addProperty("nickname", nickname);
+        body.addProperty("slug", slug);
+        postJson(apiUrl("/game-sync/cosmetics/equip"), gson.toJson(body), "Cosmetic equip failed");
+    }
+
+    /** Take off all equipped cosmetics for a player. */
+    public void unequipAllCosmetics(String nickname) throws IOException, InterruptedException {
+        com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+        body.addProperty("nickname", nickname);
+        body.add("slug", com.google.gson.JsonNull.INSTANCE);
+        postJson(apiUrl("/game-sync/cosmetics/equip"), gson.toJson(body), "Cosmetic unequip-all failed");
+    }
+
+    /** List the cosmetic catalog (slug + name) for tab-complete / validation. */
+    public java.util.List<String[]> listCosmetics() throws IOException, InterruptedException {
+        HttpResponse<String> response = get(apiUrl("/game-sync/cosmetics"));
+        java.util.List<String[]> out = new java.util.ArrayList<>();
+        com.google.gson.JsonObject o = gson.fromJson(response.body(), com.google.gson.JsonObject.class);
+        if (o != null && o.has("cosmetics")) {
+            for (com.google.gson.JsonElement e : o.getAsJsonArray("cosmetics")) {
+                com.google.gson.JsonObject c = e.getAsJsonObject();
+                out.add(new String[]{c.get("slug").getAsString(), c.has("name") ? c.get("name").getAsString() : ""});
+            }
+        }
+        return out;
+    }
+
     /** Whether the player wants the HUD opened on join (account setting). Defaults to true. */
     public boolean getHudAutoOpen(String nickname) {
         try {
