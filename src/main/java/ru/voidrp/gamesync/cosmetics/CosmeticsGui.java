@@ -34,11 +34,12 @@ import ru.voidrp.gamesync.VoidRpGameSyncPlugin;
 public final class CosmeticsGui implements CommandExecutor, Listener {
 
     private static final String TITLE = ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "✦ Косметика";
-    private static final int UNEQUIP_ALL_SLOT = 49;
+    private static final int PER_PAGE = 45;   // slots 0..44; the last row (45..53) holds controls
 
     private final VoidRpGameSyncPlugin plugin;
-    // per-player mapping of inventory slot -> cosmetic slug for the currently open GUI
+    // per-player mapping of inventory slot -> cosmetic slug (or a control marker) for the open GUI
     private final Map<UUID, Map<Integer, String>> openSlots = new HashMap<>();
+    private final Map<UUID, Integer> page = new HashMap<>();
 
     public CosmeticsGui(VoidRpGameSyncPlugin plugin) {
         this.plugin = plugin;
@@ -50,12 +51,12 @@ public final class CosmeticsGui implements CommandExecutor, Listener {
             sender.sendMessage("§cТолько для игроков.");
             return true;
         }
-        open(p);
+        open(p, page.getOrDefault(p.getUniqueId(), 0));
         return true;
     }
 
-    /** Fetch owned cosmetics off-thread, then build + open the inventory on the main thread. */
-    public void open(Player player) {
+    /** Fetch owned cosmetics off-thread, then build + open the inventory (given page) on the main thread. */
+    public void open(Player player, int wantPage) {
         final String nick = player.getName();
         player.sendMessage("§7Открываем косметику…");
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
@@ -66,32 +67,44 @@ public final class CosmeticsGui implements CommandExecutor, Listener {
                 Bukkit.getScheduler().runTask(plugin, () -> player.sendMessage("§cОшибка загрузки косметики: §f" + e.getMessage()));
                 return;
             }
-            Bukkit.getScheduler().runTask(plugin, () -> build(player, owned));
+            Bukkit.getScheduler().runTask(plugin, () -> build(player, owned, wantPage));
         });
     }
 
-    private void build(Player player, List<String[]> owned) {
+    private void build(Player player, List<String[]> owned, int wantPage) {
         if (!player.isOnline()) return;
-        int rows = Math.max(2, Math.min(6, (owned.size() / 9) + 2));
+        int totalPages = Math.max(1, (owned.size() + PER_PAGE - 1) / PER_PAGE);
+        int pg = Math.max(0, Math.min(wantPage, totalPages - 1));
+        page.put(player.getUniqueId(), pg);
+
+        // dynamic size for a single page, full 54 when paginated
+        int rows = totalPages > 1 ? 6 : Math.max(2, Math.min(6, (owned.size() / 9) + 2));
         Inventory inv = Bukkit.createInventory(player, rows * 9, TITLE);
+        int ctrlRow = rows * 9 - 9;
 
         Map<Integer, String> slotMap = new HashMap<>();
-        int i = 0;
-        for (String[] c : owned) {
-            if (i >= (rows - 1) * 9) break;          // leave the last row for controls
-            String slug = c[0], name = c[1], slot = c[2];
-            boolean equipped = "1".equals(c[3]);
-            inv.setItem(i, item(name, slot, equipped));
-            slotMap.put(i, slug);
-            i++;
+        int start = pg * PER_PAGE;
+        int end = Math.min(start + Math.min(PER_PAGE, ctrlRow), owned.size());
+        for (int i = start, s = 0; i < end && s < ctrlRow; i++, s++) {
+            String[] c = owned.get(i);
+            inv.setItem(s, item(c[1], c[2], "1".equals(c[3])));
+            slotMap.put(s, c[0]);
         }
         if (owned.isEmpty()) {
             inv.setItem(4, named(Material.BARRIER, "§cУ вас пока нет косметики",
                     List.of("§7Купить можно в WebGUI → Косметика")));
         }
-        inv.setItem(rows * 9 - 9 + 4, named(Material.BARRIER, "§cСнять всё", List.of("§7Убрать все надетые косметики")));
-        // remember which real slot is the "unequip all" for this size
-        slotMap.put(rows * 9 - 9 + 4, "\0ALL");
+        // controls row
+        inv.setItem(ctrlRow + 4, named(Material.BARRIER, "§cСнять всё", List.of("§7Убрать все надетые косметики")));
+        slotMap.put(ctrlRow + 4, "\0ALL");
+        if (pg > 0) {
+            inv.setItem(ctrlRow, named(Material.ARROW, "§e← Назад", List.of("§7Стр. " + pg + "/" + totalPages)));
+            slotMap.put(ctrlRow, "\0PREV");
+        }
+        if (pg < totalPages - 1) {
+            inv.setItem(ctrlRow + 8, named(Material.ARROW, "§eВперёд →", List.of("§7Стр. " + (pg + 2) + "/" + totalPages)));
+            slotMap.put(ctrlRow + 8, "\0NEXT");
+        }
 
         openSlots.put(player.getUniqueId(), slotMap);
         player.openInventory(inv);
@@ -146,16 +159,19 @@ public final class CosmeticsGui implements CommandExecutor, Listener {
         String slug = slotMap.get(e.getRawSlot());
         if (slug == null) return;
         final String nick = p.getName();
+        int cur = page.getOrDefault(p.getUniqueId(), 0);
+        if ("\0PREV".equals(slug)) { open(p, cur - 1); return; }
+        if ("\0NEXT".equals(slug)) { open(p, cur + 1); return; }
         if ("\0ALL".equals(slug)) {
             Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
                 try { plugin.getBackendClient().unequipAllCosmetics(nick); } catch (Exception ex) { warn(p, ex); return; }
-                Bukkit.getScheduler().runTask(plugin, () -> open(p));
+                Bukkit.getScheduler().runTask(plugin, () -> open(p, cur));
             });
             return;
         }
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
             try { plugin.getBackendClient().toggleCosmetic(nick, slug); } catch (Exception ex) { warn(p, ex); return; }
-            Bukkit.getScheduler().runTask(plugin, () -> open(p));   // re-fetch + reopen with fresh state
+            Bukkit.getScheduler().runTask(plugin, () -> open(p, cur));   // re-fetch + reopen same page
         });
     }
 
