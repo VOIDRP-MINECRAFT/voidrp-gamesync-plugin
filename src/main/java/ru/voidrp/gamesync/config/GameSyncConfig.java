@@ -1,5 +1,8 @@
 package ru.voidrp.gamesync.config;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -95,6 +98,11 @@ public final class GameSyncConfig {
     private final boolean startingBalanceEnabled;
     private final double startingBalanceAmount;
     private final long startingBalanceDelayTicks;
+
+    private final boolean starterKitEnabled;
+    private final long starterKitDelayTicks;
+    private final List<String> starterKitItems;
+    private final String starterKitMessage;
 
     private final boolean seasonAutoRewardsEnabled;
 
@@ -223,6 +231,13 @@ public final class GameSyncConfig {
         this.startingBalanceAmount = plugin.getConfig().getDouble("starting-balance.amount", 1000.0);
         this.startingBalanceDelayTicks = Math.max(1L, plugin.getConfig().getLong("starting-balance.delay-ticks", 60L));
 
+        this.starterKitEnabled = plugin.getConfig().getBoolean("starter-kit.enabled", false);
+        this.starterKitDelayTicks = Math.max(1L, plugin.getConfig().getLong("starter-kit.delay-ticks", 80L));
+        this.starterKitItems = Collections.unmodifiableList(
+                plugin.getConfig().getStringList("starter-kit.items"));
+        this.starterKitMessage = plugin.getConfig().getString("starter-kit.message",
+                "§e§lСтартовый набор§r §7— в мире очень темно, держи факелы и еду.");
+
         this.webGuiEnabled = plugin.getConfig().getBoolean("webgui.enabled", false);
         this.webGuiMenuUrl = plugin.getConfig().getString("webgui.urls.menu", "https://void-rp.ru/game-ui/menu");
         this.webGuiMarketUrl = plugin.getConfig().getString("webgui.urls.market", "https://void-rp.ru/game-ui/market");
@@ -331,6 +346,11 @@ public final class GameSyncConfig {
     public boolean isPlayerMarketEnabled() { return playerMarketEnabled; }
     public int getPlayerMarketMaxSellOrders() { return playerMarketMaxSellOrders; }
     public int getPlayerMarketMaxBuyOrders() { return playerMarketMaxBuyOrders; }
+
+    public boolean isStarterKitEnabled() { return starterKitEnabled; }
+    public long getStarterKitDelayTicks() { return starterKitDelayTicks; }
+    public List<String> getStarterKitItems() { return starterKitItems; }
+    public String getStarterKitMessage() { return starterKitMessage; }
 
     public boolean isStartingBalanceEnabled() { return startingBalanceEnabled; }
     public double getStartingBalanceAmount() { return startingBalanceAmount; }

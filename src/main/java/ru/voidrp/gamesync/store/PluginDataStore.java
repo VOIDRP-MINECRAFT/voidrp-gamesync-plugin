@@ -230,12 +230,41 @@ public final class PluginDataStore {
         yaml.set("starting-balance-granted." + playerId, true);
     }
 
+    /** Tracked separately from the starting balance so either can be re-granted on its own. */
+    public boolean hasStarterKitGranted(UUID playerId) {
+        return yaml.getBoolean("starter-kit-granted." + playerId, false);
+    }
+
+    public void setStarterKitGranted(UUID playerId) {
+        yaml.set("starter-kit-granted." + playerId, true);
+    }
+
     public boolean getTierUnlocked(UUID playerId, String tierName) {
         return yaml.getBoolean("tier-tracking." + playerId + "." + tierName, false);
     }
 
     public void setTierUnlocked(UUID playerId, String tierName) {
         yaml.set("tier-tracking." + playerId + "." + tierName, true);
+    }
+
+    /**
+     * Подтверждён ли анлок бэкендом. Хранится отдельно от факта открытия эпохи:
+     * бэкенд может отвергнуть ключ (UnknownTierError) или быть недоступен, а
+     * локальный флаг к тому моменту уже стоит — без этой пары анлок терялся бы
+     * навсегда, потому что повторной отправки не было.
+     */
+    public boolean isTierReported(UUID playerId, String tierName) {
+        return yaml.getBoolean("tier-reported." + playerId + "." + tierName, false);
+    }
+
+    public void setTierReported(UUID playerId, String tierName) {
+        yaml.set("tier-reported." + playerId + "." + tierName, true);
+    }
+
+    /** Эпохи игрока, открытые локально. */
+    public java.util.Set<String> getUnlockedTiers(UUID playerId) {
+        var section = yaml.getConfigurationSection("tier-tracking." + playerId);
+        return section == null ? java.util.Set.of() : section.getKeys(false);
     }
 
     public synchronized void saveNow() {

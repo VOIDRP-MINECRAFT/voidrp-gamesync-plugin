@@ -76,6 +76,86 @@ starting-balance:
   amount: 1000
   delay-ticks: 60
 
+# Разовый стартовый набор на ПЕРВЫЙ вход. В паке стоит Hardcore True Darkness —
+# без источника света первые минуты играть невозможно.
+# Формат items: "<namespaced_id> <количество>", выдаётся через /minecraft:give,
+# так что модовые предметы тоже работают.
+starter-kit:
+  enabled: false
+  delay-ticks: 80
+  message: "§e§lСтартовый набор§r §7— в мире очень темно, держи факелы и еду."
+  items:
+    - "minecraft:torch 32"
+    - "minecraft:cooked_beef 16"
+    - "minecraft:bread 16"
+
+# ЭПОХИ ПРОГРЕССИИ.
+# Эпоха открывается, когда предмет-гейт впервые оказывается в инвентаре игрока.
+# Ловится осмотром инвентаря, а не событием крафта: ключевые предметы пака
+# делаются в модовых мультиблоках (fusion crafting, Extreme Crafting Table,
+# ассемблеры MI), где ванильный CraftItemEvent не срабатывает вообще.
+#
+# branch: main — общая линия прогрессии, остальные — параллельные ветки,
+# они не обязательны и не блокируют друг друга.
+epochs:
+  enabled: true
+  scan-interval-ticks: 600      # 30 секунд
+  list:
+    # ── Общая линия ────────────────────────────────────────────────
+    mechanisms_age:
+      item: "create:precision_mechanism"
+      title: "открыл Эпоху механизмов"
+      branch: main
+    steel_age:
+      item: "immersiveengineering:ingot_steel"
+      title: "открыл Эпоху стали"
+      branch: main
+    energy_age:
+      item: "mekanism:steel_casing"
+      title: "открыл Эпоху энергии"
+      branch: main
+    automation_age:
+      item: "ae2:controller"
+      title: "открыл Эпоху автоматизации"
+      branch: main
+    industry_age:
+      item: "modern_industrialization:advanced_machine_hull"
+      title: "открыл Индустриальную эпоху"
+      branch: main
+    quantum_age:
+      item: "modern_industrialization:quantum_chestplate"
+      title: "открыл Квантовую эпоху"
+      branch: main
+    singularity_age:
+      item: "ftbevolution:ultimate_singularity"
+      title: "открыл Эпоху сингулярности"
+      branch: main
+    transcendence:
+      item: "ftbevolution:realized_transcendence"
+      title: "достиг Трансцендентства"
+      branch: main
+    # ── Ветки ──────────────────────────────────────────────────────
+    magic_path:
+      item: "ars_nouveau:enchanting_apparatus"
+      title: "ступил на Путь магии"
+      branch: magic
+    arcane_path:
+      item: "forbidden_arcanus:clibano_core"
+      title: "постиг Тайные искусства"
+      branch: magic
+    hunter_path:
+      item: "cataclysm:ignitium_ingot"
+      title: "ступил на Путь охотника"
+      branch: exploration
+    starlight_path:
+      item: "eternal_starlight:starcore"
+      title: "достиг Вечного Звездосвета"
+      branch: exploration
+    draconic_path:
+      item: "draconicevolution:chaotic_core"
+      title: "овладел Драконьей мощью"
+      branch: tech
+
 reward-bundles:
   referral_rank_3:
     commands:
@@ -260,5 +340,6 @@ webgui:
 banned-items:
   ids:
     - "reliquary:rod_of_lyssa"   # Удочка лисы (Rod of Lyssa) — ворует предметы из чужих инвентарей
+    - "relics:infinity_ham"      # Бесконечный окорок — обесценивает голод и выживание
   message: "§c⛔ Этот предмет запрещён на сервере и был удалён из инвентаря."
   scan-period-ticks: 100          # ~5 сек между полными сканами инвентарей

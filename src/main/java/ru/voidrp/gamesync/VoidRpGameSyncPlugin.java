@@ -72,6 +72,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
     private NationRegistry nationRegistry;
     private PluginDataStore dataStore;
     private RewardCacheService rewardCacheService;
+    private ru.voidrp.gamesync.service.EpochService epochService;
     private ReferralRewardService referralRewardService;
     private LuckPermsNationMetaService luckPermsNationMetaService;
     private TerritoryPointsResolver territoryPointsResolver;
@@ -128,6 +129,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         }
 
         allianceCacheService.start();
+        if (epochService != null) epochService.start();
         nationResearchEffectService.start();
 
         if (gameSyncConfig.isWebGuiEnabled()) {
@@ -174,6 +176,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
     public void reloadPluginState() {
         reloadConfig();
         if (syncScheduler != null) syncScheduler.stop();
+        if (epochService != null) epochService.stop();
         if (economyMarketSyncService != null) economyMarketSyncService.stop();
         if (economyShopVisualSyncService != null) economyShopVisualSyncService.stop();
         if (allianceCacheService != null) allianceCacheService.stop();
@@ -190,6 +193,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
             moddedShopItemFixupService.scheduleFixup();
         }
         allianceCacheService.start();
+        if (epochService != null) epochService.start();
         nationResearchEffectService.start();
         if (gameSyncConfig.isWebGuiEnabled()) {
             webActionPollService.start();
@@ -204,6 +208,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         }
         this.backendClient = new BackendClient(this, gameSyncConfig);
         this.rewardCacheService = new RewardCacheService(this, dataStore);
+        this.epochService = new ru.voidrp.gamesync.service.EpochService(this);
         this.nationRegistry = new NationRegistry(this, backendClient, gameSyncConfig);
         this.territoryPointsResolver = new TerritoryPointsResolver(this, dataStore, gameSyncConfig);
         this.referralRewardService = new ReferralRewardService(this, backendClient, rewardCacheService, gameSyncConfig);
@@ -380,6 +385,10 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
 
     public PluginDataStore getDataStore() {
         return dataStore;
+    }
+
+    public ru.voidrp.gamesync.service.EpochService getEpochService() {
+        return epochService;
     }
 
     public RewardCacheService getRewardCacheService() {
