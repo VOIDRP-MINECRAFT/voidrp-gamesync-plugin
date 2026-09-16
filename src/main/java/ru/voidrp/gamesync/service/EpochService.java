@@ -163,6 +163,7 @@ public final class EpochService {
             String name = player.getName();
             plugin.getLogger().info("[Epochs] " + name + " открыл эпоху " + epoch.key());
             Bukkit.broadcastMessage("§6[VoidRP] §f" + name + " §a" + epoch.title() + "§a!");
+            plugin.getTipService().onEpochUnlocked(player);
         }
         report(player, epoch.key());
     }

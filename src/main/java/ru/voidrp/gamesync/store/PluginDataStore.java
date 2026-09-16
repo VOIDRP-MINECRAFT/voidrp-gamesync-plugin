@@ -239,6 +239,15 @@ public final class PluginDataStore {
         yaml.set("starter-kit-granted." + playerId, true);
     }
 
+    /** A contextual tip (TipService) was already delivered to this player. */
+    public boolean isTipShown(UUID playerId, String key) {
+        return yaml.getBoolean("tips-shown." + playerId + "." + key, false);
+    }
+
+    public void setTipShown(UUID playerId, String key) {
+        yaml.set("tips-shown." + playerId + "." + key, true);
+    }
+
     /** The newcomer guide was opened automatically once — never again on later joins. */
     public boolean hasWelcomeShown(UUID playerId) {
         return yaml.getBoolean("welcome-shown." + playerId, false);
