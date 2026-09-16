@@ -239,6 +239,15 @@ public final class PluginDataStore {
         yaml.set("starter-kit-granted." + playerId, true);
     }
 
+    /** A roadmap key item was already reported to the backend for this player. */
+    public boolean isGuideItemSeen(UUID playerId, String itemId) {
+        return yaml.getBoolean("guide-items." + playerId + "." + itemId.replace(':', '|').replace('.', '_'), false);
+    }
+
+    public void setGuideItemSeen(UUID playerId, String itemId) {
+        yaml.set("guide-items." + playerId + "." + itemId.replace(':', '|').replace('.', '_'), true);
+    }
+
     /** A contextual tip (TipService) was already delivered to this player. */
     public boolean isTipShown(UUID playerId, String key) {
         return yaml.getBoolean("tips-shown." + playerId + "." + key, false);

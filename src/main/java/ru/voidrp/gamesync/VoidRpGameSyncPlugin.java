@@ -74,6 +74,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
     private RewardCacheService rewardCacheService;
     private ru.voidrp.gamesync.service.EpochService epochService;
     private final ru.voidrp.gamesync.service.TipService tipService = new ru.voidrp.gamesync.service.TipService(this);
+    private final ru.voidrp.gamesync.service.GuideItemTracker guideItemTracker = new ru.voidrp.gamesync.service.GuideItemTracker(this);
     private ReferralRewardService referralRewardService;
     private LuckPermsNationMetaService luckPermsNationMetaService;
     private TerritoryPointsResolver territoryPointsResolver;
@@ -132,6 +133,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         allianceCacheService.start();
         if (epochService != null) epochService.start();
         tipService.start();
+        guideItemTracker.start();
         nationResearchEffectService.start();
 
         if (gameSyncConfig.isWebGuiEnabled()) {
@@ -246,6 +248,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         ru.voidrp.gamesync.cosmetics.CosmeticsGui cosmeticsGui = new ru.voidrp.gamesync.cosmetics.CosmeticsGui(this);
         registerCommand("cosmetics", cosmeticsGui, null);
         registerCommand("guide", new ru.voidrp.gamesync.command.GuideCommand(this), null);
+        registerCommand("roadmap", new ru.voidrp.gamesync.command.RoadmapCommand(this), null);
         Bukkit.getPluginManager().registerEvents(cosmeticsGui, this);
 
         PlayerNationDonateCommand donateCommand = new PlayerNationDonateCommand(this);

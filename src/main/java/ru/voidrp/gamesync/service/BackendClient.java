@@ -201,6 +201,26 @@ public final class BackendClient {
         }
     }
 
+    /** Key item ids the in-game roadmap tracks (see backend core/progression_roadmap.json). */
+    public java.util.List<String> fetchGuideTrackedItems() throws IOException, InterruptedException {
+        HttpResponse<String> response = get(apiUrl("/game-sync/guide/tracked-items"));
+        com.google.gson.JsonObject o = gson.fromJson(response.body(), com.google.gson.JsonObject.class);
+        java.util.List<String> out = new java.util.ArrayList<>();
+        if (o != null && o.has("items")) o.getAsJsonArray("items").forEach(e -> out.add(e.getAsString()));
+        return out;
+    }
+
+    /** Report roadmap key items a player has just been seen holding. */
+    public void pushGuideItems(String uuid, String nickname, java.util.Collection<String> items) throws IOException, InterruptedException {
+        com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+        body.addProperty("minecraft_uuid", uuid);
+        body.addProperty("minecraft_nickname", nickname);
+        com.google.gson.JsonArray arr = new com.google.gson.JsonArray();
+        items.forEach(arr::add);
+        body.add("items", arr);
+        postJson(apiUrl("/game-sync/guide/items"), gson.toJson(body), "Guide items push failed");
+    }
+
     /** Push a player's current weekly-challenge state for display in the game-ui. */
     public void pushWeeklyChallenges(java.util.Map<String, Object> payload) throws IOException, InterruptedException {
         postJson(apiUrl("/game-sync/weekly-challenges"), gson.toJson(payload), "Weekly challenges push failed");

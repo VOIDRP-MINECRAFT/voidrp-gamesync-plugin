@@ -46,6 +46,7 @@ public final class GuideCommand implements CommandExecutor {
         player.sendMessage("§7• §d/ftbteams party create §fи §d/ftbteams party invite §f— своя команда.");
         player.sendMessage("§7• §fПриват: карта на §dM§f, выдели чанки левой кнопкой мыши.");
         player.sendMessage("§7• §d/bp §f— батл пасс, §dF6 §f— меню сервера.");
+        player.sendMessage("§7• §d/путь §f— путеводитель: что делать дальше, от первых инструментов до финала.");
         return true;
     }
 }

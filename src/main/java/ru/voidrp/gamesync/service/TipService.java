@@ -61,8 +61,10 @@ public final class TipService implements Listener {
                 "Каждый день новые задания: деньги и много опыта батл пасса.", "quests", "Открыть квесты", "quest", "#a78bfa");
         tip("market", "Есть деньги — есть возможности",
                 "На рынке можно купить нужное и продать лишние ресурсы другим игрокам.", "market", "Открыть рынок", "market", "#fbbf24");
+        tip("roadmap", "Не знаешь, что делать дальше?",
+                "Путеводитель показывает, на каком ты этапе и какой предмет получить следующим — от первых инструментов до финала. Команда /путь.", "roadmap", "Открыть путеводитель", "map", "#34d399");
         tip("epoch", "Открыта новая эпоха",
-                "Эпохи показывают твой прогресс в топах сервера и открывают следующие зоны батл пасса.", "leaderboards", "Открыть топы", "trophy", "#f59e0b");
+                "Эпохи показывают твой прогресс в топах сервера и открывают следующие зоны батл пасса. Следующая цель — в путеводителе.", "roadmap", "Что дальше", "trophy", "#f59e0b");
         tip("nation", "Вступи в нацию",
                 "У наций общая казна, технологии и союзы. Найди нацию на сайте или создай свою.", "nmarket", "Нации", "globe", "#22d3ee");
     }
@@ -114,6 +116,7 @@ public final class TipService implements Listener {
 
         if (minutes >= 5 && give(p, "menu")) return;
         if (minutes >= 10 && give(p, "battlepass")) return;
+        if (minutes >= 15 && give(p, "roadmap")) return;
         if (overworld && isNight(w) && minutes >= 3 && give(p, "night")) return;
         if (overworld && p.getLocation().getY() < 30 && give(p, "caves")) return;
         if (minutes >= 20 && !shown(id, "team") && !inParty(id) && give(p, "team")) return;

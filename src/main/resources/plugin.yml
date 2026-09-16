@@ -24,6 +24,10 @@ commands:
     description: Open the newcomer guide
     usage: /guide
     aliases: [гайд, novichok, новичок]
+  roadmap:
+    description: Open the progression roadmap
+    usage: /roadmap
+    aliases: [путь, путеводитель, put, progress]
   cosmetics:
     description: Open the Figura cosmetics menu
     usage: /cosmetics
