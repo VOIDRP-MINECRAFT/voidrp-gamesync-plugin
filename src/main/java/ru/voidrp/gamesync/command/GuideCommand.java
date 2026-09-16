@@ -32,7 +32,12 @@ public final class GuideCommand implements CommandExecutor {
             return true;
         }
         if (plugin.getGameSyncConfig().isWebGuiEnabled()) {
-            plugin.getWebGuiBridgeService().openGui(player, welcomeUrl(plugin));
+            // Typed in chat: the client is still closing the chat screen when an immediate
+            // open packet lands, and the web screen goes down with it. Half a second later
+            // the chat is gone and the guide stays open.
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+                if (player.isOnline()) plugin.getWebGuiBridgeService().openGui(player, welcomeUrl(plugin));
+            }, 10L);
         }
         // Short version in chat as well: works without the WebGUI mod and stays in the chat log.
         player.sendMessage("§d§l✦ Гайд новичка");
