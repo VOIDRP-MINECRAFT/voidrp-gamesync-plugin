@@ -164,7 +164,7 @@ public final class WebActionPollService {
 
     private static final java.util.Set<String> ALLOWED_PAGES = java.util.Set.of(
         "menu", "market", "nmarket", "treasury", "research", "alliance", "battlepass", "quests",
-        "leaderboards", "notifications");
+        "leaderboards", "notifications", "welcome");
 
     private void processOpenGui(WebActionItem action) {
         String actionId = action.action_id;
@@ -193,6 +193,7 @@ public final class WebActionPollService {
                 case "quests"     -> cfg.getWebGuiQuestsUrl();
                 case "leaderboards" -> cfg.getWebGuiLeaderboardsUrl();
                 case "notifications" -> cfg.getWebGuiNotificationsUrl();
+                case "welcome"    -> cfg.getWebGuiWelcomeUrl();
                 default           -> null;
             };
             if (url == null || url.isBlank()) {

@@ -239,6 +239,15 @@ public final class PluginDataStore {
         yaml.set("starter-kit-granted." + playerId, true);
     }
 
+    /** The newcomer guide was opened automatically once — never again on later joins. */
+    public boolean hasWelcomeShown(UUID playerId) {
+        return yaml.getBoolean("welcome-shown." + playerId, false);
+    }
+
+    public void setWelcomeShown(UUID playerId) {
+        yaml.set("welcome-shown." + playerId, true);
+    }
+
     public boolean getTierUnlocked(UUID playerId, String tierName) {
         return yaml.getBoolean("tier-tracking." + playerId + "." + tierName, false);
     }

@@ -20,6 +20,10 @@ commands:
     description: VoidRP GameSync admin command
     usage: /vrgs
     permission: voidrp.gamesync.admin
+  guide:
+    description: Open the newcomer guide
+    usage: /guide
+    aliases: [гайд, novichok, новичок]
   cosmetics:
     description: Open the Figura cosmetics menu
     usage: /cosmetics

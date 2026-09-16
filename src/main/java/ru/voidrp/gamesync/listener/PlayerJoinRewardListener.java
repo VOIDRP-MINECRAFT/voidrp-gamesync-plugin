@@ -20,6 +20,9 @@ public final class PlayerJoinRewardListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
+        // Decide "brand-new player" before the starter kit below marks itself granted.
+        maybeOpenWelcomeGuide(event.getPlayer().getUniqueId(), event.getPlayer().getName());
+
         if (plugin.getGameSyncConfig().isResolveOnJoin()) {
             plugin.getServer().getScheduler().runTaskLaterAsynchronously(
                 plugin,
@@ -55,6 +58,28 @@ public final class PlayerJoinRewardListener implements Listener {
         if (plugin.getGameSyncConfig().isStarterKitEnabled()) {
             maybeGrantStarterKit(event.getPlayer().getUniqueId(), event.getPlayer().getName());
         }
+    }
+
+    /**
+     * Opens the newcomer guide (WebGUI page) once, on a player's very first join. "First join"
+     * = no starter kit yet: players who were already here before the guide existed don't get
+     * it pushed at them, they can still open it with /гайд.
+     */
+    private void maybeOpenWelcomeGuide(UUID playerId, String playerName) {
+        var cfg = plugin.getGameSyncConfig();
+        var store = plugin.getDataStore();
+        if (!cfg.isWebGuiEnabled() || !cfg.isWelcomeOnFirstJoin()) return;
+        if (store.hasWelcomeShown(playerId) || store.hasStarterKitGranted(playerId)) return;
+
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            var player = Bukkit.getPlayerExact(playerName);
+            if (player == null || !player.isOnline()) return;
+            plugin.getWebGuiBridgeService().openGui(player, ru.voidrp.gamesync.command.GuideCommand.welcomeUrl(plugin));
+            store.setWelcomeShown(playerId);
+            store.saveNow();
+            player.sendMessage("§d§l✦ §fГайд новичка открыт. §7Открыть снова: §d/гайд");
+            plugin.getLogger().info("Newcomer guide opened for " + playerName);
+        }, cfg.getWelcomeDelayTicks());
     }
 
     /**

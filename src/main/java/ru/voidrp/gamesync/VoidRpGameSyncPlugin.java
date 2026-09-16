@@ -243,6 +243,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
 
         ru.voidrp.gamesync.cosmetics.CosmeticsGui cosmeticsGui = new ru.voidrp.gamesync.cosmetics.CosmeticsGui(this);
         registerCommand("cosmetics", cosmeticsGui, null);
+        registerCommand("guide", new ru.voidrp.gamesync.command.GuideCommand(this), null);
         Bukkit.getPluginManager().registerEvents(cosmeticsGui, this);
 
         PlayerNationDonateCommand donateCommand = new PlayerNationDonateCommand(this);
