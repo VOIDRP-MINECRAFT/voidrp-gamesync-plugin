@@ -210,6 +210,24 @@ public final class BackendClient {
         return out;
     }
 
+    /** Lowercase nicknames of players who allowed their live position on the public map. */
+    public java.util.List<String> fetchMapVisibleNicknames() throws IOException, InterruptedException {
+        HttpResponse<String> response = get(apiUrl("/game-sync/consents/map-visible"));
+        com.google.gson.JsonObject o = gson.fromJson(response.body(), com.google.gson.JsonObject.class);
+        java.util.List<String> out = new java.util.ArrayList<>();
+        if (o != null && o.has("nicknames")) o.getAsJsonArray("nicknames").forEach(e -> out.add(e.getAsString()));
+        return out;
+    }
+
+    /** True when the player still has to accept the current legal documents on the site. */
+    public boolean remindMissingConsents(String nickname) throws IOException, InterruptedException {
+        com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+        body.addProperty("nickname", nickname);
+        HttpResponse<String> response = postJsonForResponse(apiUrl("/game-sync/consents/remind"), gson.toJson(body), "Consent reminder failed");
+        com.google.gson.JsonObject o = gson.fromJson(response.body(), com.google.gson.JsonObject.class);
+        return o != null && o.has("pending") && o.get("pending").getAsBoolean();
+    }
+
     /** Report roadmap key items a player has just been seen holding. */
     public void pushGuideItems(String uuid, String nickname, java.util.Collection<String> items) throws IOException, InterruptedException {
         com.google.gson.JsonObject body = new com.google.gson.JsonObject();

@@ -75,6 +75,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
     private ru.voidrp.gamesync.service.EpochService epochService;
     private final ru.voidrp.gamesync.service.TipService tipService = new ru.voidrp.gamesync.service.TipService(this);
     private final ru.voidrp.gamesync.service.GuideItemTracker guideItemTracker = new ru.voidrp.gamesync.service.GuideItemTracker(this);
+    private final ru.voidrp.gamesync.service.ConsentGuardService consentGuardService = new ru.voidrp.gamesync.service.ConsentGuardService(this);
     private ReferralRewardService referralRewardService;
     private LuckPermsNationMetaService luckPermsNationMetaService;
     private TerritoryPointsResolver territoryPointsResolver;
@@ -134,6 +135,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         if (epochService != null) epochService.start();
         tipService.start();
         guideItemTracker.start();
+        consentGuardService.start();
         nationResearchEffectService.start();
 
         if (gameSyncConfig.isWebGuiEnabled()) {
@@ -327,6 +329,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
     private void registerListeners() {
         Bukkit.getPluginManager().registerEvents(new PlayerJoinRewardListener(this), this);
         Bukkit.getPluginManager().registerEvents(tipService, this);
+        Bukkit.getPluginManager().registerEvents(consentGuardService, this);
         Bukkit.getPluginManager().registerEvents(new NationMarketGuiListener(this), this);
         Bukkit.getPluginManager().registerEvents(new PlayerMarketGuiListener(this), this);
         PlayerMarketCommand pmCmd = new PlayerMarketCommand(this);
