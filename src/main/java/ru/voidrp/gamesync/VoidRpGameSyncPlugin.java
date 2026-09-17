@@ -76,6 +76,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
     private final ru.voidrp.gamesync.service.TipService tipService = new ru.voidrp.gamesync.service.TipService(this);
     private final ru.voidrp.gamesync.service.GuideItemTracker guideItemTracker = new ru.voidrp.gamesync.service.GuideItemTracker(this);
     private final ru.voidrp.gamesync.service.ConsentGuardService consentGuardService = new ru.voidrp.gamesync.service.ConsentGuardService(this);
+    private final ru.voidrp.gamesync.service.TraderService traderService = new ru.voidrp.gamesync.service.TraderService(this);
     private ReferralRewardService referralRewardService;
     private LuckPermsNationMetaService luckPermsNationMetaService;
     private TerritoryPointsResolver territoryPointsResolver;
@@ -136,6 +137,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
         tipService.start();
         guideItemTracker.start();
         consentGuardService.start();
+        traderService.start();
         nationResearchEffectService.start();
 
         if (gameSyncConfig.isWebGuiEnabled()) {
@@ -149,6 +151,7 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        traderService.stop();
         if (syncScheduler != null) {
             syncScheduler.stop();
         }
@@ -487,6 +490,10 @@ public final class VoidRpGameSyncPlugin extends JavaPlugin {
 
     public WebGuiBridgeService getWebGuiBridgeService() {
         return webGuiBridgeService;
+    }
+
+    public ru.voidrp.gamesync.service.TraderService getTraderService() {
+        return traderService;
     }
 
     public WebActionPollService getWebActionPollService() {

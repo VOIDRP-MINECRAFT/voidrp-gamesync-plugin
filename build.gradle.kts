@@ -29,6 +29,8 @@ dependencies {
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.10")
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0")
     compileOnly("org.apache.logging.log4j:log4j-core:2.22.1")
+    // Citizens API for the travelling trader NPC (soft dependency; the plugin falls back to a vanilla trader).
+    compileOnly(fileTree("/mnt/ssd/minecraft_server/plugins") { include("Citizens-*.jar") })
 
     implementation("com.google.code.gson:gson:2.11.0")
 }

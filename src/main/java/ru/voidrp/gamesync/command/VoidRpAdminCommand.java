@@ -77,11 +77,39 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
                 handleCosmetic(sender, args);
                 return true;
             }
+            case "trader" -> {
+                handleTrader(sender, args);
+                return true;
+            }
             default -> {
                 sendHelp(sender);
                 return true;
             }
         }
+    }
+
+    /** /vrgs trader here — the travelling trader will stand where the operator stands. */
+    private void handleTrader(CommandSender sender, String[] args) {
+        if (args.length < 2 || !args[1].equalsIgnoreCase("here")) {
+            sender.sendMessage("§eИспользование: /vrgs trader here §7— поставить скупщика на своё место (визиты, каталог и цены — в админке сайта)");
+            return;
+        }
+        if (!(sender instanceof org.bukkit.entity.Player player)) {
+            sender.sendMessage("§cКоманду нужно выполнить в игре.");
+            return;
+        }
+        org.bukkit.Location loc = player.getLocation().clone();
+        String who = player.getName();
+        org.bukkit.Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try {
+                plugin.getBackendClient().traderSetSpawn(loc, who);
+                org.bukkit.Bukkit.getScheduler().runTask(plugin, () -> player.sendMessage(
+                    "§aТочка скупщика сохранена: §f" + loc.getWorld().getName() + " " + loc.getBlockX() + " " + loc.getBlockY() + " " + loc.getBlockZ()
+                        + "§a. Он встанет сюда в течение нескольких секунд, если сейчас идёт визит."));
+            } catch (Exception e) {
+                org.bukkit.Bukkit.getScheduler().runTask(plugin, () -> player.sendMessage("§cНе удалось сохранить точку: " + e.getMessage()));
+            }
+        });
     }
 
     private void handleMarket(CommandSender sender, String[] args) {
@@ -435,7 +463,7 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 1) {
-            return filter(List.of("reload", "sync", "skin", "territory", "reward", "market", "tiktok", "voidcoin", "cosmetic"), args[0]);
+            return filter(List.of("reload", "sync", "skin", "territory", "reward", "market", "tiktok", "voidcoin", "cosmetic", "trader"), args[0]);
         }
 
         if (args.length == 2) {
@@ -447,6 +475,7 @@ public final class VoidRpAdminCommand implements CommandExecutor, TabCompleter {
                 case "market" -> filter(List.of("status", "reload", "recalculate", "visual-sync", "price"), args[1]);
                 case "voidcoin", "voidcoins", "vc" -> filter(onlinePlayers(), args[1]);
                 case "cosmetic", "cosmetics" -> filter(List.of("grant", "list"), args[1]);
+                case "trader" -> filter(List.of("here"), args[1]);
                 default -> List.of();
             };
         }

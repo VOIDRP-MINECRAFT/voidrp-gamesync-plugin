@@ -79,8 +79,146 @@ public final class WebActionPollService {
             case "command"      -> processCommand(action);
             case "open_gui"     -> processOpenGui(action);
             case "give_reward"  -> processGiveReward(action);
+            case "trader_trade" -> processTraderTrade(action);
             default             -> ackFailed(action.action_id, "Unknown action_type: " + action.action_type);
         }
+    }
+
+    // ── trader_trade (travelling trader: player sells to / buys from the trader) ──
+    // Stock was reserved by the backend; here the plugin moves items and money and reports how many
+    // actually went through, so the unused part of the reservation returns to the shared lot.
+
+    private void processTraderTrade(WebActionItem action) {
+        String actionId = action.action_id;
+        String playerName = action.player_name;
+        String txId = str(action.payload, "tx_id");
+        String side = str(action.payload, "side");
+        String itemKey = str(action.payload, "item_key");
+        String display = str(action.payload, "display");
+        int amount = intVal(action.payload, "amount");
+        double unitPrice = dbl(action.payload, "unit_price");
+        String key = itemKey == null ? "" : itemKey.toLowerCase(java.util.Locale.ROOT);
+        if (txId == null || amount <= 0 || unitPrice <= 0 || !SAFE_ITEM_KEY.matcher(key).matches()
+                || !("buy".equals(side) || "sell".equals(side))) {
+            finishTrader(actionId, txId, false, 0, "Некорректные данные сделки");
+            return;
+        }
+        final String label = display != null && !display.isBlank() ? display : key;
+
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            Player player = Bukkit.getPlayerExact(playerName);
+            if (player == null || !player.isOnline()) {
+                finishTrader(actionId, txId, false, 0, "Вы вышли из игры");
+                return;
+            }
+            TraderService trader = plugin.getTraderService();
+            if (trader == null || !trader.isNearTrader(player)) {
+                double r = trader == null ? 8 : trader.getInteractRadius();
+                finishTrader(actionId, txId, false, 0, "Подойдите к скупщику ближе чем на " + (int) r + " блоков");
+                return;
+            }
+            net.milkbowl.vault.economy.Economy economy = plugin.getEconomy();
+            if (economy == null) {
+                finishTrader(actionId, txId, false, 0, "Экономика сервера недоступна");
+                return;
+            }
+            if ("buy".equals(side)) {
+                sellToTrader(player, economy, actionId, txId, key, label, amount, unitPrice);
+            } else {
+                buyFromTrader(player, economy, actionId, txId, key, label, amount, unitPrice);
+            }
+        });
+    }
+
+    /** Player hands items to the trader: only clean stacks (no damage, enchantments, stored data). */
+    private void sellToTrader(Player player, net.milkbowl.vault.economy.Economy economy, String actionId, String txId,
+                              String key, String label, int amount, double unitPrice) {
+        org.bukkit.inventory.ItemStack[] contents = player.getInventory().getStorageContents();
+        int available = 0;
+        for (org.bukkit.inventory.ItemStack stack : contents) {
+            if (isCleanItem(stack, key)) available += stack.getAmount();
+        }
+        int take = Math.min(amount, available);
+        if (take <= 0) {
+            finishTrader(actionId, txId, false, 0, "В инвентаре нет подходящих предметов: " + label + " (без износа, чар и данных)");
+            return;
+        }
+        int left = take;
+        for (int i = 0; i < contents.length && left > 0; i++) {
+            org.bukkit.inventory.ItemStack stack = contents[i];
+            if (!isCleanItem(stack, key)) continue;
+            int n = Math.min(left, stack.getAmount());
+            stack.setAmount(stack.getAmount() - n);
+            contents[i] = stack.getAmount() <= 0 ? null : stack;
+            left -= n;
+        }
+        player.getInventory().setStorageContents(contents);
+        player.updateInventory();
+
+        double total = Math.round(take * unitPrice * 100.0) / 100.0;
+        net.milkbowl.vault.economy.EconomyResponse paid = economy.depositPlayer(player, total);
+        if (paid == null || !paid.transactionSuccess()) {
+            // Could not pay: give the items back.
+            org.bukkit.Material material = org.bukkit.Material.matchMaterial(key);
+            if (material != null) plugin.getNationMarketInventoryService().giveOrDrop(player, new org.bukkit.inventory.ItemStack(material), take);
+            finishTrader(actionId, txId, false, 0, "Не удалось начислить монеты, предметы возвращены");
+            return;
+        }
+        player.sendMessage("§6[Скупщик] §fПродано §e" + take + " × " + label + " §fза §a" + fmtCoins(total) + " монет");
+        finishTrader(actionId, txId, true, take, take < amount ? "В инвентаре было только " + take + " шт." : null);
+    }
+
+    /** Player buys items from the trader: as many as the balance allows, up to the reserved amount. */
+    private void buyFromTrader(Player player, net.milkbowl.vault.economy.Economy economy, String actionId, String txId,
+                               String key, String label, int amount, double unitPrice) {
+        double balance = economy.getBalance(player);
+        int affordable = (int) Math.floor((balance + 1e-6) / unitPrice);
+        int buy = Math.min(amount, affordable);
+        if (buy <= 0) {
+            finishTrader(actionId, txId, false, 0, "Недостаточно монет");
+            return;
+        }
+        double total = Math.round(buy * unitPrice * 100.0) / 100.0;
+        net.milkbowl.vault.economy.EconomyResponse charged = economy.withdrawPlayer(player, total);
+        if (charged == null || !charged.transactionSuccess()) {
+            finishTrader(actionId, txId, false, 0, "Не удалось списать монеты");
+            return;
+        }
+        boolean ok = Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "minecraft:give " + player.getName() + " " + key + " " + buy);
+        if (!ok) {
+            economy.depositPlayer(player, total);
+            finishTrader(actionId, txId, false, 0, "Не удалось выдать предмет, монеты возвращены");
+            return;
+        }
+        player.sendMessage("§6[Скупщик] §fКуплено §e" + buy + " × " + label + " §fза §c" + fmtCoins(total) + " монет");
+        finishTrader(actionId, txId, true, buy, buy < amount ? "Хватило монет только на " + buy + " шт." : null);
+    }
+
+    private static boolean isCleanItem(org.bukkit.inventory.ItemStack stack, String key) {
+        if (stack == null || stack.getType().isAir()) return false;
+        if (!stack.getType().getKey().toString().equalsIgnoreCase(key)) return false;
+        return stack.isSimilar(new org.bukkit.inventory.ItemStack(stack.getType()));
+    }
+
+    private static String fmtCoins(double v) {
+        return v == Math.floor(v) ? String.format(java.util.Locale.ROOT, "%,.0f", v).replace(',', ' ')
+                                  : String.format(java.util.Locale.ROOT, "%,.2f", v).replace(',', ' ');
+    }
+
+    private void finishTrader(String actionId, String txId, boolean ok, int qtyDone, String error) {
+        runAsync(actionId, () -> {
+            try {
+                if (txId != null) {
+                    plugin.getBackendClient().traderResult(txId, ok, qtyDone, error);
+                } else {
+                    plugin.getBackendClient().ackWebAction(actionId, "failed", error);
+                }
+            } catch (Exception ex) {
+                plugin.getLogger().warning("[Trader] result report failed for " + txId + " (" + qtyDone + " done): " + ex.getMessage());
+            } finally {
+                inFlight.remove(actionId);
+            }
+        });
     }
 
     // ── give_reward (Void Upgrader win — deliver a pool item) ─────────────────

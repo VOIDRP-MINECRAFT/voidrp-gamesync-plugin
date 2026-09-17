@@ -119,6 +119,7 @@ public final class GameSyncConfig {
     private final String webGuiNotificationsUrl;
     private final String webGuiWelcomeUrl;
     private final String webGuiRoadmapUrl;
+    private final String webGuiTraderUrl;
     private final boolean welcomeOnFirstJoin;
     private final long welcomeDelayTicks;
     private final String webGuiHudUrl;
@@ -256,6 +257,7 @@ public final class GameSyncConfig {
         this.webGuiHudUrl = plugin.getConfig().getString("webgui.urls.hud", "https://void-rp.ru/game-ui/hud");
         this.webGuiWelcomeUrl = plugin.getConfig().getString("webgui.urls.welcome", "https://void-rp.ru/game-ui/welcome");
         this.webGuiRoadmapUrl = plugin.getConfig().getString("webgui.urls.roadmap", "https://void-rp.ru/game-ui/roadmap");
+        this.webGuiTraderUrl = plugin.getConfig().getString("webgui.urls.trader", "https://void-rp.ru/game-ui/trader");
         this.welcomeOnFirstJoin = plugin.getConfig().getBoolean("webgui.welcome.on-first-join", true);
         // after the HUD (3 s) and the starter kit (4 s), so the guide is the last thing that opens
         this.welcomeDelayTicks = Math.max(20L, plugin.getConfig().getLong("webgui.welcome.delay-ticks", 240L));
@@ -381,6 +383,7 @@ public final class GameSyncConfig {
     public String getWebGuiHudUrl() { return webGuiHudUrl; }
     public String getWebGuiWelcomeUrl() { return webGuiWelcomeUrl; }
     public String getWebGuiRoadmapUrl() { return webGuiRoadmapUrl; }
+    public String getWebGuiTraderUrl() { return webGuiTraderUrl; }
     public boolean isWelcomeOnFirstJoin() { return welcomeOnFirstJoin; }
     public long getWelcomeDelayTicks() { return welcomeDelayTicks; }
     public boolean isWebGuiAutoHudOnJoin() { return webGuiAutoHudOnJoin; }

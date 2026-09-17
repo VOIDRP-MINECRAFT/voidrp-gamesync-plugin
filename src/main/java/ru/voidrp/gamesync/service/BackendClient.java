@@ -219,6 +219,44 @@ public final class BackendClient {
         return out;
     }
 
+    // ── Travelling trader ───────────────────────────────────────────────────
+
+    public com.google.gson.JsonObject traderTick(java.util.List<String> online) throws IOException, InterruptedException {
+        com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+        com.google.gson.JsonArray arr = new com.google.gson.JsonArray();
+        online.forEach(arr::add);
+        body.add("online", arr);
+        HttpResponse<String> response = postJsonForResponse(apiUrl("/game-sync/trader/tick"), gson.toJson(body), "Trader tick failed");
+        return gson.fromJson(response.body(), com.google.gson.JsonObject.class);
+    }
+
+    public com.google.gson.JsonObject traderOpen(String playerName) throws IOException, InterruptedException {
+        com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+        body.addProperty("player_name", playerName);
+        HttpResponse<String> response = postJsonForResponse(apiUrl("/game-sync/trader/open"), gson.toJson(body), "Trader open failed");
+        return gson.fromJson(response.body(), com.google.gson.JsonObject.class);
+    }
+
+    public void traderResult(String txId, boolean ok, int qtyDone, String error) throws IOException, InterruptedException {
+        com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+        body.addProperty("ok", ok);
+        body.addProperty("qty_done", qtyDone);
+        if (error != null) body.addProperty("error", error.length() > 490 ? error.substring(0, 490) : error);
+        postJson(apiUrl("/game-sync/trader/transactions/" + txId + "/result"), gson.toJson(body), "Trader result failed");
+    }
+
+    public com.google.gson.JsonObject traderSetSpawn(org.bukkit.Location loc, String setBy) throws IOException, InterruptedException {
+        com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+        body.addProperty("world", loc.getWorld().getName());
+        body.addProperty("x", Math.round(loc.getX() * 100) / 100.0);
+        body.addProperty("y", Math.round(loc.getY() * 100) / 100.0);
+        body.addProperty("z", Math.round(loc.getZ() * 100) / 100.0);
+        body.addProperty("yaw", Math.round(loc.getYaw()));
+        body.addProperty("set_by", setBy);
+        HttpResponse<String> response = postJsonForResponse(apiUrl("/game-sync/trader/spawn"), gson.toJson(body), "Trader spawn failed");
+        return gson.fromJson(response.body(), com.google.gson.JsonObject.class);
+    }
+
     /** True when the player still has to accept the current legal documents on the site. */
     public boolean remindMissingConsents(String nickname) throws IOException, InterruptedException {
         com.google.gson.JsonObject body = new com.google.gson.JsonObject();
