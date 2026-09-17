@@ -18,6 +18,7 @@ import net.citizensnpcs.api.event.NPCRightClickEvent;
 import net.citizensnpcs.api.npc.NPC;
 import net.citizensnpcs.api.npc.NPCRegistry;
 import net.citizensnpcs.api.trait.trait.Equipment;
+import net.citizensnpcs.trait.Gravity;
 import net.citizensnpcs.trait.HologramTrait;
 import net.citizensnpcs.trait.LookClose;
 import net.citizensnpcs.trait.SkinTrait;
@@ -55,10 +56,16 @@ public final class CitizensTraderNpc implements TraderNpc, Listener {
         } else {
             npc.getOrAddTrait(SkinTrait.class).setSkinPersistent("voidrp_trader", MERCHANT_SIGNATURE, MERCHANT_VALUE);
         }
+        // Stands still: players cannot push or knock him, no gravity; only the head turns to players.
+        npc.setProtected(true);
+        npc.data().setPersistent(NPC.Metadata.COLLIDABLE, false);
+        npc.data().setPersistent(NPC.Metadata.KNOCKBACK, false);
+        npc.data().setPersistent(NPC.Metadata.FLUID_PUSHABLE, false);
+        npc.getOrAddTrait(Gravity.class).setHasGravity(false);
         LookClose look = npc.getOrAddTrait(LookClose.class);
         look.lookClose(true);
-        look.setRange(10);
-        look.setRealisticLooking(true);
+        look.setRange(8);
+        look.setRealisticLooking(false);
 
         Equipment eq = npc.getOrAddTrait(Equipment.class);
         equip(eq, Equipment.EquipmentSlot.CHESTPLATE, elite ? "sophisticatedbackpacks:netherite_backpack" : "sophisticatedbackpacks:gold_backpack");
