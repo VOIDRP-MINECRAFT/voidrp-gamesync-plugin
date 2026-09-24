@@ -18,6 +18,7 @@ repositories {
     maven("https://repo.lucko.me/")
     maven("https://jitpack.io")
     maven("https://repo.opencollab.dev/main/")
+    maven("https://maven.citizensnpcs.co/repo")
 }
 
 dependencies {
@@ -30,6 +31,9 @@ dependencies {
     compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0")
     compileOnly("org.apache.logging.log4j:log4j-core:2.22.1")
     // Citizens API for the travelling trader NPC (soft dependency; the plugin falls back to a vanilla trader).
+    // From the Citizens repository so CI and fresh checkouts can compile; the local server jar stays as a
+    // fallback for offline builds on the host.
+    compileOnly("net.citizensnpcs:citizens-main:2.0.35-SNAPSHOT") { isTransitive = false }
     compileOnly(fileTree("/mnt/ssd/minecraft_server/plugins") { include("Citizens-*.jar") })
 
     implementation("com.google.code.gson:gson:2.11.0")
