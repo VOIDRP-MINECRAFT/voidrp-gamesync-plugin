@@ -1,61 +1,100 @@
-# 🔌 VoidRP Game Sync Plugin
+# 🔌 VoidRP Game Sync
 
-> Paper 1.21.1 плагин — синхронизация игровых данных с backend, прокси-шоп модовых предметов, динамические цены, рынок игроков, WebGUI-мост.
+> Главный Paper-плагин сервера VoidRP: синхронизация с бэкендом, нации и альянсы, экономика с модовыми
+> предметами, рынок игроков, странствующий торговец, гайд новичка и мост к WebGUI-страницам в игре.
 
-![Paper](https://img.shields.io/badge/Paper-1.21.1-00AF54)
+![Paper](https://img.shields.io/badge/Paper%20%2F%20Mohist-1.21.1-00AF54)
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)
-![Gradle](https://img.shields.io/badge/Gradle-Shadow-02303A?logo=gradle)
 ![Vault](https://img.shields.io/badge/depends-Vault-yellow)
+[![Build](https://github.com/VOIDRP-MINECRAFT/voidrp-gamesync-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/VOIDRP-MINECRAFT/voidrp-gamesync-plugin/actions/workflows/build.yml)
 ![License](https://img.shields.io/badge/license-proprietary-red)
 
 ---
 
 ## 🗺️ Место в экосистеме
 
-```
-  Minecraft Server (Mohist 1.21.1)
-  └── voidrp-gamesync-plugin
-        │ X-Game-Auth-Secret (HTTP)         WebGUI plugin channels
-        ▼                                   ▼
-  minecraft-backend (FastAPI)     Minecraft Client
-        │                           voidrp-webgui (MCEF Chromium)
-        ├── нации · статистика              ▲
-        ├── рынок игроков                   │
-        └── pending web actions     webgui:open_web / webgui:set_main_menu
+```mermaid
+flowchart LR
+    subgraph SRV["Сервер VoidRP · Mohist 1.21.1"]
+        GS["🔌 voidrp-gamesync-plugin"]
+        ESG["EconomyShopGUI"]
+        CIT["Citizens · LuckPerms<br/>WorldGuard · BlueMap/Dynmap"]
+        BP["battlepass · daily-quests"]
+    end
+    B[("minecraft-backend<br/>/api/v1/game-sync/*")]
+    C["🖥️ Клиент + WebGUI<br/>(MCEF Chromium)"]
+    W["void-rp.ru/game-ui/*"]
 
-  ESGUI (магазин) ──► EconomyShopGuiBridgeService (перехват транзакций)
+    ESG -- "PreTransactionEvent" --> GS
+    GS <--> CIT
+    GS -- "PlayerMarketTradeEvent" --> BP
+    GS <-- "X-Game-Auth-Secret" --> B
+    GS -- "webgui:open_web<br/>URL + webgui_token" --> C
+    C --> W
+    W -- "web actions<br/>(покупка, отмена, сделка)" --> B
+    B -. "опрос каждую секунду" .-> GS
 ```
 
 ---
 
 ## ✨ Возможности
 
-### Синхронизация данных
-- Статистика нации (онлайн, баланс, территория) → backend
-- Членство и роли → LuckPerms meta (`nation`, `nation_role`)
-- Dynmap маркеры наций и цвета WorldGuard регионов
+| Область | Что делает |
+|---|---|
+| 🏛️ **Нации** | Синхронизация состава и статистики, LuckPerms-мета `nation`/`nation_role` с префиксами, маркеры на карте и цвета регионов WorldGuard, подсчёт территории (FTB Chunks или WorldGuard), столица (`/nsetcapital`), подсказки лидеру в HUD, если столица не на месте |
+| 💰 **Казна и исследования** | Взносы и вывод (`/ndonate`, `/nwithdraw`), история, дерево исследований нации (`/nres`) с эффектами: бонусы опыта пропуска, слоты квестов и т. д. |
+| 🤝 **Альянсы** | Предложения и голосования (`/ally`), отключение урона по союзникам |
+| 💹 **Экономика** | Прокси-шоп модовых предметов для EconomyShopGUI, динамические цены из бэкенда, синхронизация отображаемых цен, `/price` |
+| 🛒 **Рынок игроков** | Ордера на покупку и продажу (`/shop`, `/pm`), рынок наций (`/nmarket`), безопасная доставка, WebGUI-страницы |
+| 🧳 **Странствующий торговец** | NPC на спавне по расписанию бэкенда, сделки только рядом с ним, голограмма с таймером |
+| 🧭 **Новичкам** | Гайд при первом входе (`/гайд`), дорожная карта прогресса (`/путь`), контекстные подсказки в HUD, эпохи прогресса по ключевым предметам, стартовый набор |
+| 🎁 **Награды** | Достижения, еженедельные испытания (3 в неделю), рефералы, TikTok-кампании, Void Coins |
+| 🎨 **Косметика и скины** | Меню косметики (`/cosmetics`), выдача админом, применение скинов с сайта |
+| 🛡️ **Правила и согласия** | Скрытие игроков на BlueMap без согласия на распространение ПДн (152-ФЗ), напоминание о непринятых документах, удаление запрещённых предметов |
+| 🖥️ **WebGUI-мост** | Открытие страниц сайта поверх игры, HUD, меню по <kbd>F6</kbd>, приём действий со страниц |
 
-### Прокси-шоп модовых предметов
-- `EconomyShopGuiBridgeService` — перехватывает транзакции ESGUI для модовых предметов
-- Выдаёт модовые предметы через `minecraft:give` (поддержка data components)
-- Динамические цены из backend через `EconomyMarketCache`
-- `ModdedShopItemFixupService` — reflection-патч ESGUI для корректного отображения иконок
+---
 
-### Рынок игроков
-- Ордера на покупку/продажу между игроками
-- Delivery система — безопасная выдача (ack before deliver)
-- Комиссия 2% (1% Premium), 0.5% за отмену
-- Сериализация ItemStack через NBT (работает с модовыми предметами)
-- `PlayerMarketTradeEvent` — интеграция с Battle Pass и квестами
+## 🛒 Рынок игроков: доставка без дюпов
 
-### WebGUI-мост (in-game UI)
-- `WebGuiBridgeService` — открывает страницы сайта прямо в игре через Chromium
-- `WebActionPollService` — поллер pending web actions от браузерных страниц
-- `WebGuiPlayerJoinListener` — автоматически задаёт URL главного меню (F6) при входе
+```mermaid
+sequenceDiagram
+    autonumber
+    actor P as Игрок
+    participant G as gamesync
+    participant B as Бэкенд
+    P->>G: забрать покупки (/pm pickup или WebGUI)
+    G->>G: игрок уже в доставке? → отказ
+    G->>B: GET pending-deliveries
+    B-->>G: предметы и деньги к выдаче
+    G->>B: ACK доставок — до выдачи
+    G->>P: выдать предметы (в инвентарь или под ноги) и деньги (Vault)
+    G-->>G: PlayerMarketTradeEvent → опыт пропуска и квесты
+```
 
-### Альянсы и PvP
-- `AllianceCacheService` — кэш союзников для подавления friendly-fire
-- Голосование за альянсы, дипломатические статусы
+Подтверждение уходит на бэкенд **до** выдачи: если игрок отключится посреди доставки, повторной выдачи не будет.
+Комиссия — 2% (1% с Premium), отмена ордера — 0,5%.
+
+## 🧳 Странствующий торговец
+
+```mermaid
+sequenceDiagram
+    participant B as Бэкенд
+    participant G as gamesync
+    actor P as Игрок
+    loop каждые 5 секунд
+        G->>B: /game-sync/trader/tick
+        B-->>G: визит активен? лоты, таймер
+    end
+    G->>G: NPC на точке спавна (Citizens или ванильный торговец)
+    P->>G: ПКМ по торговцу
+    G->>B: открыть сессию торговли
+    G->>P: WebGUI-страница торговца
+    P->>B: сделка → web action trader_trade
+    B-->>G: действие из очереди
+    G->>G: игрок всё ещё рядом? чистый предмет? хватает денег?
+    G->>P: обмен
+```
 
 ---
 
@@ -87,7 +126,7 @@ webGuiBridge.openQuests(player);        // /quests (кнопка в меню)
 
 ### Протокол пакетов
 
-```
+```text
 Канал: webgui:open_web
 Payload: VarInt(protocolVersion=1) + VarInt(mode: 0=GUI / 1=HUD) + MCString(url_with_token)
 
@@ -122,48 +161,55 @@ Payload: MCString(url)
 |---|---|
 | Paper / Mohist | 1.21.1 |
 | Java | 21 |
-| Vault | любая |
-| LuckPerms | опционально |
-| EconomyShopGUI | опционально |
+| Vault | обязательно |
+| Citizens, LuckPerms, WorldGuard, Dynmap/BlueMap, SkinsRestorer, EconomyShopGUI | опционально |
 
 ---
 
 ## 🚀 Сборка и деплой
 
 ```bash
-cd voidrp_gamesync_plugin
 ./gradlew shadowJar
 # → build/libs/voidrp-game-sync-paper-1.4.0-all.jar
 
-# Деплой с горячей перезагрузкой (без рестарта сервера)
-cp build/libs/voidrp-game-sync-paper-*.jar \
-   /path/to/minecraft_server/plugins/VoidRpGameSync.jar
+# Горячая перезагрузка без рестарта сервера
+cp build/libs/voidrp-game-sync-paper-*-all.jar /path/to/server/plugins/VoidRpGameSync.jar
 mcrcon -H 127.0.0.1 -P 25575 -p <pass> "plugman reload VoidRpGameSync"
 ```
 
-**Важно:** после деплоя удалять старый build-output jar из `plugins/` — иначе Paper видит `Ambiguous plugin name` и загружает не тот файл (P1.8).
+> [!IMPORTANT]
+> После деплоя удалите старый jar из `plugins/`, иначе Paper увидит `Ambiguous plugin name` и загрузит не тот файл.
 
 ---
 
 ## ⚙️ Конфигурация
 
-**`config.yml`** — URL backend, секрет, интервалы:
+`plugins/VoidRpGameSync/config.yml` (главное):
+
 ```yaml
 backend:
-  url: https://api.void-rp.ru/api/v1
-  secret: <X-Game-Auth-Secret>
+  base-url: "https://api.void-rp.ru"
+  api-prefix: "/api/v1"
+  game-auth-secret: ""        # X-Game-Auth-Secret этого сервера — только на сервере, не в git
 sync:
-  interval_ticks: 6000    # каждые 5 минут
+  period-seconds: 180
+territory:
+  source: ftbchunks           # или worldguard
+economy-market:
+  enabled: true
+starter-kit:
+  enabled: false
+epochs:
+  enabled: true
 webgui:
-  enabled: false           # включить когда фронтенд-страницы готовы
+  enabled: false
   urls:
-    menu: https://void-rp.ru/game-ui/menu
-    hud: https://void-rp.ru/game-ui/hud
-    market: https://void-rp.ru/game-ui#market
-    nation_market: https://void-rp.ru/game-ui#nation-market
-    treasury: https://void-rp.ru/game-ui#treasury
-    battlepass: https://void-rp.ru/game-ui#battlepass
-    quests: https://void-rp.ru/game-ui#quests
+    menu: "https://void-rp.ru/game-ui/menu"
+    market: "https://void-rp.ru/game-ui/market"
+    battlepass: "https://void-rp.ru/game-ui/battlepass"
+    hud: "https://void-rp.ru/game-ui/hud"
+banned-items:
+  ids: ["reliquary:rod_of_lyssa", "relics:infinity_ham"]
 ```
 
 **`plugins/VoidRpGameSync/modded_items.yml`** — реестр модовых предметов:
@@ -178,16 +224,37 @@ webgui:
 
 ---
 
-## 🛠️ Команды
+## ⌨️ Команды
 
-| Команда | Описание | Права |
-|---|---|---|
-| `/vrgs sync all` | Синхронизировать все нации | `voidrp.gamesync.admin` |
-| `/vrgs sync nation <slug>` | Синхронизировать нацию | `voidrp.gamesync.admin` |
-| `/vrgs reward resolve <player>` | Рассчитать награды | `voidrp.gamesync.admin` |
-| `/vrgs nation set <slug> <field> <val>` | Изменить поле нации | `voidrp.gamesync.admin` |
-| `/vrgs reload` | Перезагрузить конфиг | `voidrp.gamesync.admin` |
-| `/webgui reload` | Перечитать server.json токена | OP 2 |
+### Игрокам
+
+| Команда | Что делает |
+|---|---|
+| `/guide` (`/гайд`, `/новичок`) | Гайд новичка |
+| `/roadmap` (`/путь`, `/progress`) | Дорожная карта прогресса |
+| `/shop` (`/market`), `/pm` | Рынок игроков |
+| `/nmarket` (`/nm`) | Рынок наций |
+| `/price` (`/mprice`) | Текущая рыночная цена предмета |
+| `/ndonate`, `/ntreasury`, `/ntreasuryhistory`, `/nwithdraw` | Казна нации |
+| `/nres` | Исследования нации |
+| `/nsetcapital` | Поставить столицу нации |
+| `/ally` | Альянсы |
+| `/cosmetics` (`/косметика`) | Меню косметики |
+
+### Администраторам (`voidrp.gamesync.admin`)
+
+| Команда | Что делает |
+|---|---|
+| `/vrgs reload` | Перечитать конфиг |
+| `/vrgs sync all \| nation <slug> \| player <ник>` | Синхронизация |
+| `/vrgs market status \| reload \| recalculate \| visual-sync \| price` | Рыночные цены |
+| `/vrgs trader here` | Поставить точку торговца |
+| `/vrgs voidcoin <игрок> <кол-во>` | Выдать или списать Void Coins |
+| `/vrgs cosmetic grant \| list` | Косметика |
+| `/vrgs skin refresh \| clear <игрок>` | Скины |
+| `/vrgs reward resolve \| apply <игрок>` | Реферальные награды |
+| `/vrgs territory debug <slug>` | Отладка территории нации |
+| `/vrgs tiktok <ссылка>` | TikTok-кампания |
 
 ---
 
@@ -195,11 +262,12 @@ webgui:
 
 | Репо | Связь |
 |---|---|
-| [minecraft-backend](https://github.com/VOIDRP-MINECRAFT/minecraft-backend) | REST API — все запросы идут сюда |
-| [voidrp-webgui-neoforge](https://github.com/VOIDRP-MINECRAFT/voidrp-webgui-neoforge) | NeoForge мод, который принимает наши пакеты |
-| [voidrp-battlepass](https://github.com/VOIDRP-MINECRAFT/voidrp-battlepass) | Слушает `PlayerMarketTradeEvent` для XP |
-| [voidrp-daily-quests](https://github.com/VOIDRP-MINECRAFT/voidrp-daily-quests) | Слушает `PlayerMarketTradeEvent` для квестов |
-| [wg-region-guard](https://github.com/VOIDRP-MINECRAFT/wg-region-guard) | WorldGuard интеграция для наций |
+| [minecraft-backend](https://github.com/VOIDRP-MINECRAFT/minecraft-backend) | Все данные: `/api/v1/game-sync/*` |
+| [voidrp-webgui-neoforge](https://github.com/VOIDRP-MINECRAFT/voidrp-webgui-neoforge) | Мод, который принимает наши пакеты и рисует страницы |
+| [voidrp-site](https://github.com/VOIDRP-MINECRAFT/voidrp-site) | Страницы `/game-ui/*` |
+| [voidrp-battlepass](https://github.com/VOIDRP-MINECRAFT/voidrp-battlepass) · [voidrp-daily-quests](https://github.com/VOIDRP-MINECRAFT/voidrp-daily-quests) | Слушают `PlayerMarketTradeEvent`, используют исследования наций |
+
+Как сервисы общаются между собой — в [документации организации](https://github.com/VOIDRP-MINECRAFT/.github/blob/main/docs/INTEGRATION.md).
 
 ---
 
