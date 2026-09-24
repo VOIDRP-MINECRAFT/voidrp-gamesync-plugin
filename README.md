@@ -1,13 +1,33 @@
-# 🔌 VoidRP Game Sync
+<p align="center"><img src=".github/assets/banner.jpg" alt="VoidRP Game Sync" width="100%"></p>
 
-> Главный Paper-плагин сервера VoidRP: синхронизация с бэкендом, нации и альянсы, экономика с модовыми
-> предметами, рынок игроков, странствующий торговец, гайд новичка и мост к WebGUI-страницам в игре.
+<div align="center">
 
 ![Paper](https://img.shields.io/badge/Paper%20%2F%20Mohist-1.21.1-00AF54)
 ![Java](https://img.shields.io/badge/Java-21-ED8B00?logo=openjdk&logoColor=white)
 ![Vault](https://img.shields.io/badge/depends-Vault-yellow)
 [![Build](https://github.com/VOIDRP-MINECRAFT/voidrp-gamesync-plugin/actions/workflows/build.yml/badge.svg)](https://github.com/VOIDRP-MINECRAFT/voidrp-gamesync-plugin/actions/workflows/build.yml)
 ![License](https://img.shields.io/badge/license-proprietary-red)
+
+</div>
+
+> Главный Paper-плагин сервера VoidRP: синхронизация с бэкендом, нации и альянсы, экономика с модовыми
+> предметами, рынок игроков, странствующий торговец, гайд новичка и мост к WebGUI-страницам в игре.
+
+---
+
+## 📸 Как это выглядит
+
+<table>
+<tr>
+<td width="50%"><img src=".github/assets/screenshots/game-ui-market.jpg" alt="Биржа в игре: стакан ордеров, история цены"><br><sub>Биржа в игре: стакан ордеров, история цены</sub></td>
+<td width="50%"><img src=".github/assets/screenshots/site-market.jpg" alt="Тот же рынок на сайте"><br><sub>Тот же рынок на сайте</sub></td>
+</tr>
+<tr>
+<td width="50%"><img src=".github/assets/screenshots/game-ui-menu.jpg" alt="Меню игрока: данные, которые плагин синхронизирует"><br><sub>Меню игрока: данные, которые плагин синхронизирует</sub></td>
+</tr>
+</table>
+
+<sub>Страницы [voidrp-site](https://github.com/VOIDRP-MINECRAFT/voidrp-site) на демо-данных; плагин отдаёт им статистику, рынок и доставку предметов.</sub>
 
 ---
 
