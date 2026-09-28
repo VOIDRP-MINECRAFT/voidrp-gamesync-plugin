@@ -1,6 +1,6 @@
 plugins {
     java
-    id("com.gradleup.shadow") version "8.3.10"
+    id("com.gradleup.shadow") version "8.3.11"
 }
 
 group = "ru.voidrp"
@@ -23,20 +23,20 @@ repositories {
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
-    compileOnly("com.github.MilkBowl:VaultAPI:1.7")
+    compileOnly("com.github.MilkBowl:VaultAPI:1.7.1")
     compileOnly("net.luckperms:api:5.5")
-    compileOnly("me.clip:placeholderapi:2.11.6")
+    compileOnly("me.clip:placeholderapi:2.12.3")
 
-    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.10")
-    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.3.0")
-    compileOnly("org.apache.logging.log4j:log4j-core:2.22.1")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.19")
+    compileOnly("com.sk89q.worldedit:worldedit-bukkit:7.4.5")
+    compileOnly("org.apache.logging.log4j:log4j-core:2.26.1")
     // Citizens API for the travelling trader NPC (soft dependency; the plugin falls back to a vanilla trader).
     // From the Citizens repository so CI and fresh checkouts can compile; the local server jar stays as a
     // fallback for offline builds on the host.
     compileOnly("net.citizensnpcs:citizens-main:2.0.35-SNAPSHOT") { isTransitive = false }
     compileOnly(fileTree("/mnt/ssd/minecraft_server/plugins") { include("Citizens-*.jar") })
 
-    implementation("com.google.code.gson:gson:2.11.0")
+    implementation("com.google.code.gson:gson:2.14.0")
 }
 
 tasks {
