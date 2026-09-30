@@ -1,5 +1,5 @@
 name: VoidRpGameSync
-version: 1.4.0
+version: 1.5.0
 main: ru.voidrp.gamesync.VoidRpGameSyncPlugin
 api-version: "1.21"
 depend:

@@ -210,6 +210,23 @@ public final class BackendClient {
         return out;
     }
 
+    /** Banned items of this server, as set in the admin panel: {ids, message, scan_period_ticks}. */
+    public com.google.gson.JsonObject fetchItemBans(String pluginVersion) throws IOException, InterruptedException {
+        String v = java.net.URLEncoder.encode(pluginVersion == null ? "" : pluginVersion, java.nio.charset.StandardCharsets.UTF_8);
+        HttpResponse<String> response = get(apiUrl("/game-sync/item-bans?v=" + v));
+        return gson.fromJson(response.body(), com.google.gson.JsonObject.class);
+    }
+
+    /** Every item id this server has, so the admin panel searches only real items. */
+    public void reportItemRegistry(java.util.Collection<String> itemIds, String pluginVersion) throws IOException, InterruptedException {
+        com.google.gson.JsonObject body = new com.google.gson.JsonObject();
+        com.google.gson.JsonArray ids = new com.google.gson.JsonArray();
+        itemIds.forEach(ids::add);
+        body.add("item_ids", ids);
+        body.addProperty("plugin_version", pluginVersion);
+        postJson(apiUrl("/game-sync/item-bans/registry"), gson.toJson(body), "Item registry report failed");
+    }
+
     /** Lowercase nicknames of players who allowed their live position on the public map. */
     public java.util.List<String> fetchMapVisibleNicknames() throws IOException, InterruptedException {
         HttpResponse<String> response = get(apiUrl("/game-sync/consents/map-visible"));
